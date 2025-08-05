@@ -7,21 +7,18 @@ const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
 const playerHeight = 130;
-
-// Set eyeHeight to about 120px above top grass block, which is at y = -40 (blockSize - 30)
-// So eyeHeight is 80 (positive)
-const eyeHeight = 80;
+const eyeHeight = 120; // Eye height is 120px above the feet
+const groundLevel = -40; // Top of the ground is at Y = -40
 
 let yaw = 0, pitch = 0;
 let targetYaw = 0, targetPitch = 0;
 const mouseSensitivity = 0.1;
 
 let posX = 0;
-let posY = 0;
+let posY = groundLevel;
 let posZ = 0;
 let velocityY = 0;
 const gravity = 0.5;
-const groundLevel = 0;
 
 const jumpHeight = 70;
 const jumpVelocity = -Math.sqrt(2 * gravity * jumpHeight);
@@ -243,7 +240,7 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  // FIX: Move camera up by a positive eyeHeight value
+  // ✅ Corrected: cameraEye moves upward by 120px
   cameraEye.style.transform = `translateY(${eyeHeight}px)`;
 }
 
