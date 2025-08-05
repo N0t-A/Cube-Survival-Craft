@@ -7,18 +7,21 @@ const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
 const playerHeight = 130;
-const eyeHeight = 120;
+
+// Set eyeHeight to about 120px above top grass block, which is at y = -40 (blockSize - 30)
+// So eyeHeight is 80 (positive)
+const eyeHeight = 80;
 
 let yaw = 0, pitch = 0;
 let targetYaw = 0, targetPitch = 0;
 const mouseSensitivity = 0.1;
 
 let posX = 0;
-const groundLevel = -20; // Grass top Y position in world coordinates
-let posY = groundLevel;  // Start player on the ground
+let posY = 0;
 let posZ = 0;
 let velocityY = 0;
 const gravity = 0.5;
+const groundLevel = 0;
 
 const jumpHeight = 70;
 const jumpVelocity = -Math.sqrt(2 * gravity * jumpHeight);
@@ -26,7 +29,7 @@ const jumpVelocity = -Math.sqrt(2 * gravity * jumpHeight);
 let keysPressed = {};
 
 const chunkSize = 10;
-const blockSize = 50; // You said blocks are 50px tall now
+const blockSize = 70;
 const renderDistance = 1;
 
 const loadedChunks = new Set();
@@ -240,8 +243,8 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  // Camera offset by eyeHeight above player feet position
-  cameraEye.style.transform = `translateY(${-eyeHeight}px)`;
+  // FIX: Move camera up by a positive eyeHeight value
+  cameraEye.style.transform = `translateY(${eyeHeight}px)`;
 }
 
 function animate() {
