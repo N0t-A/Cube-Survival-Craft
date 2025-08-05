@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Inventory + Crafting</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <style>
+    /* Basic styling for slots and images */
+    #inventory, #inventory-panel, #crafting-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 10px 0;
+    }
+
+    #inventory {
+      width: 630px; /* 9 slots * 70px + gaps */
+    }
+
+    #inventory .slot,
+    #inventory-panel .slot,
+    #crafting-area .slot,
+    #crafting-result {
+      width: 70px;
+      height: 70px;
+      background: #444;
+      border: 2px solid #222;
+      box-sizing: border-box;
+      position: relative;
+      cursor: pointer;
+    }
+
+    #inventory-panel.hidden {
+      display: none;
+    }
+
+    .inventory-grid {
+      width: 630px; /* 9 columns */
+      display: grid;
+      grid-template-columns: repeat(9, 70px);
+      grid-template-rows: repeat(3, 70px);
+      gap: 4px;
+      margin-top: 10px;
+    }
+
+    .crafting-grid {
+      width: 144px; /* 2 columns * 70px + gap */
+      display: grid;
+      grid-template-columns: repeat(2, 70px);
+      grid-template-rows: repeat(2, 70px);
+      gap: 4px;
+    }
+
+    #crafting-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    #crafting-arrow {
+      font-size: 2rem;
+      user-select: none;
+    }
+
+    #crafting-result {
+      width: 70px;
+      height: 70px;
+      background: #666;
+      border: 2px solid #222;
+      box-sizing: border-box;
+      cursor: default;
+    }
+
+    /* Image styling */
+    .slot img {
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+
+<body tabindex="0">
+  <div id="game-container">
+    <!-- Camera system: yaw > pitch > eye > camera -->
+    <div id="camera-wrapper">
+      <div id="camera-yaw">
+        <div id="camera-pitch">
+          <div id="camera-eye">
+            <div id="camera" class="camera-node"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene is separate from the camera system -->
+    <div id="scene">
+      <div id="world"></div>
+
+      <div id="player-model">
+        <!-- Player model cubes... -->
+      </div>
+    </div>
+
+    <!-- Inventory Hotbar -->
+    <div id="inventory">
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+      <div class="slot"></div>
+    </div>
+
+    <!-- Full Inventory Panel -->
+    <div id="inventory-panel" class="hidden">
+      <div id="inventory-wrapper">
+        <!-- Crafting area and result -->
+        <div id="crafting-container">
+          <div id="crafting-area" class="crafting-grid">
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+          </div>
+          <div id="crafting-arrow">➡️</div>
+          <div id="crafting-result" class="slot"></div>
+        </div>
+
+        <!-- 27 Inventory slots (3 rows × 9 columns) -->
+        <div class="inventory-grid">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+
+</html>
