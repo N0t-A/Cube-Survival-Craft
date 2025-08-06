@@ -7,30 +7,34 @@ const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
 const playerHeight = 130;
-const eyeHeight = 120; // ✅ Correct eye height
+const eyeHeight = 120; // Correct eye height above ground
+
 let yaw = 0, pitch = 0;
 let targetYaw = 0, targetPitch = 0;
 const mouseSensitivity = 0.1;
 
 let posX = 0;
-let posY = -40; // ✅ Start at ground level
+let posY = -40; // Start at ground level (inverted Y-axis)
 let posZ = 0;
 let velocityY = 0;
-const gravity = -0.5;
+const gravity = -0.5; // Gravity pulls downward in inverted Y system
 const groundLevel = -40;
 
 const jumpHeight = 70;
-const jumpVelocity = Math.sqrt(2 * -gravity * jumpHeight);
+const jumpVelocity = Math.sqrt(2 * -gravity * jumpHeight); // Positive jump velocity
 
 let keysPressed = {};
+
 const chunkSize = 10;
 const blockSize = 70;
 const renderDistance = 1;
 
 const loadedChunks = new Set();
 let chunkQueue = [];
+
 let lastChunkX = null;
 let lastChunkZ = null;
+
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
 
@@ -38,11 +42,13 @@ let lastPlayerTransform = '';
 document.body.addEventListener('click', () => {
   document.body.requestPointerLock();
 });
+
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     console.log('✅ Pointer lock enabled');
   }
 });
+
 document.addEventListener('mousemove', (e) => {
   if (document.pointerLockElement === document.body) {
     targetYaw += e.movementX * mouseSensitivity;
@@ -50,6 +56,7 @@ document.addEventListener('mousemove', (e) => {
     targetPitch = Math.max(-85, Math.min(85, targetPitch));
   }
 });
+
 document.addEventListener('keydown', (e) => {
   keysPressed[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && posY === groundLevel) {
@@ -61,6 +68,7 @@ document.addEventListener('keydown', (e) => {
     updateInventoryUI();
   }
 });
+
 document.addEventListener('keyup', (e) => {
   keysPressed[e.key.toLowerCase()] = false;
 });
@@ -74,11 +82,13 @@ function createBlock(x, y, z, type, exposedFaces) {
   const block = document.createElement('div');
   block.className = `block ${type}`;
   block.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+
   for (const face of exposedFaces) {
     const faceEl = document.createElement('div');
     faceEl.classList.add('face', face);
     block.appendChild(faceEl);
   }
+
   return block;
 }
 
@@ -174,6 +184,7 @@ function generateChunk(chunkX, chunkZ) {
 function loadChunksAroundPlayer() {
   const playerChunkX = Math.floor(posX / (chunkSize * blockSize));
   const playerChunkZ = Math.floor(posZ / (chunkSize * blockSize));
+
   if (playerChunkX === lastChunkX && playerChunkZ === lastChunkZ) return;
   lastChunkX = playerChunkX;
   lastChunkZ = playerChunkZ;
@@ -229,8 +240,8 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  // ✅ FIXED: camera eye properly raised above ground
-  cameraEye.style.transform = `translate3d(0px, ${-(posY - eyeHeight)}px, 0px)`;
+  // ← Correct camera translation for inverted Y axis
+  cameraEye.style.transform = `translate3d(0px, ${posY - eyeHeight}px, 0px)`;
 }
 
 function animate() {
@@ -269,6 +280,7 @@ function animate() {
   loadChunksAroundPlayer();
   processChunkQueue();
   updateTransforms();
+
   requestAnimationFrame(animate);
 }
 
