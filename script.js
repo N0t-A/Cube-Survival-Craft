@@ -7,21 +7,21 @@ const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
 const playerHeight = 130;
-const eyeHeight = 680; // ⬅️ Fixed: raised camera by 8 blocks (560px)
+const eyeHeight = 120; // ✅ Fixed: correct eye height above ground
 
 let yaw = 0, pitch = 0;
 let targetYaw = 0, targetPitch = 0;
 const mouseSensitivity = 0.1;
 
 let posX = 0;
-let posY = 0;
+let posY = -40; // ✅ Start at ground level
 let posZ = 0;
 let velocityY = 0;
-const gravity = 0.5;
-const groundLevel = 0;
+const gravity = -0.5; // ✅ Gravity pulls downward in inverted Y system
+const groundLevel = -40;
 
 const jumpHeight = 70;
-const jumpVelocity = -Math.sqrt(2 * gravity * jumpHeight);
+const jumpVelocity = Math.sqrt(2 * -gravity * jumpHeight); // ✅ Positive jump velocity
 
 let keysPressed = {};
 
@@ -240,7 +240,7 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  cameraEye.style.transform = `translateY(${eyeHeight}px)`; // ✅ Raised camera
+  cameraEye.style.transform = `translateY(${eyeHeight}px)`; // ✅ Raised camera relative to feet
 }
 
 function animate() {
@@ -249,7 +249,7 @@ function animate() {
 
   velocityY += gravity;
   posY += velocityY;
-  if (posY > groundLevel) {
+  if (posY < groundLevel) {
     posY = groundLevel;
     velocityY = 0;
   }
