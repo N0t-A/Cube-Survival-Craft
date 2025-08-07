@@ -74,15 +74,16 @@ function updatePlayerPosition() {
 
 // === Apply transforms to DOM ===
 function updateTransforms() {
-  // Apply yaw and pitch to camera wrappers
-  cameraYaw.style.transform = `rotateY(${yaw}deg)`;
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
-
-  // Translate the scene (moves the world around the player)
+  // Scene handles yaw + translation (player horizontal rotation + world movement)
   const sceneTransform = `
+    rotateY(${yaw}deg)
     translate3d(${-posX}px, ${-posY}px, ${-posZ}px)
   `;
 
+  // Camera pitch container handles pitch rotation (vertical)
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+
+  // Player model rotates horizontally (yaw) and is translated to position
   const playerTransform = `
     translate3d(${posX}px, ${posY}px, ${posZ}px)
     rotateY(${yaw}deg)
@@ -98,7 +99,7 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  // Position camera at eye height
+  // Position camera at eye height (inside cameraPitch)
   cameraEye.style.transform = `translate3d(0px, ${-(posY - eyeHeight)}px, 0px)`;
 }
 
