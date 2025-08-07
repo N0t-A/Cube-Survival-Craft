@@ -5,6 +5,7 @@ const cameraPitch = document.getElementById('camera-pitch');
 const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
+const gameContainer = document.getElementById('game-container'); // For pointer lock
 
 // === Player state ===
 let posX = 0;
@@ -22,13 +23,33 @@ const speed = 2;
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
 
-// === Input handling ===
+// === Input handling (Keyboard) ===
 document.body.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
 });
 document.body.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
+
+// === Pointer lock setup ===
+gameContainer.addEventListener('click', () => {
+  gameContainer.requestPointerLock();
+});
+
+document.addEventListener('pointerlockchange', () => {
+  const locked = document.pointerLockElement === gameContainer;
+  if (locked) {
+    document.addEventListener('mousemove', handleMouseMove);
+  } else {
+    document.removeEventListener('mousemove', handleMouseMove);
+  }
+});
+
+function handleMouseMove(e) {
+  yaw += e.movementX * 0.1;
+  pitch -= e.movementY * 0.1;
+  pitch = Math.max(-89, Math.min(89, pitch));
+}
 
 // === Update position based on input ===
 function updatePlayerPosition() {
