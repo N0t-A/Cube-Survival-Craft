@@ -1,75 +1,57 @@
-<!DOCTYPE html>
-<html>
+<div id="game-container">
+  <div id="scene">
+    <div id="world"></div>
+  </div>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width" />
-  <title>Inventory + Crafting</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
-</head>
+  <!-- Player model (if visible in 3rd person) -->
+  <div id="player-model">
+    <!-- Player cubes go here -->
+  </div>
 
-<body tabindex="0">
-  <div id="game-container">
-    <div id="scene">
-      <div id="world"></div>
-        <div id="crosshair">+</div>
-
-      <div id="player-model">
-        <!-- Camera system is now inside the player model -->
-        <div id="camera-wrapper">
-          <div id="camera-yaw">
-            <div id="camera-pitch">
-              <div id="camera-eye">
-                <div id="camera" class="camera-node"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Player model cubes go here -->
-      </div>
-    </div>
-
-    <!-- Inventory Hotbar -->
-    <div id="inventory">
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-    </div>
-
-    <!-- Full Inventory Panel -->
-    <div id="inventory-panel" class="hidden">
-      <div id="inventory-wrapper">
-        <!-- Crafting area and result -->
-        <div id="crafting-container">
-          <div id="crafting-area" class="crafting-grid">
-            <div class="slot"></div>
-            <div class="slot"></div>
-            <div class="slot"></div>
-            <div class="slot"></div>
-          </div>
-          <div id="crafting-arrow">➡️</div>
-          <div id="crafting-result" class="slot"></div>
-        </div>
-
-        <!-- Inventory grid (27 slots) -->
-        <div class="inventory-grid">
-          <!-- 3 rows × 9 columns -->
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-        </div>
+  <!-- Camera transform wrappers -->
+  <div id="camera-pitch">
+    <div id="camera-yaw">
+      <div id="camera-eye">
+        <div id="camera" class="camera-node"></div>
       </div>
     </div>
   </div>
 
-  <script src="script.js" defer></script>
-</body>
+  <div id="crosshair">+</div>
 
-</html>
+  <!-- Inventory Hotbar -->
+  <div id="inventory">
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+    <div class="slot"></div>
+  </div>
+
+  <!-- Full Inventory Panel -->
+  <div id="inventory-panel" class="hidden">
+    <div id="inventory-wrapper">
+      <div id="crafting-container">
+        <div id="crafting-area" class="crafting-grid">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+        </div>
+        <div id="crafting-arrow">➡️</div>
+        <div id="crafting-result" class="slot"></div>
+      </div>
+
+      <div class="inventory-grid">
+        <!-- 3 rows × 9 columns -->
+        <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+        <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      </div>
+    </div>
+  </div>
+</div>
