@@ -18,6 +18,7 @@ body {
   position: relative;
   perspective: 800px;
   perspective-origin: center center;
+  cursor: pointer;
 }
 
 #camera-wrapper,
