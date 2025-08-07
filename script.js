@@ -5,7 +5,6 @@ const cameraPitch = document.getElementById('camera-pitch');
 const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
-const gameContainer = document.getElementById('game-container'); // For pointer lock
 
 // === Player state ===
 let posX = 0;
@@ -23,7 +22,7 @@ const speed = 2;
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
 
-// === Input handling (Keyboard) ===
+// === Input handling ===
 document.body.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
 });
@@ -31,24 +30,28 @@ document.body.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
 
-// === Pointer lock setup ===
-gameContainer.addEventListener('click', () => {
-  gameContainer.requestPointerLock();
+// === Pointer lock + mouse look ===
+document.body.addEventListener('click', () => {
+  document.body.requestPointerLock();
 });
 
 document.addEventListener('pointerlockchange', () => {
-  const locked = document.pointerLockElement === gameContainer;
-  if (locked) {
-    document.addEventListener('mousemove', handleMouseMove);
+  if (document.pointerLockElement === document.body) {
+    document.addEventListener('mousemove', onMouseMove);
   } else {
-    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mousemove', onMouseMove);
   }
 });
 
-function handleMouseMove(e) {
-  yaw += e.movementX * 0.1;
-  pitch -= e.movementY * 0.1;
-  pitch = Math.max(-89, Math.min(89, pitch));
+function onMouseMove(e) {
+  const sensitivity = 0.1;
+  yaw += e.movementX * sensitivity;
+  pitch -= e.movementY * sensitivity;
+
+  // Clamp pitch to avoid flipping
+  const maxPitch = 89;
+  if (pitch > maxPitch) pitch = maxPitch;
+  if (pitch < -maxPitch) pitch = -maxPitch;
 }
 
 // === Update position based on input ===
@@ -71,9 +74,12 @@ function updatePlayerPosition() {
 
 // === Apply transforms to DOM ===
 function updateTransforms() {
+  // Apply yaw and pitch to camera wrappers
+  cameraYaw.style.transform = `rotateY(${yaw}deg)`;
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+
+  // Translate the scene (moves the world around the player)
   const sceneTransform = `
-    rotateX(${pitch}deg)
-    rotateY(${yaw}deg)
     translate3d(${-posX}px, ${-posY}px, ${-posZ}px)
   `;
 
@@ -92,7 +98,7 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  // ✅ Corrected camera position for inverted Y-axis
+  // Position camera at eye height
   cameraEye.style.transform = `translate3d(0px, ${-(posY - eyeHeight)}px, 0px)`;
 }
 
