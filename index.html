@@ -12,21 +12,16 @@
       <div id="world"></div>
     </div>
 
-    <!-- Player model (if visible in 3rd person) -->
-    <div id="player-model">
-      <!-- Player cubes go here -->
-    </div>
+    <!-- Player model -->
+    <div id="player-model"></div>
 
-    <!-- Camera transform wrappers: yaw outside, pitch inside -->
-    <div id="camera-yaw">
-      <div id="camera-pitch">
-        <div id="camera-eye">
-          <div id="camera" class="camera-node"></div>
-        </div>
+    <!-- Camera pitch wrapper only for vertical rotation -->
+    <div id="camera-pitch">
+      <div id="camera-eye">
+        <div id="camera" class="camera-node"></div>
       </div>
     </div>
 
-    <!-- Crosshair -->
     <div id="crosshair">+</div>
 
     <!-- Inventory Hotbar -->
@@ -41,7 +36,8 @@
       <div id="inventory-wrapper">
         <div id="crafting-container">
           <div id="crafting-area" class="crafting-grid">
-            <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+            <div class="slot"></div><div class="slot"></div>
+            <div class="slot"></div><div class="slot"></div>
           </div>
           <div id="crafting-arrow">➡️</div>
           <div id="crafting-result" class="slot"></div>
