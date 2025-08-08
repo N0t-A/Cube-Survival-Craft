@@ -108,11 +108,21 @@ function updateTransforms() {
   cameraEye.style.transform = `translate3d(0px, ${-eyeHeight}px, 0px)`;
 }
 
+// === Helper: Create faces inside a block element ===
+function createBlockFaces(block) {
+  const faces = ['top', 'front', 'right', 'back', 'left', 'bottom'];
+  faces.forEach(face => {
+    const faceDiv = document.createElement('div');
+    faceDiv.className = `face ${face}`;
+    block.appendChild(faceDiv);
+  });
+}
+
 // === Terrain generation ===
 function generateFlatWorld() {
   const chunkSize = 10;
   const blockSize = 70;
-  const groundY = -40; // Ground level to align with player posY
+  const groundY = -40; // Aligns with player Y pos
 
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
@@ -122,10 +132,14 @@ function generateFlatWorld() {
       const posZ = z * blockSize;
       const posY = groundY;
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
+
+      // Create and append the faces inside the block
+      createBlockFaces(block);
+
       world.appendChild(block);
     }
   }
-  console.log(`Generated ${chunkSize * chunkSize} blocks in world div.`);
+  console.log(`Generated ${chunkSize * chunkSize} blocks with faces in world.`);
 }
 
 // === Animation loop ===
