@@ -21,6 +21,18 @@ body {
   cursor: pointer;
 }
 
+#crosshair {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: white;
+  pointer-events: none;
+  z-index: 1000;
+  user-select: none;
+}
+
 #camera-wrapper,
 #camera-yaw,
 #camera-pitch,
