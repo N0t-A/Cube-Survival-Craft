@@ -26,12 +26,25 @@ const eyeHeight = 120; // Camera height above feet (in pixels)
 const keys = {};
 const speed = 2;
 
+// === Physics constants ===
+const gravity = 1.5;       // Gravity acceleration (pixels/frame²)
+const jumpStrength = 70;   // Jump initial velocity (equals one block height)
+const groundY = -40;       // Ground level (same as in generateFlatWorld)
+
+// Player vertical velocity and grounded state
+let velY = 0;
+let grounded = false;
+
 // === Memoized transforms (for performance) ===
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
 
 // === Input handling ===
 document.body.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && grounded) {
+    velY = -jumpStrength;  // Negative velocity goes up (Y axis inverted)
+    grounded = false;
+  }
   keys[e.key.toLowerCase()] = true;
 });
 document.body.addEventListener('keyup', (e) => {
@@ -62,8 +75,9 @@ function onMouseMove(e) {
   if (pitch < -maxPitch) pitch = -maxPitch;
 }
 
-// === Update position based on input ===
+// === Update position based on input + gravity + jump + collision ===
 function updatePlayerPosition() {
+  // Horizontal movement
   let forward = 0;
   let right = 0;
 
@@ -78,6 +92,17 @@ function updatePlayerPosition() {
 
   posX += (forward * cos - right * sin) * speed;
   posZ += (forward * sin + right * cos) * speed;
+
+  // Vertical movement with gravity and jumping
+  velY += gravity;
+  posY += velY;
+
+  // Collision with ground
+  if (posY > groundY) {
+    posY = groundY;
+    velY = 0;
+    grounded = true;
+  }
 }
 
 // === Apply transforms to DOM ===
@@ -122,7 +147,6 @@ function createBlockFaces(block) {
 function generateFlatWorld() {
   const chunkSize = 10;
   const blockSize = 70;
-  const groundY = -40; // Aligns with player Y pos
 
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
@@ -133,48 +157,12 @@ function generateFlatWorld() {
       const posY = groundY;
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
 
-      // Create and append the faces inside the block
       createBlockFaces(block);
 
       world.appendChild(block);
     }
   }
   console.log(`Generated ${chunkSize * chunkSize} blocks with faces in world.`);
-}
-
-// === Helper: Create character parts with faces ===
-function createPart(className) {
-  const part = document.createElement('div');
-  part.className = className; // e.g., 'torso', 'head', 'leg left', 'arm right'
-
-  const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
-  faces.forEach(face => {
-    const faceDiv = document.createElement('div');
-    faceDiv.className = `face ${face}`;
-    part.appendChild(faceDiv);
-  });
-
-  return part;
-}
-
-// === Character creation ===
-function createCharacter() {
-  // Clear existing content in playerModel to avoid duplicates
-  playerModel.innerHTML = '';
-
-  const torso = createPart('torso');
-  const head = createPart('head');
-  const legLeft = createPart('leg left');
-  const legRight = createPart('leg right');
-  const armLeft = createPart('arm left');
-  const armRight = createPart('arm right');
-
-  playerModel.appendChild(torso);
-  playerModel.appendChild(head);
-  playerModel.appendChild(legLeft);
-  playerModel.appendChild(legRight);
-  playerModel.appendChild(armLeft);
-  playerModel.appendChild(armRight);
 }
 
 // === Animation loop ===
@@ -186,5 +174,4 @@ function animate() {
 
 // === Start game ===
 generateFlatWorld();
-createCharacter();
 animate();
