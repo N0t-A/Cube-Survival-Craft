@@ -1,28 +1,47 @@
-// === Elements ===
-const cameraPitch = document.getElementById('camera-pitch');
+// === Game setup ===
+const playerModel = document.getElementById('player-model');
 const cameraYaw = document.getElementById('camera-yaw');
+const cameraPitch = document.getElementById('camera-pitch');
 const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
-// === Player State ===
+// Debugging: Check if 'world' element is found
+console.log('world div:', world);
+
+if (!world) {
+  console.error('Error: world element not found!');
+}
+
+// === Player state ===
 let posX = 0;
-let posY = -40;  // Ground level
+let posY = -40; // Ground level (inverted Y-axis)
 let posZ = 0;
 let yaw = 0;
 let pitch = 0;
-const eyeHeight = 120;  // Camera height above feet
+const eyeHeight = 120; // Camera height above feet (in pixels)
 
-// === Movement ===
+// === Movement state ===
 const keys = {};
 const speed = 2;
 
-// === Input Handling ===
-document.body.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
-document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+// === Memoized transforms (for performance) ===
+let lastSceneTransform = '';
+let lastPlayerTransform = '';
 
-// === Pointer Lock + Mouse Look ===
-document.body.addEventListener('click', () => document.body.requestPointerLock());
+// === Input handling ===
+document.body.addEventListener('keydown', (e) => {
+  keys[e.key.toLowerCase()] = true;
+});
+document.body.addEventListener('keyup', (e) => {
+  keys[e.key.toLowerCase()] = false;
+});
+
+// === Pointer lock + mouse look ===
+document.body.addEventListener('click', () => {
+  document.body.requestPointerLock();
+});
+
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     document.addEventListener('mousemove', onMouseMove);
@@ -36,20 +55,23 @@ function onMouseMove(e) {
   yaw += e.movementX * sensitivity;
   pitch -= e.movementY * sensitivity;
 
+  // Clamp pitch to avoid flipping
   const maxPitch = 89;
   if (pitch > maxPitch) pitch = maxPitch;
   if (pitch < -maxPitch) pitch = -maxPitch;
 }
 
-// === Player Movement Update ===
+// === Update position based on input ===
 function updatePlayerPosition() {
-  let forward = 0, right = 0;
+  let forward = 0;
+  let right = 0;
+
   if (keys['w']) forward += 1;
   if (keys['s']) forward -= 1;
   if (keys['d']) right += 1;
   if (keys['a']) right -= 1;
 
-  const rad = yaw * Math.PI / 180;
+  const rad = yaw * (Math.PI / 180);
   const sin = Math.sin(rad);
   const cos = Math.cos(rad);
 
@@ -57,42 +79,61 @@ function updatePlayerPosition() {
   posZ += (forward * sin + right * cos) * speed;
 }
 
-// === Update Transforms ===
+// === Apply transforms to DOM ===
 function updateTransforms() {
-  // Rotate the world opposite to player's yaw and pitch (to simulate camera rotation)
-  scene.style.transform = `
-    rotateX(${-pitch}deg)
-    rotateY(${-yaw}deg)
+  // Rotate the world to simulate camera rotation
+  const sceneTransform = `
+    rotateX(${pitch}deg)
+    rotateY(${yaw}deg)
     translate3d(${-posX}px, ${-posY}px, ${-posZ}px)
   `;
 
-  // Camera-eye position for eye height (fixed)
+  const playerTransform = `
+    translate3d(${posX}px, ${posY}px, ${posZ}px)
+    rotateY(${yaw}deg)
+  `;
+
+  if (sceneTransform !== lastSceneTransform) {
+    scene.style.transform = sceneTransform;
+    lastSceneTransform = sceneTransform;
+  }
+
+  if (playerTransform !== lastPlayerTransform) {
+    playerModel.style.transform = playerTransform;
+    lastPlayerTransform = playerTransform;
+  }
+
+  // Camera eye stays fixed (eyes of player)
   cameraEye.style.transform = `translate3d(0px, ${-eyeHeight}px, 0px)`;
 }
 
-// === Generate Flat Terrain ===
+// === Terrain generation ===
 function generateFlatWorld() {
   const chunkSize = 10;
   const blockSize = 70;
-  const groundY = -40;
+  const groundY = -40; // Ground level to align with player posY
 
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
       const block = document.createElement('div');
-      block.className = 'block grass-block'; // match CSS class if needed
-      block.style.transform = `translate3d(${x * blockSize}px, ${groundY}px, ${z * blockSize}px)`;
+      block.className = 'grass block';
+      const posX = x * blockSize;
+      const posZ = z * blockSize;
+      const posY = groundY;
+      block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
       world.appendChild(block);
     }
   }
+  console.log(`Generated ${chunkSize * chunkSize} blocks in world div.`);
 }
 
-// === Animation Loop ===
+// === Animation loop ===
 function animate() {
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
 }
 
-// === Start ===
+// === Start game ===
 generateFlatWorld();
 animate();
