@@ -97,22 +97,37 @@ function updateTransforms() {
   cameraEye.style.transform = `translate3d(0px, ${-(posY - eyeHeight)}px, 0px)`;
 }
 
-// === Terrain generation ===
+// === Terrain generation (dynamic) ===
 function generateFlatWorld() {
-  const chunkSize = 16;
-  const blockSize = 50;
-  const groundY = -40;
+  const chunkSize = 10;    // width & depth in blocks
+  const blockSize = 70;    // block size in px
+  const groundLevel = -40; // top layer position
 
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
-      const block = document.createElement('div');
-      block.className = 'block grass';
-      const posX = x * blockSize;
-      const posZ = z * blockSize;
-      const posY = groundY;
-      block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
-      world.appendChild(block);
+      // Grass layer (top)
+      createBlock('grass', x, groundLevel, z);
+
+      // Dirt layers (3 deep)
+      for (let y = 1; y <= 3; y++) {
+        createBlock('dirt', x, groundLevel + (y * blockSize), z);
+      }
+
+      // Stone layers (goes much deeper)
+      for (let y = 4; y <= 10; y++) {
+        createBlock('stone', x, groundLevel + (y * blockSize), z);
+      }
     }
+  }
+
+  function createBlock(type, bx, by, bz) {
+    const block = document.createElement('div');
+    block.className = `block ${type}`;
+    const posX = bx * blockSize;
+    const posY = by;
+    const posZ = bz * blockSize;
+    block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
+    world.appendChild(block);
   }
 }
 
