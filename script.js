@@ -1,5 +1,6 @@
 // === Game setup ===
 const playerModel = document.getElementById('player-model');
+const cameraYaw = document.getElementById('camera-yaw');
 const cameraPitch = document.getElementById('camera-pitch');
 const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
@@ -11,13 +12,13 @@ let posY = -40; // Ground level (inverted Y-axis)
 let posZ = 0;
 let yaw = 0;
 let pitch = 0;
-const eyeHeight = 120; // Camera height above feet (pixels)
+const eyeHeight = 120; // Camera height above feet (in pixels)
 
 // === Movement state ===
 const keys = {};
 const speed = 2;
 
-// === Memoized transforms for performance ===
+// === Memoized transforms (for performance) ===
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
 
@@ -73,45 +74,42 @@ function updatePlayerPosition() {
 
 // === Apply transforms to DOM ===
 function updateTransforms() {
-  // Rotate and translate the whole scene (world)
+  // Instead of rotating camera, rotate the world to simulate camera rotation
   const sceneTransform = `
+    rotateX(${pitch}deg)
     rotateY(${yaw}deg)
     translate3d(${-posX}px, ${-posY}px, ${-posZ}px)
   `;
 
-  // Apply transform if changed
-  if (sceneTransform !== lastSceneTransform) {
-    scene.style.transform = sceneTransform;
-    lastSceneTransform = sceneTransform;
-  }
-
-  // Pitch only rotates cameraPitch wrapper (vertical look)
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
-
-  // Player model position and yaw rotation for third person view
   const playerTransform = `
     translate3d(${posX}px, ${posY}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
+
+  if (sceneTransform !== lastSceneTransform) {
+    scene.style.transform = sceneTransform;
+    lastSceneTransform = sceneTransform;
+  }
 
   if (playerTransform !== lastPlayerTransform) {
     playerModel.style.transform = playerTransform;
     lastPlayerTransform = playerTransform;
   }
 
-  // Position camera eye vertically (eyeHeight above feet)
-  cameraEye.style.transform = `translate3d(0px, ${-(posY - eyeHeight)}px, 0px)`;
+  // Camera eye stays fixed (eyes of player)
+  cameraEye.style.transform = `translate3d(0px, ${-eyeHeight}px, 0px)`;
 }
 
-// === Dynamic terrain generation ===
+// === Terrain generation ===
 function generateFlatWorld() {
   const chunkSize = 10;
   const blockSize = 70;
-  const groundY = 0;
+  const groundY = -40; // Ground level to align with player posY
+
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
       const block = document.createElement('div');
-      block.className = 'block grass';
+      block.className = 'grass block'; // Updated class order here
       const posX = x * blockSize;
       const posZ = z * blockSize;
       const posY = groundY;
@@ -128,6 +126,6 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// === Start the game ===
+// === Start game ===
 generateFlatWorld();
 animate();
