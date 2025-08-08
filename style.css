@@ -26,10 +26,10 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 24px;
-  color: white;
+  font-size: 24px; /* Adjust size if needed */
+  color: white;     /* Or any color that contrasts with your sky */
   pointer-events: none;
-  z-index: 1000;
+  z-index: 9999;
   user-select: none;
 }
 
