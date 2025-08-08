@@ -19,7 +19,7 @@ document.addEventListener('pointerlockchange', () => {
   }
 });
 
-// === Camera control ===
+// === Camera rotation ===
 let yaw = 0;
 let pitch = 0;
 
@@ -28,17 +28,19 @@ function onMouseMove(e) {
   pitch -= e.movementY * 0.1;
   pitch = Math.max(-90, Math.min(90, pitch));
 
+  // Apply rotation
   cameraYaw.style.transform = `rotateY(${yaw}deg)`;
   cameraPitch.style.transform = `rotateX(${pitch}deg)`;
 }
 
 // === Player position ===
 let posX = 0;
-let posY = -40; // Ground level
+let posY = -40; // Ground level (inverted Y-axis: smaller values are higher)
 let posZ = 0;
 const eyeHeight = 120;
 
 function updateCameraPosition() {
+  // Adjust for inverted Y-axis
   cameraEye.style.transform = `translate3d(${posX}px, ${-(posY - eyeHeight)}px, ${posZ}px)`;
 }
 
@@ -66,23 +68,14 @@ function generateTerrain() {
 
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
-      const height = 3; // top layer + dirt
+      // Grass block at ground level
+      let block = createBlock('grass', x * blockSize, groundLevel, z * blockSize);
+      world.appendChild(block);
 
-      for (let y = 0; y < height; y++) {
-        let type;
-        if (y === 0) {
-          type = 'grass';
-        } else {
-          type = 'dirt';
-        }
-
-        const block = createBlock(
-          type,
-          x * blockSize,
-          groundLevel - (y * blockSize),
-          z * blockSize
-        );
-
+      // Dirt blocks below grass
+      for (let y = 1; y <= 3; y++) {
+        let dirtY = groundLevel + (blockSize * y); // goes downward
+        block = createBlock('dirt', x * blockSize, dirtY, z * blockSize);
         world.appendChild(block);
       }
     }
