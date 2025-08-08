@@ -74,7 +74,7 @@ function updatePlayerPosition() {
 
 // === Apply transforms to DOM ===
 function updateTransforms() {
-  // Instead of rotating camera, rotate the world to simulate camera rotation
+  // Rotate world to simulate camera rotation and movement
   const sceneTransform = `
     rotateX(${pitch}deg)
     rotateY(${yaw}deg)
@@ -96,24 +96,40 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  // Camera eye stays fixed (eyes of player)
+  // Camera eye stays fixed (player's eyes)
   cameraEye.style.transform = `translate3d(0px, ${-eyeHeight}px, 0px)`;
 }
 
-// === Terrain generation ===
+// === Helper: Create a block face element ===
+function createFace(className) {
+  const face = document.createElement('div');
+  face.className = `face ${className}`;
+  return face;
+}
+
+// === Terrain generation with faces ===
 function generateFlatWorld() {
   const chunkSize = 10;
   const blockSize = 70;
-  const groundY = -40; // Ground level to align with player posY
+  const groundY = -40; // Ground level to match player posY
 
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
       const block = document.createElement('div');
-      block.className = 'grass block'; // Updated class order here
+      block.className = 'grass block';
       const posX = x * blockSize;
       const posZ = z * blockSize;
       const posY = groundY;
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
+
+      // Add six faces for the block
+      block.appendChild(createFace('top'));
+      block.appendChild(createFace('bottom'));
+      block.appendChild(createFace('front'));
+      block.appendChild(createFace('back'));
+      block.appendChild(createFace('left'));
+      block.appendChild(createFace('right'));
+
       world.appendChild(block);
     }
   }
