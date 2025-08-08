@@ -74,16 +74,11 @@ function updatePlayerPosition() {
 
 // === Apply transforms to DOM ===
 function updateTransforms() {
-  // Scene handles yaw + translation (player horizontal rotation + world movement)
   const sceneTransform = `
     rotateY(${yaw}deg)
     translate3d(${-posX}px, ${-posY}px, ${-posZ}px)
   `;
 
-  // Camera pitch container handles pitch rotation (vertical)
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
-
-  // Player model rotates horizontally (yaw) and is translated to position
   const playerTransform = `
     translate3d(${posX}px, ${posY}px, ${posZ}px)
     rotateY(${yaw}deg)
@@ -99,8 +94,26 @@ function updateTransforms() {
     lastPlayerTransform = playerTransform;
   }
 
-  // Position camera at eye height (inside cameraPitch)
   cameraEye.style.transform = `translate3d(0px, ${-(posY - eyeHeight)}px, 0px)`;
+}
+
+// === Terrain generation ===
+function generateFlatWorld() {
+  const chunkSize = 16;
+  const blockSize = 50;
+  const groundY = -40;
+
+  for (let x = 0; x < chunkSize; x++) {
+    for (let z = 0; z < chunkSize; z++) {
+      const block = document.createElement('div');
+      block.className = 'block grass';
+      const posX = x * blockSize;
+      const posZ = z * blockSize;
+      const posY = groundY;
+      block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
+      world.appendChild(block);
+    }
+  }
 }
 
 // === Animation loop ===
@@ -111,4 +124,5 @@ function animate() {
 }
 
 // === Start game ===
+generateFlatWorld();
 animate();
