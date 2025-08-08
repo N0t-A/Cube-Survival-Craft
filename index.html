@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Your Game Title</title>
-  <!-- Link to your CSS file -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,35 +11,29 @@
     <div id="scene">
       <div id="world"></div>
     </div>
-    <div id="crosshair"></div>
 
     <!-- Player model (if visible in 3rd person) -->
     <div id="player-model">
       <!-- Player cubes go here -->
     </div>
 
-    <!-- Camera transform wrappers -->
-    <div id="camera-pitch">
-      <div id="camera-yaw">
+    <!-- Camera transform wrappers: yaw outside, pitch inside -->
+    <div id="camera-yaw">
+      <div id="camera-pitch">
         <div id="camera-eye">
           <div id="camera" class="camera-node"></div>
         </div>
       </div>
     </div>
 
+    <!-- Crosshair -->
     <div id="crosshair">+</div>
 
     <!-- Inventory Hotbar -->
     <div id="inventory">
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
     </div>
 
     <!-- Full Inventory Panel -->
@@ -48,15 +41,11 @@
       <div id="inventory-wrapper">
         <div id="crafting-container">
           <div id="crafting-area" class="crafting-grid">
-            <div class="slot"></div>
-            <div class="slot"></div>
-            <div class="slot"></div>
-            <div class="slot"></div>
+            <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
           </div>
           <div id="crafting-arrow">➡️</div>
           <div id="crafting-result" class="slot"></div>
         </div>
-
         <div class="inventory-grid">
           <!-- 3 rows × 9 columns -->
           <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
@@ -67,7 +56,6 @@
     </div>
   </div>
 
-  <!-- Link to your JavaScript file, deferred -->
   <script src="script.js" defer></script>
 </body>
 </html>
