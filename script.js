@@ -1,4 +1,4 @@
-console.log("Script loaded!);
+console.log("Script loaded!");
 // === Game setup ===
 const playerModel = document.getElementById('player-model');
 const cameraYaw = document.getElementById('camera-yaw');
