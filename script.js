@@ -142,6 +142,41 @@ function generateFlatWorld() {
   console.log(`Generated ${chunkSize * chunkSize} blocks with faces in world.`);
 }
 
+// === Helper: Create character parts with faces ===
+function createPart(className) {
+  const part = document.createElement('div');
+  part.className = className; // e.g., 'torso', 'head', 'leg left', 'arm right'
+
+  const faces = ['front', 'back', 'left', 'right', 'top', 'bottom'];
+  faces.forEach(face => {
+    const faceDiv = document.createElement('div');
+    faceDiv.className = `face ${face}`;
+    part.appendChild(faceDiv);
+  });
+
+  return part;
+}
+
+// === Character creation ===
+function createCharacter() {
+  // Clear existing content in playerModel to avoid duplicates
+  playerModel.innerHTML = '';
+
+  const torso = createPart('torso');
+  const head = createPart('head');
+  const legLeft = createPart('leg left');
+  const legRight = createPart('leg right');
+  const armLeft = createPart('arm left');
+  const armRight = createPart('arm right');
+
+  playerModel.appendChild(torso);
+  playerModel.appendChild(head);
+  playerModel.appendChild(legLeft);
+  playerModel.appendChild(legRight);
+  playerModel.appendChild(armLeft);
+  playerModel.appendChild(armRight);
+}
+
 // === Animation loop ===
 function animate() {
   updatePlayerPosition();
@@ -151,4 +186,5 @@ function animate() {
 
 // === Start game ===
 generateFlatWorld();
+createCharacter();
 animate();
