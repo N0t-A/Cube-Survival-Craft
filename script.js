@@ -8,7 +8,7 @@ const world = document.getElementById('world');
 
 // === Player state ===
 let posX = 0;
-let posY = 840; // Ground level (inverted Y-axis)
+let posY = 980; // Ground level (inverted Y-axis)
 let posZ = 0;
 let yaw = 0;
 let pitch = 0;
