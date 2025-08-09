@@ -21,7 +21,7 @@ const speed = 2;
 // === Physics constants ===
 const gravity = 1.5;
 const jumpStrength = 70; // ~1 block height
-const groundY = 840;
+const groundY = 980;
 
 // Character vertical offset so feet align on ground
 const characterYOffset = 280; // Move character model up by 50px
