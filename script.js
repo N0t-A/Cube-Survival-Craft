@@ -8,7 +8,7 @@ const world = document.getElementById('world');
 
 // === Player state ===
 let posX = 0;
-let posY = -700; // Ground level (inverted Y-axis)
+let posY = 700; // Ground level (inverted Y-axis)
 let posZ = 0;
 let yaw = 0;
 let pitch = 0;
@@ -146,7 +146,7 @@ function generateFlatWorld() {
       block.className = 'grass block';
       const posX = x * blockSize;
       const posZ = z * blockSize;
-      const posY = groundY - 700;
+      const posY = groundY + 700;
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
 
       createBlockFaces(block);
