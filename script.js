@@ -21,7 +21,7 @@ const speed = 2;
 // === Physics constants ===
 const gravity = 1.5;       // Gravity acceleration (pixels/frame²)
 const jumpStrength = 70;   // Jump initial velocity (equals one block height)
-const groundY = -490;       // Ground level (same as in generateFlatWorld)
+const groundY = -700;       // Ground level (same as in generateFlatWorld)
 
 // Player vertical velocity and grounded state
 let velY = 0;
