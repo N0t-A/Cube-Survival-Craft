@@ -19,9 +19,9 @@ const keys = {};
 const speed = 2;
 
 // === Physics constants ===
-const gravity = 1.5;       // Gravity acceleration (pixels/frame²)
-const jumpStrength = 70;   // Jump initial velocity (equals one block height)
-const groundY = 840;       // Ground level (same as in generateFlatWorld)
+const gravity = 1.5;
+const jumpStrength = 70; // ~1 block height
+const groundY = 840;
 
 // Player vertical velocity and grounded state
 let velY = 0;
@@ -34,7 +34,7 @@ let lastPlayerTransform = '';
 // === Input handling ===
 document.body.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && grounded) {
-    velY = -jumpStrength;  // Negative velocity goes up (Y axis inverted)
+    velY = -jumpStrength; // Negative goes "up" (inverted Y-axis)
     grounded = false;
   }
   keys[e.key.toLowerCase()] = true;
@@ -61,7 +61,7 @@ function onMouseMove(e) {
   yaw += e.movementX * sensitivity;
   pitch -= e.movementY * sensitivity;
 
-  // Clamp pitch to avoid flipping
+  // Clamp pitch
   const maxPitch = 89;
   if (pitch > maxPitch) pitch = maxPitch;
   if (pitch < -maxPitch) pitch = -maxPitch;
@@ -69,7 +69,6 @@ function onMouseMove(e) {
 
 // === Update position based on input + gravity + jump + collision ===
 function updatePlayerPosition() {
-  // Horizontal movement
   let forward = 0;
   let right = 0;
 
@@ -85,11 +84,11 @@ function updatePlayerPosition() {
   posX += (forward * cos - right * sin) * speed;
   posZ += (forward * sin + right * cos) * speed;
 
-  // Vertical movement with gravity and jumping
+  // Gravity & jumping
   velY += gravity;
   posY += velY;
 
-  // Collision with ground
+  // Ground collision
   if (posY > groundY) {
     posY = groundY;
     velY = 0;
@@ -97,13 +96,21 @@ function updatePlayerPosition() {
   }
 }
 
-// === Apply transforms to DOM ===
+// === Apply transforms (3rd-person view) ===
 function updateTransforms() {
-  // Rotate the world to simulate camera rotation
+  // Offset camera behind and above the player
+  const cameraDistance = 200; // Distance behind player
+  const cameraHeight = eyeHeight + 50; // Slightly above head
+  const rad = yaw * (Math.PI / 180);
+
+  const camX = posX - Math.sin(rad) * cameraDistance;
+  const camZ = posZ - Math.cos(rad) * cameraDistance;
+  const camY = posY - cameraHeight;
+
   const sceneTransform = `
     rotateX(${pitch}deg)
     rotateY(${yaw}deg)
-    translate3d(${-posX}px, ${-posY}px, ${-posZ}px)
+    translate3d(${-camX}px, ${-camY}px, ${-camZ}px)
   `;
 
   const playerTransform = `
@@ -120,9 +127,6 @@ function updateTransforms() {
     playerModel.style.transform = playerTransform;
     lastPlayerTransform = playerTransform;
   }
-
-  // Camera eye stays fixed (eyes of player)
-  cameraEye.style.transform = `translate3d(0px, ${-eyeHeight}px, 0px)`;
 }
 
 // === Helper: Create faces inside a block element ===
@@ -146,11 +150,10 @@ function generateFlatWorld() {
       block.className = 'grass block';
       const posX = x * blockSize;
       const posZ = z * blockSize;
-      const posY = groundY + 840;
+      const posY = groundY + 840; // Might need adjusting if your terrain is offset
+
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
-
       createBlockFaces(block);
-
       world.appendChild(block);
     }
   }
