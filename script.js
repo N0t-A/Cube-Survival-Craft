@@ -8,7 +8,7 @@ const world = document.getElementById('world');
 
 // === Player state ===
 let posX = 0;
-let posY = 490; // 980 - 490 (move character up by 7 blocks)
+let posY = 490; // Character start Y (inverted Y-axis)
 let posZ = 0;
 let yaw = 0;
 let pitch = 0;
@@ -21,10 +21,9 @@ const speed = 2;
 // === Physics constants ===
 const gravity = 1.5;
 const jumpStrength = 70; // ~1 block height
-const groundY = 1540; // 1190 + 350 (move grass blocks down by 5 blocks)
 
 // Character vertical offset so feet align on ground
-const characterYOffset = 770; // 280 + 490 (offset character model up by 7 blocks)
+const characterYOffset = 770; // Offset character model up by 7 blocks
 
 // Player vertical velocity and grounded state
 let velY = 0;
@@ -33,6 +32,10 @@ let grounded = false;
 // === Memoized transforms (for performance) ===
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
+
+// === Block data for collision ===
+// Map keys are "x,z" strings, values are the top surface Y of the block
+const blockHeights = new Map();
 
 // === Input handling ===
 document.body.addEventListener('keydown', (e) => {
@@ -91,19 +94,37 @@ function updatePlayerPosition() {
   velY += gravity;
   posY += velY;
 
-  // Ground collision
-  if (posY > groundY) {
-    posY = groundY;
-    velY = 0;
-    grounded = true;
+  // Collision check with blocks below player:
+  // Convert player's X,Z to block grid coords (assuming blockSize = 70)
+  const blockSize = 70;
+  const blockX = Math.floor(posX / blockSize);
+  const blockZ = Math.floor(posZ / blockSize);
+
+  // Get block surface Y at player pos
+  const key = `${blockX},${blockZ}`;
+  const blockSurfaceY = blockHeights.get(key);
+
+  if (blockSurfaceY !== undefined) {
+    // Stop falling if player feet would go below block surface
+    const playerFeetY = posY - characterYOffset; // Y position of feet
+
+    if (playerFeetY > blockSurfaceY) {
+      posY = blockSurfaceY + characterYOffset; // Reset player Y to stand on block
+      velY = 0;
+      grounded = true;
+    } else {
+      grounded = false;
+    }
+  } else {
+    // No block below - falling
+    grounded = false;
   }
 }
 
 // === Apply transforms (3rd-person view) ===
 function updateTransforms() {
-  // Offset camera behind and above the player
-  const cameraDistance = 200; // Distance behind player
-  const cameraHeight = eyeHeight + 50; // Slightly above head
+  const cameraDistance = 200;
+  const cameraHeight = eyeHeight + 50;
   const rad = yaw * (Math.PI / 180);
 
   const camX = posX - Math.sin(rad) * cameraDistance;
@@ -146,6 +167,7 @@ function createBlockFaces(block) {
 function generateFlatWorld() {
   const chunkSize = 10;
   const blockSize = 70;
+  const grassY = 1540; // Grass blocks Y (5 blocks down)
 
   for (let x = 0; x < chunkSize; x++) {
     for (let z = 0; z < chunkSize; z++) {
@@ -153,11 +175,16 @@ function generateFlatWorld() {
       block.className = 'grass block';
       const posX = x * blockSize;
       const posZ = z * blockSize;
-      const posY = groundY;
+      const posY = grassY;
 
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
       createBlockFaces(block);
       world.appendChild(block);
+
+      // Store block top surface in map for collision (top of block = posY)
+      // Since your Y axis is inverted, smaller posY means higher elevation
+      // But here, posY is the top surface Y coordinate.
+      blockHeights.set(`${x},${z}`, posY);
     }
   }
 }
