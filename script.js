@@ -8,7 +8,7 @@ const world = document.getElementById('world');
 
 // === Player state ===
 let posX = 0;
-let posY = 700; // Ground level (inverted Y-axis)
+let posY = 840; // Ground level (inverted Y-axis)
 let posZ = 0;
 let yaw = 0;
 let pitch = 0;
@@ -21,7 +21,7 @@ const speed = 2;
 // === Physics constants ===
 const gravity = 1.5;       // Gravity acceleration (pixels/frame²)
 const jumpStrength = 70;   // Jump initial velocity (equals one block height)
-const groundY = -700;       // Ground level (same as in generateFlatWorld)
+const groundY = 840;       // Ground level (same as in generateFlatWorld)
 
 // Player vertical velocity and grounded state
 let velY = 0;
@@ -146,7 +146,7 @@ function generateFlatWorld() {
       block.className = 'grass block';
       const posX = x * blockSize;
       const posZ = z * blockSize;
-      const posY = groundY + 700;
+      const posY = groundY + 840;
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
 
       createBlockFaces(block);
