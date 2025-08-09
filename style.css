@@ -78,6 +78,7 @@ body {
   position: absolute;
   transform-style: preserve-3d;
   transform-origin: bottom center;
+  z-index: 10;
 }
 
 
