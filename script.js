@@ -146,7 +146,7 @@ function generateFlatWorld() {
       block.className = 'grass block';
       const posX = x * blockSize;
       const posZ = z * blockSize;
-      const posY = groundY - 700;
+      const posY = groundY;
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
 
       createBlockFaces(block);
