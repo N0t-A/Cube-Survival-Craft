@@ -8,7 +8,7 @@ const world = document.getElementById('world');
 
 // === Player state ===
 let posX = 0;
-let posY = 770; // Ground level (inverted Y-axis)
+let posY = 840; // Ground level (inverted Y-axis)
 let posZ = 0;
 let yaw = 0;
 let pitch = 0;
@@ -22,6 +22,9 @@ const speed = 2;
 const gravity = 1.5;
 const jumpStrength = 70; // ~1 block height
 const groundY = 840;
+
+// Character vertical offset so feet align on ground
+const characterYOffset = -50; // Move character model up by 50px
 
 // Player vertical velocity and grounded state
 let velY = 0;
@@ -114,7 +117,7 @@ function updateTransforms() {
   `;
 
   const playerTransform = `
-    translate3d(${posX}px, ${posY}px, ${posZ}px)
+    translate3d(${posX}px, ${posY + characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
 
