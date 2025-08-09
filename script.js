@@ -6,13 +6,6 @@ const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
-// Debugging: Check if 'world' element is found
-console.log('world div:', world);
-
-if (!world) {
-  console.error('Error: world element not found!');
-}
-
 // === Player state ===
 let posX = 0;
 let posY = -210; // Ground level (inverted Y-axis)
