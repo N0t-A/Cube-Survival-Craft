@@ -12,8 +12,8 @@ body {
 }
 
 #game-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100v%;
   transform-style: preserve-3d;
   position: relative;
   perspective: 800px;
