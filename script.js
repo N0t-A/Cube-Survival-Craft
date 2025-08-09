@@ -117,7 +117,7 @@ function updateTransforms() {
   `;
 
   const playerTransform = `
-    translate3d(${posX}px, ${posY + characterYOffset}px, ${posZ}px)
+    translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
 
