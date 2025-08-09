@@ -150,13 +150,40 @@ function generateFlatWorld() {
       block.className = 'grass block';
       const posX = x * blockSize;
       const posZ = z * blockSize;
-      const posY = groundY + 840; // Might need adjusting if your terrain is offset
+      const posY = groundY;
 
       block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
       createBlockFaces(block);
       world.appendChild(block);
     }
   }
+}
+
+// === Character creation (CSS-based) ===
+function createCharacter() {
+  playerModel.innerHTML = ''; // Clear previous
+
+  const parts = [
+    { className: 'torso' },
+    { className: 'head' },
+    { className: 'arm left' },
+    { className: 'arm right' },
+    { className: 'leg left' },
+    { className: 'leg right' },
+  ];
+
+  parts.forEach(({ className }) => {
+    const part = document.createElement('div');
+    part.className = `part ${className}`;
+
+    ['front', 'back', 'left', 'right', 'top', 'bottom'].forEach(face => {
+      const faceDiv = document.createElement('div');
+      faceDiv.className = `face ${face}`;
+      part.appendChild(faceDiv);
+    });
+
+    playerModel.appendChild(part);
+  });
 }
 
 // === Animation loop ===
@@ -168,4 +195,5 @@ function animate() {
 
 // === Start game ===
 generateFlatWorld();
+createCharacter();
 animate();
