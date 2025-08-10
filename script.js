@@ -24,7 +24,7 @@ const jumpStrength = 70; // ~1 block height
 const groundY = 1190;
 
 // Character vertical offset so feet align on ground
-const characterYOffset = 420; // Move character model up by 50px
+const characterYOffset = 1190; // Move character model up by 50px
 
 // Player vertical velocity and grounded state
 let velY = 0;
