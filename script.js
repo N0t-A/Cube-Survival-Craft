@@ -6,190 +6,224 @@ const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
+console.log('script start, DOM refs ok?', !!world, !!scene, !!playerModel);
+
+// === Config / constants ===
+const BLOCK_SIZE = 70;         // px per block
+const CHUNK_SIZE_X = 10;       // width in blocks
+const CHUNK_SIZE_Z = 10;       // depth in blocks
+const STONE_LAYERS = 80;       // how many stone layers under the surface
+const BASE_GROUND_Y = 1260;    // base pixel Y of the grass/top layer (your existing groundY)
+const groundY = BASE_GROUND_Y; // top-surface Y of layer 0 (pixel)
+const eyeHeight = 120;
+
 // === Player state ===
 let posX = 0;
-let posY = 0; // Ground level (inverted Y-axis)
+let posY = groundY - 280; // default: place feet at ground (pixel) => posY = surface + character offset; we use offset below
 let posZ = 0;
-let yaw = 0;
-let pitch = 0;
-const eyeHeight = 120; // Camera height above feet (in pixels)
+let yaw = 0, pitch = 0;
 
-// === Movement state ===
+// character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
+const characterYOffset = 280; // pixels (so model origin is posY - characterYOffset)
+posY = groundY + 0 * BLOCK_SIZE + characterYOffset; // ensure model starts standing on top layer
+
+// === Movement / physics ===
 const keys = {};
 const speed = 2;
-
-// === Physics constants ===
 const gravity = 1.5;
-const jumpStrength = 70; // ~1 block height
-const groundY = 1260;
-
-// Character vertical offset so feet align on ground
-const characterYOffset = 1190; // Move character model up by 50px
-
-// Player vertical velocity and grounded state
+const jumpStrength = 70;
 let velY = 0;
 let grounded = false;
 
-// === Memoized transforms (for performance) ===
+// memoized transforms
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
 
+// === World data structure ===
+// worldData keyed by "gx,gy,gz" where gx,gz in [0..CHUNK_SIZE-1], gy in [0..STONE_LAYERS-1]
+// value is string: 'grass','dirt','stone','coal-ore', etc.
+const worldData = new Map();
+
+// helper to build map key
+function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
+
 // === Input handling ===
 document.body.addEventListener('keydown', (e) => {
+  keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && grounded) {
-    velY = -jumpStrength; // Negative goes "up" (inverted Y-axis)
+    velY = -jumpStrength; // negative goes up in your inverted-y system
     grounded = false;
   }
-  keys[e.key.toLowerCase()] = true;
 });
 document.body.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
 
-// === Pointer lock + mouse look ===
+// pointer lock + mouse look
 document.body.addEventListener('click', () => {
   document.body.requestPointerLock();
 });
-
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     document.addEventListener('mousemove', onMouseMove);
+    console.log('pointer locked');
   } else {
     document.removeEventListener('mousemove', onMouseMove);
+    console.log('pointer unlocked');
   }
 });
-
 function onMouseMove(e) {
   const sensitivity = 0.1;
   yaw += e.movementX * sensitivity;
   pitch -= e.movementY * sensitivity;
-
-  // Clamp pitch
   const maxPitch = 89;
   if (pitch > maxPitch) pitch = maxPitch;
   if (pitch < -maxPitch) pitch = -maxPitch;
 }
 
-// === Update position based on input + gravity + jump + collision ===
-function updatePlayerPosition() {
-  let forward = 0;
-  let right = 0;
+// === Block DOM creation helpers ===
+function createBlockElement(gx, gy, gz, type, exposedFaces) {
+  const el = document.createElement('div');
+  el.className = `block ${type}`; // e.g. "block grass" or "block coal-ore"
+  const px = gx * BLOCK_SIZE;
+  const pz = gz * BLOCK_SIZE;
+  const py = groundY + gy * BLOCK_SIZE; // pixel Y (inverted axis: larger Y = lower on screen)
+  el.style.transform = `translate3d(${px}px, ${py}px, ${pz}px)`;
 
-  if (keys['w']) forward += 1;
-  if (keys['s']) forward -= 1;
-  if (keys['d']) right += 1;
-  if (keys['a']) right -= 1;
-
-  const rad = yaw * (Math.PI / 180);
-  const sin = Math.sin(rad);
-  const cos = Math.cos(rad);
-
-  posX += (forward * cos - right * sin) * speed;
-  posZ += (forward * sin + right * cos) * speed;
-
-  // Gravity & jumping
-  velY += gravity;
-  posY += velY;
-
-  // Collision with blocks under player
-  // Find block top surface under player at current posX, posZ
-  const blockSize = 70;
-  const chunkSize = 10; // same as terrain generation
-
-  // Calculate player block coords (floor to integer)
-  const blockX = Math.floor(posX / blockSize);
-  const blockZ = Math.floor(posZ / blockSize);
-
-  // Only check collision if inside the chunk bounds
-  if (blockX >= 0 && blockX < chunkSize && blockZ >= 0 && blockZ < chunkSize) {
-    // Terrain surface top Y at that block (groundY is top of grass)
-    // If you have multi-layer terrain, you might want to store block layers in a data structure for accurate collision
-    // For now, assume flat ground at groundY
-    const blockSurfaceY = groundY; 
-
-    const playerFeetY = posY - characterYOffset;
-
-    // Because Y axis inverted: smaller Y means higher elevation
-    if (playerFeetY < blockSurfaceY) { // player is below block surface
-      posY = blockSurfaceY + characterYOffset; // snap player up on block
-      velY = 0;
-      grounded = true;
-    } else {
-      grounded = false;
-    }
-  } else {
-    // Outside chunk bounds, apply normal ground collision fallback
-    if (posY > groundY) {
-      posY = groundY;
-      velY = 0;
-      grounded = true;
-    } else {
-      grounded = false;
-    }
+  for (const face of exposedFaces) {
+    const faceEl = document.createElement('div');
+    faceEl.className = `face ${face}`;
+    el.appendChild(faceEl);
   }
+  return el;
 }
 
-// === Apply transforms (3rd-person view) ===
-function updateTransforms() {
-  // Offset camera behind and above the player
-  const cameraDistance = 200; // Distance behind player
-  const cameraHeight = eyeHeight + 50; // Slightly above head
-  const rad = yaw * (Math.PI / 180);
-
-  const camX = posX - Math.sin(rad) * cameraDistance;
-  const camZ = posZ - Math.cos(rad) * cameraDistance;
-  const camY = posY - cameraHeight;
-
-  const sceneTransform = `
-    rotateX(${pitch}deg)
-    rotateY(${yaw}deg)
-    translate3d(${-camX}px, ${-camY}px, ${-camZ}px)
-  `;
-
-  const playerTransform = `
-    translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
-    rotateY(${yaw}deg)
-  `;
-
-  if (sceneTransform !== lastSceneTransform) {
-    scene.style.transform = sceneTransform;
-    lastSceneTransform = sceneTransform;
+// === Face culling: check neighbor existence in worldData by grid coords
+function getExposedFacesFor(gx, gy, gz) {
+  const neighbors = [
+    {dx: 0, dy: -1, dz: 0, name: 'top'},     // above in grid (smaller pixel Y)
+    {dx: 0, dy: 1, dz: 0, name: 'bottom'},   // below
+    {dx: 0, dy: 0, dz: -1, name: 'front'},
+    {dx: 0, dy: 0, dz: 1, name: 'back'},
+    {dx: -1, dy: 0, dz: 0, name: 'left'},
+    {dx: 1, dy: 0, dz: 0, name: 'right'},
+  ];
+  const faces = [];
+  for (const n of neighbors) {
+    const nk = keyAt(gx + n.dx, gy + n.dy, gz + n.dz);
+    if (!worldData.has(nk)) faces.push(n.name);
   }
-
-  if (playerTransform !== lastPlayerTransform) {
-    playerModel.style.transform = playerTransform;
-    lastPlayerTransform = playerTransform;
-  }
+  return faces;
 }
 
-// === Helper: Create faces inside a block element ===
-function createBlockFaces(block) {
-  const faces = ['top', 'front', 'right', 'back', 'left', 'bottom'];
-  faces.forEach(face => {
-    const faceDiv = document.createElement('div');
-    faceDiv.className = `face ${face}`;
-    block.appendChild(faceDiv);
-  });
-}
+// === Ore vein generator (random-walk)
+function generateVein(startGX, startGY, startGZ, size, type) {
+  const placed = [];
+  const stack = [{x: startGX, y: startGY, z: startGZ}];
+  const visited = new Set();
+  while (stack.length > 0 && placed.length < size) {
+    const idx = Math.floor(Math.random() * stack.length);
+    const cur = stack.splice(idx,1)[0];
+    const k = keyAt(cur.x, cur.y, cur.z);
+    if (visited.has(k)) continue;
+    visited.add(k);
 
-// === Terrain generation ===
-function generateFlatWorld() {
-  const chunkSize = 10;
-  const blockSize = 70;
+    // only replace stone positions (so we don't overwrite grass/dirt)
+    const existing = worldData.get(k);
+    if (existing === 'stone') {
+      worldData.set(k, type);
+      placed.push({x: cur.x, y: cur.y, z: cur.z});
+    }
 
-  for (let x = 0; x < chunkSize; x++) {
-    for (let z = 0; z < chunkSize; z++) {
-      const block = document.createElement('div');
-      block.className = 'grass block';
-      const posX = x * blockSize;
-      const posZ = z * blockSize;
-      const posY = groundY;
-
-      block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
-      createBlockFaces(block);
-      world.appendChild(block);
+    // push neighbors with some bias
+    const neighbors = [
+      {x:cur.x+1,y:cur.y,z:cur.z},
+      {x:cur.x-1,y:cur.y,z:cur.z},
+      {x:cur.x,y:cur.y+1,z:cur.z},
+      {x:cur.x,y:cur.y-1,z:cur.z},
+      {x:cur.x,y:cur.y,z:cur.z+1},
+      {x:cur.x,y:cur.y,z:cur.z-1},
+    ];
+    for (const n of neighbors) {
+      // bounds check
+      if (n.x < 0 || n.x >= CHUNK_SIZE_X || n.z < 0 || n.z >= CHUNK_SIZE_Z || n.y < 0 || n.y >= STONE_LAYERS) continue;
+      if (!visited.has(keyAt(n.x,n.y,n.z)) && Math.random() < 0.9) {
+        stack.push(n);
+      }
     }
   }
+  return placed;
+}
+
+// === Full multi-layer terrain generation (replaces generateFlatWorld) ===
+function generateMultiLayerWorld() {
+  world.innerHTML = '';
+  worldData.clear();
+
+  const chunkX = CHUNK_SIZE_X;
+  const chunkZ = CHUNK_SIZE_Z;
+
+  // For each column (gx,gz) generate top grass, random 2-3 dirt layers, then stone down to STONE_LAYERS
+  for (let gx = 0; gx < chunkX; gx++) {
+    for (let gz = 0; gz < chunkZ; gz++) {
+      const dirtLayers = Math.floor(Math.random() * 2) + 2; // 2 or 3
+      // layer 0 = grass
+      worldData.set(keyAt(gx, 0, gz), 'grass');
+
+      // dirt layers 1..dirtLayers
+      for (let y = 1; y <= dirtLayers; y++) {
+        worldData.set(keyAt(gx, y, gz), 'dirt');
+      }
+
+      // stone layers from dirtLayers+1 up to STONE_LAYERS-1
+      for (let y = dirtLayers + 1; y < STONE_LAYERS; y++) {
+        worldData.set(keyAt(gx, y, gz), 'stone');
+      }
+    }
+  }
+
+  // --- ORE GENERATION PARAMETERS (grid layer indices) ---
+  // note: user gave depths in "blocks deep" from surface; since layer 0 is surface,
+  // depth range [minDepth .. maxDepth] maps to layer index range [minDepth .. maxDepth]
+  const ores = [
+    { name: 'coal-ore',   minD: 1,  maxD: 15, veins: 2, size: 15 },
+    { name: 'copper-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
+    { name: 'tin-ore',    minD: 10, maxD: 20, veins: 2, size: 10 },
+    { name: 'iron-ore',   minD: 20, maxD: 35, veins: 2, size: 7  },
+    { name: 'diamond-ore',minD: 35, maxD: 50, veins: 1, size: 4  },
+    { name: 'amber-ore',  minD: 50, maxD: 80, veins: 1, size: 1  },
+    { name: 'ruby-ore',   minD: 50, maxD: 80, veins: 1, size: 1  },
+  ];
+
+  // generate veins for each ore in order (higher-priority ores later to override)
+  for (const ore of ores) {
+    for (let v = 0; v < ore.veins; v++) {
+      // choose random starting position within chunk and depth range
+      const gx = Math.floor(Math.random() * chunkX);
+      const gz = Math.floor(Math.random() * chunkZ);
+      // clamp depth to bounds and STONE_LAYERS
+      const minLayer = Math.max(1, ore.minD);
+      const maxLayer = Math.min(STONE_LAYERS - 1, ore.maxD);
+      if (minLayer > maxLayer) continue;
+      const gy = Math.floor(minLayer + Math.random() * (maxLayer - minLayer + 1));
+      // create vein by random walk
+      generateVein(gx, gy, gz, ore.size, ore.name);
+    }
+  }
+
+  // --- Create DOM blocks but only for exposed faces ---
+  let created = 0;
+  for (const [k, type] of worldData.entries()) {
+    // parse coords
+    const [gx, gy, gz] = k.split(',').map(Number);
+    const exposed = getExposedFacesFor(gx, gy, gz);
+    if (exposed.length === 0) continue; // fully enclosed, skip creating DOM element
+    const el = createBlockElement(gx, gy, gz, type, exposed);
+    world.appendChild(el);
+    created++;
+  }
+
+  console.log('generateMultiLayerWorld: worldData size', worldData.size, 'created DOM blocks', created);
 }
 
 // === Character creation (CSS-based) ===
@@ -219,14 +253,101 @@ function createCharacter() {
   });
 }
 
-// === Animation loop ===
+// === Collision helper (sample): get highest block top surface under player's grid cell
+function getTopSurfaceYUnderPlayer() {
+  const gx = Math.floor(posX / BLOCK_SIZE);
+  const gz = Math.floor(posZ / BLOCK_SIZE);
+  // iterate layers from top (0) downwards to find the first existing block
+  for (let gy = 0; gy < STONE_LAYERS; gy++) {
+    if (worldData.has(keyAt(gx, gy, gz))) {
+      // pixel Y of that layer's top surface (we treat block at layer gy as occupying its top)
+      return groundY + gy * BLOCK_SIZE;
+    }
+  }
+  return undefined;
+}
+
+// === Movement & collision update (uses block-based surface check) ===
+function updatePlayerPosition() {
+  // horizontal movement
+  let forward = 0, right = 0;
+  if (keys['w']) forward += 1;
+  if (keys['s']) forward -= 1;
+  if (keys['d']) right += 1;
+  if (keys['a']) right -= 1;
+  const rad = yaw * Math.PI / 180;
+  posX += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
+  posZ += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
+
+  // vertical
+  velY += gravity;
+  posY += velY;
+
+  // check block under player's grid cell
+  const surface = getTopSurfaceYUnderPlayer();
+  const playerFeetY = posY - characterYOffset;
+
+  if (surface !== undefined) {
+    // inverted-Y: smaller pixel Y = higher. If player's feet are above (smaller) than surface, they are above ground.
+    // We want to prevent feet going below surface (i.e. playerFeetY should not be > surface).
+    // If playerFeetY > surface => feet lower than surface (fell through) -> snap up.
+    if (playerFeetY > surface) {
+      posY = surface + characterYOffset;
+      velY = 0;
+      grounded = true;
+    } else {
+      grounded = false;
+    }
+  } else {
+    // nothing under player in chunk => fallback to base ground clamp
+    if (posY > groundY + STONE_LAYERS * BLOCK_SIZE) {
+      posY = groundY + STONE_LAYERS * BLOCK_SIZE;
+      velY = 0;
+      grounded = true;
+    } else {
+      grounded = false;
+    }
+  }
+}
+
+// === Transforms ===
+function updateTransforms() {
+  // camera (3rd-person debug)
+  const cameraDistance = 200;
+  const cameraHeight = eyeHeight + 50;
+  const rad = yaw * Math.PI / 180;
+  const camX = posX - Math.sin(rad) * cameraDistance;
+  const camZ = posZ - Math.cos(rad) * cameraDistance;
+  const camY = posY - cameraHeight;
+
+  const sceneTransform = `
+    rotateX(${pitch}deg)
+    rotateY(${yaw}deg)
+    translate3d(${-camX}px, ${-camY}px, ${-camZ}px)
+  `;
+  const playerTransform = `
+    translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
+    rotateY(${yaw}deg)
+  `;
+  if (sceneTransform !== lastSceneTransform) {
+    scene.style.transform = sceneTransform;
+    lastSceneTransform = sceneTransform;
+  }
+  if (playerTransform !== lastPlayerTransform) {
+    playerModel.style.transform = playerTransform;
+    lastPlayerTransform = playerTransform;
+  }
+}
+
+// === Game loop ===
 function animate() {
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
 }
 
-// === Start game ===
-generateFlatWorld();
+// === Start ===
+generateMultiLayerWorld();
 createCharacter();
+console.log('World generated. posY start:', posY, 'groundY:', groundY);
 animate();
