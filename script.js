@@ -66,10 +66,10 @@ document.body.addEventListener('click', () => {
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     document.addEventListener('mousemove', onMouseMove);
-    console.log('pointer lock on');
+    console.log('pointer lock ON');
   } else {
     document.removeEventListener('mousemove', onMouseMove);
-    console.log('pointer lock off');
+    console.log('pointer lock OFF');
   }
 });
 function onMouseMove(e) {
@@ -196,12 +196,15 @@ function generateMultiLayerWorld() {
   // generate veins for each ore in order (higher-priority ores later to override)
   for (const ore of ores) {
     for (let v = 0; v < ore.veins; v++) {
+      // choose random starting position within chunk and depth range
       const gx = Math.floor(Math.random() * chunkX);
       const gz = Math.floor(Math.random() * chunkZ);
+      // clamp depth to bounds and STONE_LAYERS
       const minLayer = Math.max(1, ore.minD);
       const maxLayer = Math.min(STONE_LAYERS - 1, ore.maxD);
       if (minLayer > maxLayer) continue;
       const gy = Math.floor(minLayer + Math.random() * (maxLayer - minLayer + 1));
+      // create vein by random walk
       generateVein(gx, gy, gz, ore.size, ore.name);
     }
   }
@@ -209,9 +212,10 @@ function generateMultiLayerWorld() {
   // --- Create DOM blocks but only for exposed faces ---
   let created = 0;
   for (const [k, type] of worldData.entries()) {
+    // parse coords
     const [gx, gy, gz] = k.split(',').map(Number);
     const exposed = getExposedFacesFor(gx, gy, gz);
-    if (exposed.length === 0) continue;
+    if (exposed.length === 0) continue; // fully enclosed, skip creating DOM element
     const el = createBlockElement(gx, gy, gz, type, exposed);
     world.appendChild(el);
     created++;
@@ -222,7 +226,7 @@ function generateMultiLayerWorld() {
 
 // === Character creation (CSS-based) ===
 function createCharacter() {
-  playerModel.innerHTML = '';
+  playerModel.innerHTML = ''; // Clear previous
 
   const parts = [
     { className: 'torso' },
@@ -247,33 +251,37 @@ function createCharacter() {
   });
 }
 
-// === Collision helper ===
+// === Collision helper: get highest block top surface under player's grid cell
 function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
+  // iterate layers from top (0) downwards to find the first existing block
   for (let gy = 0; gy < STONE_LAYERS; gy++) {
     if (worldData.has(keyAt(gx, gy, gz))) {
+      // pixel Y of that layer's top surface (we treat block at layer gy as occupying its top)
       return groundY + gy * BLOCK_SIZE;
     }
   }
   return undefined;
 }
 
-// === Movement & collision update ===
+// === Movement & collision update (uses block-based surface check) ===
 function updatePlayerPosition() {
+  // horizontal movement
   let forward = 0, right = 0;
   if (keys['w']) forward += 1;
   if (keys['s']) forward -= 1;
   if (keys['d']) right += 1;
   if (keys['a']) right -= 1;
-
   const rad = yaw * Math.PI / 180;
   posX += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
   posZ += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
 
+  // vertical
   velY += gravity;
   posY += velY;
 
+  // check block under player's grid cell
   const surface = getTopSurfaceYUnderPlayer();
   const playerFeetY = posY - characterYOffset;
 
@@ -286,6 +294,7 @@ function updatePlayerPosition() {
       grounded = false;
     }
   } else {
+    // fallback clamp in case no blocks under player
     if (posY > groundY + STONE_LAYERS * BLOCK_SIZE) {
       posY = groundY + STONE_LAYERS * BLOCK_SIZE;
       velY = 0;
@@ -304,10 +313,11 @@ function updateTransforms() {
   const camX = posX - Math.sin(rad) * cameraDistance;
   const camZ = posZ - Math.cos(rad) * cameraDistance;
 
-  // FIXED: add cameraHeight instead of subtracting it (inverted Y axis)
-  const camY = posY + cameraHeight;
+  // Correct camY for inverted Y axis (subtract to go *up*)
+  const camY = posY - cameraHeight;
 
-  console.log(`posY: ${posY}, camY: ${camY}`);
+  // Debug info to console:
+  console.log(`posY: ${posY}, cameraHeight: ${cameraHeight}, camY: ${camY}`);
 
   const sceneTransform = `
     rotateX(${pitch}deg)
