@@ -6,68 +6,47 @@ const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
-console.log('Script loaded. DOM refs ok?', !!world, !!scene, !!playerModel);
-
-// === Config / constants ===
-const BLOCK_SIZE = 70;                 // pixels per block
-const CHUNK_SIZE = 10;                 // 10x10 chunk used in generation
-
-// Base positions you had earlier (kept for reference)
-const BASE_GROUND_Y = 1190;            // original groundY baseline (pixels)
-const BASE_PLAYER_Y = 980;             // original player posY baseline (pixels)
-
-// How many blocks to shift (user request)
-/* Move grass down by 5 blocks, move player up by 7 blocks */
-const GRASS_MOVE_DOWN_BLOCKS = 5;
-const CHARACTER_MOVE_UP_BLOCKS = 7;
-
-// compute actual positions in pixels from blocks
-const groundY = BASE_GROUND_Y + GRASS_MOVE_DOWN_BLOCKS * BLOCK_SIZE;     // grass blocks Y
+// === Player state ===
 let posX = 0;
-let posY = BASE_PLAYER_Y - CHARACTER_MOVE_UP_BLOCKS * BLOCK_SIZE;        // player Y (moved up)
+let posY = 980; // Ground level (inverted Y-axis)
 let posZ = 0;
-
-console.log('BLOCK_SIZE', BLOCK_SIZE, 'groundY', groundY, 'initial posY', posY);
-
 let yaw = 0;
 let pitch = 0;
-const eyeHeight = 120; // camera eye offset
+const eyeHeight = 120; // Camera height above feet (in pixels)
 
-// Movement + physics
+// === Movement state ===
 const keys = {};
 const speed = 2;
-const gravity = 1.5;       // positive moves down (inverted Y)
-const jumpStrength = 70;   // how strong a jump is (pixels) — 70 is ~1 block
 
-// character model offset — distance from posY to where model is drawn (feet vs model origin)
-// Keep this as your model's designed offset. Modify if model appears misaligned.
-let characterYOffset = 280; // existing value; you can tweak if required
+// === Physics constants ===
+const gravity = 1.5;
+const jumpStrength = 70; // ~1 block height
+const groundY = 1190;
 
-// Player vertical state
+// Character vertical offset so feet align on ground
+const characterYOffset = 280; // Move character model up by 50px
+
+// Player vertical velocity and grounded state
 let velY = 0;
 let grounded = false;
 
-// Memoized transforms
+// === Memoized transforms (for performance) ===
 let lastSceneTransform = '';
 let lastPlayerTransform = '';
 
-// Map to track top surface Y for each grid cell (x,z) -> top Y in pixels
-// key = `${gridX},${gridZ}`
-const blockHeights = new Map();
-
-// --- Input handlers ---
+// === Input handling ===
 document.body.addEventListener('keydown', (e) => {
-  keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && grounded) {
-    velY = -jumpStrength; // negative goes 'up' in your inverted system
+    velY = -jumpStrength; // Negative goes "up" (inverted Y-axis)
     grounded = false;
   }
+  keys[e.key.toLowerCase()] = true;
 });
 document.body.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
 
-// pointer lock & mouse look
+// === Pointer lock + mouse look ===
 document.body.addEventListener('click', () => {
   document.body.requestPointerLock();
 });
@@ -75,10 +54,8 @@ document.body.addEventListener('click', () => {
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     document.addEventListener('mousemove', onMouseMove);
-    console.log('pointer locked, mousemove attached');
   } else {
     document.removeEventListener('mousemove', onMouseMove);
-    console.log('pointer unlocked, mousemove removed');
   }
 });
 
@@ -86,97 +63,62 @@ function onMouseMove(e) {
   const sensitivity = 0.1;
   yaw += e.movementX * sensitivity;
   pitch -= e.movementY * sensitivity;
+
+  // Clamp pitch
   const maxPitch = 89;
   if (pitch > maxPitch) pitch = maxPitch;
   if (pitch < -maxPitch) pitch = -maxPitch;
 }
 
-// --- Helper: create faces inside a block element ---
-function createBlockFaces(block) {
-  const faces = ['top', 'front', 'right', 'back', 'left', 'bottom'];
-  faces.forEach(face => {
-    const faceDiv = document.createElement('div');
-    faceDiv.className = `face ${face}`;
-    block.appendChild(faceDiv);
-  });
-}
-
-// --- Terrain generation (flat chunk) ---
-// This fills world div and populates blockHeights map
-function generateFlatWorld() {
-  world.innerHTML = '';            // clear existing to avoid duplicates
-  blockHeights.clear();
-
-  for (let gx = 0; gx < CHUNK_SIZE; gx++) {
-    for (let gz = 0; gz < CHUNK_SIZE; gz++) {
-      const block = document.createElement('div');
-      block.className = 'grass block'; // CSS expects 'grass.block' styling
-      const px = gx * BLOCK_SIZE;
-      const pz = gz * BLOCK_SIZE;
-      const py = groundY;             // top-surface Y of the grass block
-
-      block.style.transform = `translate3d(${px}px, ${py}px, ${pz}px)`;
-      createBlockFaces(block);
-      world.appendChild(block);
-
-      // store the top-surface Y for this grid cell
-      blockHeights.set(`${gx},${gz}`, py);
-    }
-  }
-
-  console.log('generateFlatWorld: placed', CHUNK_SIZE * CHUNK_SIZE, 'grass blocks');
-  console.log('sample blockHeights[0,0] =', blockHeights.get('0,0'));
-}
-
-// --- Collision: find highest block surface under the player at their current posX,posZ ---
-// returns topSurfaceY (pixels) or undefined if no block in that cell
-function getBlockSurfaceAtPlayer() {
-  // convert world coordinates to grid coordinates (integer cell)
-  const gridX = Math.floor(posX / BLOCK_SIZE);
-  const gridZ = Math.floor(posZ / BLOCK_SIZE);
-  const key = `${gridX},${gridZ}`;
-  return blockHeights.get(key);
-}
-
-// --- Update position (movement + gravity + collision) ---
+// === Update position based on input + gravity + jump + collision ===
 function updatePlayerPosition() {
-  // horizontal movement
-  let forward = 0, right = 0;
+  let forward = 0;
+  let right = 0;
+
   if (keys['w']) forward += 1;
   if (keys['s']) forward -= 1;
   if (keys['d']) right += 1;
   if (keys['a']) right -= 1;
 
-  const rad = yaw * Math.PI / 180;
-  const sin = Math.sin(rad), cos = Math.cos(rad);
+  const rad = yaw * (Math.PI / 180);
+  const sin = Math.sin(rad);
+  const cos = Math.cos(rad);
+
   posX += (forward * cos - right * sin) * speed;
   posZ += (forward * sin + right * cos) * speed;
 
-  // vertical (gravity)
+  // Gravity & jumping
   velY += gravity;
   posY += velY;
 
-  // collision with actual block under player
-  const surfaceY = getBlockSurfaceAtPlayer();
+  // Collision with blocks under player
+  // Find block top surface under player at current posX, posZ
+  const blockSize = 70;
+  const chunkSize = 10; // same as terrain generation
 
-  // player's feet Y position in world coords
-  const playerFeetY = posY - characterYOffset;
+  // Calculate player block coords (floor to integer)
+  const blockX = Math.floor(posX / blockSize);
+  const blockZ = Math.floor(posZ / blockSize);
 
-  if (surfaceY !== undefined) {
-    // Because your Y is inverted (larger Y = lower on screen),
-    // if playerFeetY is *less than* surfaceY, the feet are below the block top (fell through)
-    if (playerFeetY < surfaceY) {
-      // snap the player up so feet sit exactly at the surface
-      posY = surfaceY + characterYOffset;
+  // Only check collision if inside the chunk bounds
+  if (blockX >= 0 && blockX < chunkSize && blockZ >= 0 && blockZ < chunkSize) {
+    // Terrain surface top Y at that block (groundY is top of grass)
+    // If you have multi-layer terrain, you might want to store block layers in a data structure for accurate collision
+    // For now, assume flat ground at groundY
+    const blockSurfaceY = groundY; 
+
+    const playerFeetY = posY - characterYOffset;
+
+    // Because Y axis inverted: smaller Y means higher elevation
+    if (playerFeetY < blockSurfaceY) { // player is below block surface
+      posY = blockSurfaceY + characterYOffset; // snap player up on block
       velY = 0;
       grounded = true;
-      // debug
-      // console.log('snapped to block at', surfaceY, 'playerFeetY now', posY - characterYOffset);
     } else {
       grounded = false;
     }
   } else {
-    // no block under player (outside chunk) => fallback floor collision
+    // Outside chunk bounds, apply normal ground collision fallback
     if (posY > groundY) {
       posY = groundY;
       velY = 0;
@@ -187,12 +129,12 @@ function updatePlayerPosition() {
   }
 }
 
-// --- Apply transforms (world rotates so camera feels like eyes) ---
+// === Apply transforms (3rd-person view) ===
 function updateTransforms() {
-  // camera positioned behind and above (3rd person for debugging)
-  const cameraDistance = 200;
-  const cameraHeight = eyeHeight + 50;
-  const rad = yaw * Math.PI / 180;
+  // Offset camera behind and above the player
+  const cameraDistance = 200; // Distance behind player
+  const cameraHeight = eyeHeight + 50; // Slightly above head
+  const rad = yaw * (Math.PI / 180);
 
   const camX = posX - Math.sin(rad) * cameraDistance;
   const camZ = posZ - Math.cos(rad) * cameraDistance;
@@ -213,21 +155,78 @@ function updateTransforms() {
     scene.style.transform = sceneTransform;
     lastSceneTransform = sceneTransform;
   }
+
   if (playerTransform !== lastPlayerTransform) {
     playerModel.style.transform = playerTransform;
     lastPlayerTransform = playerTransform;
   }
 }
 
-// --- Main loop ---
+// === Helper: Create faces inside a block element ===
+function createBlockFaces(block) {
+  const faces = ['top', 'front', 'right', 'back', 'left', 'bottom'];
+  faces.forEach(face => {
+    const faceDiv = document.createElement('div');
+    faceDiv.className = `face ${face}`;
+    block.appendChild(faceDiv);
+  });
+}
+
+// === Terrain generation ===
+function generateFlatWorld() {
+  const chunkSize = 10;
+  const blockSize = 70;
+
+  for (let x = 0; x < chunkSize; x++) {
+    for (let z = 0; z < chunkSize; z++) {
+      const block = document.createElement('div');
+      block.className = 'grass block';
+      const posX = x * blockSize;
+      const posZ = z * blockSize;
+      const posY = groundY;
+
+      block.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
+      createBlockFaces(block);
+      world.appendChild(block);
+    }
+  }
+}
+
+// === Character creation (CSS-based) ===
+function createCharacter() {
+  playerModel.innerHTML = ''; // Clear previous
+
+  const parts = [
+    { className: 'torso' },
+    { className: 'head' },
+    { className: 'arm left' },
+    { className: 'arm right' },
+    { className: 'leg left' },
+    { className: 'leg right' },
+  ];
+
+  parts.forEach(({ className }) => {
+    const part = document.createElement('div');
+    part.className = `part ${className}`;
+
+    ['front', 'back', 'left', 'right', 'top', 'bottom'].forEach(face => {
+      const faceDiv = document.createElement('div');
+      faceDiv.className = `face ${face}`;
+      part.appendChild(faceDiv);
+    });
+
+    playerModel.appendChild(part);
+  });
+}
+
+// === Animation loop ===
 function animate() {
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
 }
 
-// === Start ===
+// === Start game ===
 generateFlatWorld();
-createCharacter();   // if you have this function defined elsewhere; otherwise createCharacter stub is fine
-console.log('Starting game loop. posY =', posY, 'groundY =', groundY);
+createCharacter();
 animate();
