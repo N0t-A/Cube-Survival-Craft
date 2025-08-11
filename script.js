@@ -1,3 +1,5 @@
+console.log("Script running...");
+
 // === Config / constants ===
 const BLOCK_SIZE = 70;         // px per block
 const CHUNK_SIZE_X = 10;       // width in blocks
