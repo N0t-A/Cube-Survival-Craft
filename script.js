@@ -1,36 +1,27 @@
-console.log("Script running...");
+console.log("Script running");
 
-// === Config / constants ===
-const BLOCK_SIZE = 70;         
-const CHUNK_SIZE_X = 10;       
-const CHUNK_SIZE_Z = 10;       
-const STONE_LAYERS = 80;       
-const eyeHeight = 120;         
-const characterYOffset = 280;  
-
-// === Player state ===
-let posX = 0;
-let posY = 0; 
-let posZ = 0;
-let yaw = 0, pitch = 0;
-let velocityY = 0;
-let onGround = false;
-
-// === Elements ===
-const scene = document.getElementById("scene");
+// === Game setup ===
+const playerModel = document.getElementById("player-model");
 const cameraYaw = document.getElementById("camera-yaw");
 const cameraPitch = document.getElementById("camera-pitch");
 const cameraEye = document.getElementById("camera-eye");
+const scene = document.getElementById("scene");
+const world = document.getElementById("world");
 
-// === World data ===
-const blocks = {};
+const BLOCK_SIZE = 50;
+const CHUNK_SIZE = 16;
+const WORLD_HEIGHT = 80; // max depth
 
-// Pointer lock request
+// === Pointer Lock Debug ===
 scene.addEventListener("click", () => {
-    scene.requestPointerLock();
+    console.log("Scene clicked, requesting pointer lock...");
+    if (scene.requestPointerLock) {
+        scene.requestPointerLock();
+    } else {
+        console.warn("Pointer lock API not supported in this browser.");
+    }
 });
 
-// Pointer lock change debug
 document.addEventListener("pointerlockchange", () => {
     if (document.pointerLockElement === scene) {
         console.log("Pointer lock ON");
@@ -39,133 +30,95 @@ document.addEventListener("pointerlockchange", () => {
     }
 });
 
-// Mouse look
-document.addEventListener("mousemove", (e) => {
+document.addEventListener("pointerlockerror", () => {
+    console.error("Pointer lock request failed.");
+});
+
+// === Mouse Movement ===
+document.addEventListener("mousemove", (event) => {
     if (document.pointerLockElement === scene) {
-        yaw += e.movementX * 0.1;   
-        pitch -= e.movementY * 0.1; 
-        pitch = Math.max(-89, Math.min(89, pitch)); 
+        const movementX = event.movementX || 0;
+        const movementY = event.movementY || 0;
+
+        // Adjust yaw and pitch
+        cameraYaw.style.transform += ` rotateY(${movementX * 0.1}deg)`;
+        cameraPitch.style.transform += ` rotateX(${-movementY * 0.1}deg)`;
     }
 });
 
-// Ore vein generator
-function generateVeins(oreType, minDepth, maxDepth, veinsPerChunk, veinSize) {
+// === Player Position ===
+let posX = 0;
+let posY = -BLOCK_SIZE * 3; // Offset: 3 blocks above ground
+let posZ = 0;
+
+// === Generate a Chunk ===
+function generateChunk(chunkX, chunkZ) {
+    const fragment = document.createDocumentFragment();
+
+    for (let x = 0; x < CHUNK_SIZE; x++) {
+        for (let z = 0; z < CHUNK_SIZE; z++) {
+            const worldX = chunkX * CHUNK_SIZE + x;
+            const worldZ = chunkZ * CHUNK_SIZE + z;
+
+            // Ground layer setup
+            for (let y = 0; y < WORLD_HEIGHT; y++) {
+                let blockType = null;
+
+                if (y === 0) {
+                    blockType = "grass";
+                } else if (y > 0 && y <= 3) {
+                    blockType = "dirt";
+                } else {
+                    blockType = "stone";
+                }
+
+                const block = document.createElement("div");
+                block.className = `block ${blockType}`;
+                block.style.transform = `translate3d(${worldX * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${worldZ * BLOCK_SIZE}px)`;
+                fragment.appendChild(block);
+            }
+        }
+    }
+
+    // === Ore Generation ===
+    generateOre(fragment, chunkX, chunkZ, "coal-ore", 1, 15, 2, 15);
+    generateOre(fragment, chunkX, chunkZ, "copper-ore", 10, 20, 2, 10);
+    generateOre(fragment, chunkX, chunkZ, "tin-ore", 10, 20, 2, 10);
+    generateOre(fragment, chunkX, chunkZ, "iron-ore", 20, 35, 2, 7);
+    generateOre(fragment, chunkX, chunkZ, "diamond-ore", 35, 50, 1, 4);
+    generateOre(fragment, chunkX, chunkZ, "amber-ore", 50, 80, 1, 1);
+    generateOre(fragment, chunkX, chunkZ, "ruby-ore", 50, 80, 1, 1);
+
+    world.appendChild(fragment);
+}
+
+// === Ore Vein Generator ===
+function generateOre(fragment, chunkX, chunkZ, oreType, minDepth, maxDepth, veinsPerChunk, veinSize) {
     for (let v = 0; v < veinsPerChunk; v++) {
-        const startX = Math.floor(Math.random() * CHUNK_SIZE_X);
-        const startZ = Math.floor(Math.random() * CHUNK_SIZE_Z);
-        const startY = Math.floor(Math.random() * (maxDepth - minDepth + 1)) + minDepth;
+        const startX = chunkX * CHUNK_SIZE + Math.floor(Math.random() * CHUNK_SIZE);
+        const startY = minDepth + Math.floor(Math.random() * (maxDepth - minDepth + 1));
+        const startZ = chunkZ * CHUNK_SIZE + Math.floor(Math.random() * CHUNK_SIZE);
 
         for (let i = 0; i < veinSize; i++) {
             const offsetX = startX + Math.floor(Math.random() * 3) - 1;
-            const offsetZ = startZ + Math.floor(Math.random() * 3) - 1;
             const offsetY = startY + Math.floor(Math.random() * 3) - 1;
+            const offsetZ = startZ + Math.floor(Math.random() * 3) - 1;
 
-            const key = `${offsetX},${offsetY},${offsetZ}`;
-            if (blocks[key] && blocks[key].type === "stone") {
-                blocks[key].type = oreType;
-            }
+            const block = document.createElement("div");
+            block.className = `block ${oreType}`;
+            block.style.transform = `translate3d(${offsetX * BLOCK_SIZE}px, ${offsetY * BLOCK_SIZE}px, ${offsetZ * BLOCK_SIZE}px)`;
+            fragment.appendChild(block);
         }
     }
 }
 
-function createBlockElement(x, y, z, type) {
-    const block = document.createElement("div");
-    block.className = `block ${type}`;
-    block.style.transform = `translate3d(${x * BLOCK_SIZE}px, ${-(y * BLOCK_SIZE)}px, ${z * BLOCK_SIZE}px)`;
-    scene.appendChild(block);
-}
-
-function generateChunk() {
-    for (let x = 0; x < CHUNK_SIZE_X; x++) {
-        for (let z = 0; z < CHUNK_SIZE_Z; z++) {
-            for (let y = 0; y <= STONE_LAYERS; y++) {
-                let type;
-                if (y === 0) type = "grass";
-                else if (y <= 3) type = "dirt";
-                else type = "stone";
-
-                const key = `${x},${y},${z}`;
-                blocks[key] = { type };
-            }
-        }
-    }
-
-    generateVeins("coal-ore", 1, 15, 2, 15);
-    generateVeins("copper-ore", 10, 20, 2, 10);
-    generateVeins("tin-ore", 10, 20, 2, 10);
-    generateVeins("iron-ore", 20, 35, 2, 7);
-    generateVeins("diamond-ore", 35, 50, 1, 4);
-    generateVeins("amber-ore", 50, 80, 1, 1);
-    generateVeins("ruby-ore", 50, 80, 1, 1);
-
-    for (const key in blocks) {
-        const [x, y, z] = key.split(",").map(Number);
-        createBlockElement(x, y, z, blocks[key].type);
+// === Generate World ===
+for (let cx = 0; cx < 2; cx++) {
+    for (let cz = 0; cz < 2; cz++) {
+        generateChunk(cx, cz);
     }
 }
 
-function createCharacter() {
-    const player = document.createElement("div");
-    player.id = "player-model";
-    player.style.transform = `translate3d(0px, ${-(posY * BLOCK_SIZE + characterYOffset)}px, 0px)`;
-
-    const parts = [
-        { id: "legs", height: 50, y: 0 },
-        { id: "torso", height: 60, y: -50 },
-        { id: "head", height: 20, y: -110 }
-    ];
-
-    parts.forEach(part => {
-        const div = document.createElement("div");
-        div.className = `part ${part.id}`;
-        div.style.height = `${part.height}px`;
-        div.style.transform = `translateY(${part.y}px)`;
-
-        ["front", "back", "left", "right", "top", "bottom"].forEach(face => {
-            const faceDiv = document.createElement("div");
-            faceDiv.className = `face ${face}`;
-            div.appendChild(faceDiv);
-        });
-
-        player.appendChild(div);
-    });
-
-    scene.appendChild(player);
-}
-
-function checkCollision(newY) {
-    const footY = Math.floor(newY / BLOCK_SIZE);
-    const blockBelow = blocks[`0,${footY},0`];
-    return blockBelow && blockBelow.type !== undefined;
-}
-
-function updatePhysics() {
-    velocityY -= 0.98;
-
-    let newY = posY + velocityY * 0.1;
-    if (velocityY < 0 && checkCollision(newY)) {
-        onGround = true;
-        velocityY = 0;
-        newY = Math.floor(newY / BLOCK_SIZE) * BLOCK_SIZE;
-    } else {
-        onGround = false;
-    }
-
-    posY = newY;
-}
-
-function updateCamera() {
-    cameraYaw.style.transform = `rotateY(${yaw}deg)`;
-    cameraPitch.style.transform = `rotateX(${pitch}deg)`;
-    cameraEye.style.transform = `translate3d(${posX}px, ${-(posY + eyeHeight)}px, ${posZ}px)`;
-}
-
-function gameLoop() {
-    updatePhysics();
-    updateCamera();
-    requestAnimationFrame(gameLoop);
-}
-
-generateChunk();
-createCharacter();
-gameLoop();
+// === Position Player ===
+playerModel.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
+cameraEye.style.transform = `translate3d(0px, ${posY - 120}px, 0px)`;
