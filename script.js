@@ -1,124 +1,123 @@
 console.log("Script running");
 
 // === Game setup ===
-const playerModel = document.getElementById("player-model");
-const cameraYaw = document.getElementById("camera-yaw");
-const cameraPitch = document.getElementById("camera-pitch");
-const cameraEye = document.getElementById("camera-eye");
-const scene = document.getElementById("scene");
-const world = document.getElementById("world");
+const playerModel = document.getElementById('player-model');
+const cameraYaw = document.getElementById('camera-yaw');
+const cameraPitch = document.getElementById('camera-pitch');
+const cameraEye = document.getElementById('camera-eye');
+const scene = document.getElementById('scene');
+const world = document.getElementById('world');
 
-const BLOCK_SIZE = 50;
-const CHUNK_SIZE = 16;
-const WORLD_HEIGHT = 80; // max depth
-
-// === Pointer Lock Debug ===
-scene.addEventListener("click", () => {
-    console.log("Scene clicked, requesting pointer lock...");
-    if (scene.requestPointerLock) {
-        scene.requestPointerLock();
-    } else {
-        console.warn("Pointer lock API not supported in this browser.");
-    }
-});
-
-document.addEventListener("pointerlockchange", () => {
-    if (document.pointerLockElement === scene) {
-        console.log("Pointer lock ON");
-    } else {
-        console.log("Pointer lock OFF");
-    }
-});
-
-document.addEventListener("pointerlockerror", () => {
-    console.error("Pointer lock request failed.");
-});
-
-// === Mouse Movement ===
-document.addEventListener("mousemove", (event) => {
-    if (document.pointerLockElement === scene) {
-        const movementX = event.movementX || 0;
-        const movementY = event.movementY || 0;
-
-        // Adjust yaw and pitch
-        cameraYaw.style.transform += ` rotateY(${movementX * 0.1}deg)`;
-        cameraPitch.style.transform += ` rotateX(${-movementY * 0.1}deg)`;
-    }
-});
-
-// === Player Position ===
+// === Player position ===
 let posX = 0;
-let posY = -BLOCK_SIZE * 3; // Offset: 3 blocks above ground
+let posY = -200; // starting above ground
 let posZ = 0;
+let velY = 0;
+const gravity = 2;
+const jumpStrength = -70; // inverted Y-axis
 
-// === Generate a Chunk ===
-function generateChunk(chunkX, chunkZ) {
-    const fragment = document.createDocumentFragment();
+// === Pointer Lock Setup ===
+document.body.addEventListener('click', () => {
+    document.body.requestPointerLock();
+});
+document.addEventListener('pointerlockchange', () => {
+    if (document.pointerLockElement === document.body) {
+        console.log("Pointer lock on");
+    } else {
+        console.log("Pointer lock off");
+    }
+});
+document.addEventListener('mousemove', (e) => {
+    if (document.pointerLockElement === document.body) {
+        cameraYaw.style.transform += ` rotateY(${e.movementX * 0.1}deg)`;
+        cameraPitch.style.transform += ` rotateX(${-e.movementY * 0.1}deg)`;
+    }
+});
 
-    for (let x = 0; x < CHUNK_SIZE; x++) {
-        for (let z = 0; z < CHUNK_SIZE; z++) {
-            const worldX = chunkX * CHUNK_SIZE + x;
-            const worldZ = chunkZ * CHUNK_SIZE + z;
+// === Create Character ===
+function createCharacter() {
+    const parts = [
+        { className: 'legs', height: 50, y: 80 },
+        { className: 'torso', height: 60, y: 30 },
+        { className: 'head', height: 20, y: 10 }
+    ];
 
-            // Ground layer setup
-            for (let y = 0; y < WORLD_HEIGHT; y++) {
-                let blockType = null;
+    parts.forEach(part => {
+        const partEl = document.createElement('div');
+        partEl.className = `char-part ${part.className}`;
+        partEl.style.height = part.height + 'px';
+        partEl.style.transform = `translateY(${part.y}px)`;
+        playerModel.appendChild(partEl);
+    });
+}
+createCharacter();
 
-                if (y === 0) {
-                    blockType = "grass";
-                } else if (y > 0 && y <= 3) {
-                    blockType = "dirt";
-                } else {
-                    blockType = "stone";
-                }
+// === Terrain Generation ===
+function generateChunk() {
+    const chunkSize = 16;
+    const blockSize = 40;
+    const grassHeight = -40;
+    const dirtLayers = 3;
+    const stoneDepth = 80;
 
-                const block = document.createElement("div");
-                block.className = `block ${blockType}`;
-                block.style.transform = `translate3d(${worldX * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${worldZ * BLOCK_SIZE}px)`;
-                fragment.appendChild(block);
+    for (let x = 0; x < chunkSize; x++) {
+        for (let z = 0; z < chunkSize; z++) {
+            // Grass layer
+            createBlock("grass", x * blockSize, grassHeight, z * blockSize);
+
+            // Dirt layers
+            for (let y = 1; y <= dirtLayers; y++) {
+                createBlock("dirt", x * blockSize, grassHeight + (y * blockSize), z * blockSize);
+            }
+
+            // Stone layers
+            for (let y = dirtLayers + 1; y <= stoneDepth; y++) {
+                createBlock("stone", x * blockSize, grassHeight + (y * blockSize), z * blockSize);
             }
         }
     }
-
-    // === Ore Generation ===
-    generateOre(fragment, chunkX, chunkZ, "coal-ore", 1, 15, 2, 15);
-    generateOre(fragment, chunkX, chunkZ, "copper-ore", 10, 20, 2, 10);
-    generateOre(fragment, chunkX, chunkZ, "tin-ore", 10, 20, 2, 10);
-    generateOre(fragment, chunkX, chunkZ, "iron-ore", 20, 35, 2, 7);
-    generateOre(fragment, chunkX, chunkZ, "diamond-ore", 35, 50, 1, 4);
-    generateOre(fragment, chunkX, chunkZ, "amber-ore", 50, 80, 1, 1);
-    generateOre(fragment, chunkX, chunkZ, "ruby-ore", 50, 80, 1, 1);
-
-    world.appendChild(fragment);
 }
 
-// === Ore Vein Generator ===
-function generateOre(fragment, chunkX, chunkZ, oreType, minDepth, maxDepth, veinsPerChunk, veinSize) {
-    for (let v = 0; v < veinsPerChunk; v++) {
-        const startX = chunkX * CHUNK_SIZE + Math.floor(Math.random() * CHUNK_SIZE);
-        const startY = minDepth + Math.floor(Math.random() * (maxDepth - minDepth + 1));
-        const startZ = chunkZ * CHUNK_SIZE + Math.floor(Math.random() * CHUNK_SIZE);
+function createBlock(type, x, y, z) {
+    const block = document.createElement('div');
+    block.className = `block ${type}`;
+    block.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+    world.appendChild(block);
+}
 
-        for (let i = 0; i < veinSize; i++) {
-            const offsetX = startX + Math.floor(Math.random() * 3) - 1;
-            const offsetY = startY + Math.floor(Math.random() * 3) - 1;
-            const offsetZ = startZ + Math.floor(Math.random() * 3) - 1;
+generateChunk();
 
-            const block = document.createElement("div");
-            block.className = `block ${oreType}`;
-            block.style.transform = `translate3d(${offsetX * BLOCK_SIZE}px, ${offsetY * BLOCK_SIZE}px, ${offsetZ * BLOCK_SIZE}px)`;
-            fragment.appendChild(block);
+// === Collision Detection ===
+function isOnGround() {
+    const feetY = posY + 130; // character height
+    const blocks = document.querySelectorAll('.block');
+    for (let block of blocks) {
+        const matrix = new DOMMatrixReadOnly(getComputedStyle(block).transform);
+        const blockY = matrix.m42;
+        if (Math.abs(blockY - feetY) < gravity) {
+            return true;
         }
     }
+    return false;
 }
 
-// === Generate World ===
-for (let cx = 0; cx < 2; cx++) {
-    for (let cz = 0; cz < 2; cz++) {
-        generateChunk(cx, cz);
+// === Game Loop ===
+function gameLoop() {
+    // Log elevation
+    console.log("Character elevation (posY):", posY);
+
+    // Gravity
+    if (!isOnGround()) {
+        velY += gravity;
+        posY += velY;
+    } else {
+        velY = 0;
     }
-}
 
-// === Position Player ===
-playerModel.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
-cameraEye.style.transform = `translate3d(0px, ${posY - 120}px, 0px)`;
+    // Update character position
+    playerModel.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
+    cameraEye.style.transform = `translate3d(0px, ${posY - 120}px, 0px)`;
+
+    requestAnimationFrame(gameLoop);
+}
+gameLoop();
