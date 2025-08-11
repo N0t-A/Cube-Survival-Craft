@@ -1,16 +1,16 @@
 console.log("Script running...");
 
 // === Config / constants ===
-const BLOCK_SIZE = 70;         // px per block
-const CHUNK_SIZE_X = 10;       // width in blocks
-const CHUNK_SIZE_Z = 10;       // depth in blocks
-const STONE_LAYERS = 80;       // how many stone layers under the surface
-const eyeHeight = 120;         // camera height from feet
-const characterYOffset = 280;  // pixels to raise model so feet are on ground
+const BLOCK_SIZE = 70;         
+const CHUNK_SIZE_X = 10;       
+const CHUNK_SIZE_Z = 10;       
+const STONE_LAYERS = 80;       
+const eyeHeight = 120;         
+const characterYOffset = 280;  
 
 // === Player state ===
 let posX = 0;
-let posY = 0; // Feet start at ground level (Y=0 is grass)
+let posY = 0; 
 let posZ = 0;
 let yaw = 0, pitch = 0;
 let velocityY = 0;
@@ -24,6 +24,29 @@ const cameraEye = document.getElementById("camera-eye");
 
 // === World data ===
 const blocks = {};
+
+// Pointer lock request
+scene.addEventListener("click", () => {
+    scene.requestPointerLock();
+});
+
+// Pointer lock change debug
+document.addEventListener("pointerlockchange", () => {
+    if (document.pointerLockElement === scene) {
+        console.log("Pointer lock ON");
+    } else {
+        console.log("Pointer lock OFF");
+    }
+});
+
+// Mouse look
+document.addEventListener("mousemove", (e) => {
+    if (document.pointerLockElement === scene) {
+        yaw += e.movementX * 0.1;   
+        pitch -= e.movementY * 0.1; 
+        pitch = Math.max(-89, Math.min(89, pitch)); 
+    }
+});
 
 // Ore vein generator
 function generateVeins(oreType, minDepth, maxDepth, veinsPerChunk, veinSize) {
@@ -45,7 +68,6 @@ function generateVeins(oreType, minDepth, maxDepth, veinsPerChunk, veinSize) {
     }
 }
 
-// Block creation
 function createBlockElement(x, y, z, type) {
     const block = document.createElement("div");
     block.className = `block ${type}`;
@@ -53,7 +75,6 @@ function createBlockElement(x, y, z, type) {
     scene.appendChild(block);
 }
 
-// Chunk generator
 function generateChunk() {
     for (let x = 0; x < CHUNK_SIZE_X; x++) {
         for (let z = 0; z < CHUNK_SIZE_Z; z++) {
@@ -69,7 +90,6 @@ function generateChunk() {
         }
     }
 
-    // Ores
     generateVeins("coal-ore", 1, 15, 2, 15);
     generateVeins("copper-ore", 10, 20, 2, 10);
     generateVeins("tin-ore", 10, 20, 2, 10);
@@ -78,14 +98,12 @@ function generateChunk() {
     generateVeins("amber-ore", 50, 80, 1, 1);
     generateVeins("ruby-ore", 50, 80, 1, 1);
 
-    // Render blocks
     for (const key in blocks) {
         const [x, y, z] = key.split(",").map(Number);
         createBlockElement(x, y, z, blocks[key].type);
     }
 }
 
-// Create character model
 function createCharacter() {
     const player = document.createElement("div");
     player.id = "player-model";
@@ -115,16 +133,14 @@ function createCharacter() {
     scene.appendChild(player);
 }
 
-// Collision detection
 function checkCollision(newY) {
     const footY = Math.floor(newY / BLOCK_SIZE);
     const blockBelow = blocks[`0,${footY},0`];
     return blockBelow && blockBelow.type !== undefined;
 }
 
-// Physics update
 function updatePhysics() {
-    velocityY -= 0.98; // gravity
+    velocityY -= 0.98;
 
     let newY = posY + velocityY * 0.1;
     if (velocityY < 0 && checkCollision(newY)) {
@@ -138,30 +154,18 @@ function updatePhysics() {
     posY = newY;
 }
 
-// Camera update
 function updateCamera() {
     cameraYaw.style.transform = `rotateY(${yaw}deg)`;
     cameraPitch.style.transform = `rotateX(${pitch}deg)`;
     cameraEye.style.transform = `translate3d(${posX}px, ${-(posY + eyeHeight)}px, ${posZ}px)`;
 }
 
-// Pointer lock debug
-document.addEventListener("pointerlockchange", () => {
-    if (document.pointerLockElement) {
-        console.log("Pointer lock ON");
-    } else {
-        console.log("Pointer lock OFF");
-    }
-});
-
-// Main game loop
 function gameLoop() {
     updatePhysics();
     updateCamera();
     requestAnimationFrame(gameLoop);
 }
 
-// Init
 generateChunk();
 createCharacter();
 gameLoop();
