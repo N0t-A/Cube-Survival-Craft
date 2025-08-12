@@ -1,4 +1,4 @@
-console.log('script running'); // Log at start
+console.log('script running');
 
 // === Game setup ===
 const playerModel = document.getElementById('player-model');
@@ -32,8 +32,8 @@ posY = groundY + 0 * BLOCK_SIZE + characterYOffset; // ensure model starts stand
 // === Movement / physics ===
 const keys = {};
 const speed = 2;
-const gravity = 1.5;
-const jumpStrength = 70;
+const gravity = 1.5;     // gravity pulls down (posY increases)
+const jumpStrength = 70; // jump moves up (posY decreases)
 let velY = 0;
 let grounded = false;
 
@@ -53,7 +53,7 @@ function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 document.body.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && grounded) {
-    velY = jumpStrength; // jump moves up (posY decreases)
+    velY = -jumpStrength; // negative velY moves up (jump)
     grounded = false;
   }
 });
@@ -280,7 +280,7 @@ function updatePlayerPosition() {
   posZ += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
 
   // vertical physics
-  velY -= gravity;  // gravity pulls Y DOWN by decreasing posY (inverted Y)
+  velY += gravity;  // gravity pulls down (posY increases)
   posY += velY;
 
   // collision check
@@ -288,16 +288,14 @@ function updatePlayerPosition() {
   const playerFeetY = posY - characterYOffset;
 
   if (surface !== undefined) {
-    // If feet Y is deeper underground (greater pixel Y) than surface, clamp to surface
     if (playerFeetY > surface) {
       grounded = true;
       velY = 0;
-      posY = surface + characterYOffset; // Snap feet on surface
+      posY = surface + characterYOffset; // snap feet on surface
     } else {
       grounded = false;
     }
   } else {
-    // fallback clamp if no block under player
     if (posY > groundY + STONE_LAYERS * BLOCK_SIZE) {
       posY = groundY + STONE_LAYERS * BLOCK_SIZE;
       velY = 0;
