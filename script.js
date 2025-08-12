@@ -22,14 +22,15 @@ let posZ = 0;
 let yaw = 0, pitch = 0;
 
 // character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
-// posY is the vertical position of the player's feet + characterYOffset
+// posY is the vertical position of the player's **feet + characterYOffset**
+// So to start feet at groundY (0), posY = characterYOffset
 const characterYOffset = 280;
 posY = characterYOffset; // player feet at ground (y=0)
 
 // === Movement / physics ===
 const keys = {};
 const speed = 2;
-const gravity = 1.5;  // gravity pulls player down by decreasing posY
+const gravity = 1.5;  // positive gravity pulls player down (increasing Y)
 const jumpStrength = 70;
 let velY = 0;
 let grounded = false;
@@ -46,7 +47,7 @@ function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 document.body.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && grounded) {
-    velY = jumpStrength; // jump adds positive velocity upwards (posY increases)
+    velY = -jumpStrength; // negative velocity moves player up (jump)
     grounded = false;
   }
 });
@@ -228,9 +229,10 @@ function createCharacter() {
 function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
-  for (let gy = 0; gy < STONE_LAYERS; gy++) {
+  // Loop from top down to find highest block
+  for (let gy = STONE_LAYERS - 1; gy >= 0; gy--) {
     if (worldData.has(keyAt(gx, gy, gz))) {
-      return gy * BLOCK_SIZE; // return top surface Y (pixel)
+      return gy * BLOCK_SIZE; // highest block top surface Y in px
     }
   }
   return undefined;
@@ -247,17 +249,17 @@ function updatePlayerPosition() {
   posX += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
   posZ += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
 
-  // Apply gravity (pulling down means decreasing posY)
-  velY -= gravity;
+  // vertical movement and gravity
+  velY += gravity;
   posY += velY;
 
-  // Collision detection
-  const surface = getTopSurfaceYUnderPlayer(); // in px, block top Y
+  // collision check
+  const surface = getTopSurfaceYUnderPlayer();
   const playerFeetY = posY - characterYOffset;
 
   if (surface !== undefined) {
     if (playerFeetY < surface) {
-      // Player's feet below surface? Clamp feet to surface
+      // Player feet under surface, move up to surface
       posY = surface + characterYOffset;
       velY = 0;
       grounded = true;
@@ -265,9 +267,9 @@ function updatePlayerPosition() {
       grounded = false;
     }
   } else {
-    // fallback clamp to bottom of world
-    if (posY < characterYOffset) {
-      posY = characterYOffset;
+    // fallback clamp
+    if (posY > STONE_LAYERS * BLOCK_SIZE + characterYOffset) {
+      posY = STONE_LAYERS * BLOCK_SIZE + characterYOffset;
       velY = 0;
       grounded = true;
     } else {
