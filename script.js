@@ -13,7 +13,7 @@ const CHUNK_SIZE_X = 10;       // width in blocks
 const CHUNK_SIZE_Z = 10;       // depth in blocks
 const STONE_LAYERS = 80;       // how many stone layers under the surface
 const groundY = 0;             // Ground surface Y is zero now
-const eyeHeight = 120;         // camera eye height above player feet (px)
+const eyeHeight = 120;         // camera eye height above feet
 
 // === Player state ===
 let posX = 0;
@@ -21,15 +21,14 @@ let posY = 0;
 let posZ = 0;
 let yaw = 0, pitch = 0;
 
-// character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
-// posY is player's feet + characterYOffset
-const characterYOffset = 420;  // 6 blocks * 70px per block = 420px
-posY = characterYOffset;       // player feet at ground level (Y=0)
+// character offset (total height of character model)
+const characterYOffset = 280;  
+posY = characterYOffset;       // player feet start at ground level (0)
 
 // === Movement / physics ===
 const keys = {};
 const speed = 2;
-const gravity = 1.5;  // positive gravity pulls player down (increasing Y)
+const gravity = 1.5;  // gravity pulls player down (increasing Y)
 const jumpStrength = 70;
 let velY = 0;
 let grounded = false;
@@ -46,7 +45,7 @@ function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 document.body.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && grounded) {
-    velY = -jumpStrength; // negative velocity moves player up (jump)
+    velY = -jumpStrength; // jump: negative velocity moves up
     grounded = false;
   }
 });
@@ -278,13 +277,13 @@ function updatePlayerPosition() {
 // === Transforms ===
 function updateTransforms() {
   const cameraDistance = 200;
-  const cameraHeight = eyeHeight + characterYOffset;  // camera sits above player feet by eyeHeight + offset
+  const cameraHeight = eyeHeight; // camera eye height above feet
   const rad = yaw * Math.PI / 180;
   const camX = posX - Math.sin(rad) * cameraDistance;
   const camZ = posZ - Math.cos(rad) * cameraDistance;
   const camY = posY - cameraHeight;
 
-  // Debug log player elevation
+  // Debug log player elevation (feet)
   console.log(`Player elevation (feet Y): ${(posY - characterYOffset).toFixed(2)}`);
 
   const sceneTransform = `
