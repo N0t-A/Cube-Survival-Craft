@@ -22,7 +22,8 @@ let posZ = 0;
 let yaw = 0, pitch = 0;
 
 // character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
-// posY is the vertical position of the player's feet + characterYOffset
+// posY is the vertical position of the player's **feet + characterYOffset**
+// So to start feet at groundY (0), posY = characterYOffset
 const characterYOffset = 280;
 posY = characterYOffset; // player feet at ground (y=0)
 
@@ -228,12 +229,12 @@ function createCharacter() {
 function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
-  for (let gy = STONE_LAYERS - 1; gy >= 0; gy--) {
+  for (let gy = 0; gy < STONE_LAYERS; gy++) {
     if (worldData.has(keyAt(gx, gy, gz))) {
-      return (gy + 1) * BLOCK_SIZE; // return top surface Y (pixel)
+      return gy * BLOCK_SIZE; // return top surface Y (pixel)
     }
   }
-  return 0; // no block found, surface at zero (air)
+  return undefined;
 }
 
 // === Movement & collision update ===
@@ -247,31 +248,21 @@ function updatePlayerPosition() {
   posX += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
   posZ += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
 
-  // vertical movement and gravity
-  velY += gravity;
+  // Apply gravity
+  velY += gravity;  // gravity is positive, pulls player down (increasing posY)
   posY += velY;
 
-  // collision check
+  // Collision detection against ground surface
   const surface = getTopSurfaceYUnderPlayer();
   const playerFeetY = posY - characterYOffset;
 
-  if (surface !== undefined) {
-    if (playerFeetY > surface) {
-      posY = surface + characterYOffset;
-      velY = 0;
-      grounded = true;
-    } else {
-      grounded = false;
-    }
+  if (playerFeetY >= surface) {
+    // Player is below or at surface, clamp to surface and reset velocity
+    posY = surface + characterYOffset;
+    velY = 0;
+    grounded = true;
   } else {
-    // fallback clamp
-    if (posY > STONE_LAYERS * BLOCK_SIZE + characterYOffset) {
-      posY = STONE_LAYERS * BLOCK_SIZE + characterYOffset;
-      velY = 0;
-      grounded = true;
-    } else {
-      grounded = false;
-    }
+    grounded = false;
   }
 }
 
