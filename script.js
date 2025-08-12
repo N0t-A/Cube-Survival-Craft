@@ -1,6 +1,5 @@
-console.log('script running'); // Very first log
+console.log('script running');
 
-// === Game setup ===
 const playerModel = document.getElementById('player-model');
 const cameraYaw = document.getElementById('camera-yaw');
 const cameraPitch = document.getElementById('camera-pitch');
@@ -8,28 +7,30 @@ const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
-console.log('script start, DOM refs ok?', !!world, !!scene, !!playerModel);
-
 // === Config / constants ===
 const BLOCK_SIZE = 70;         // px per block
 const CHUNK_SIZE_X = 10;       // width in blocks
 const CHUNK_SIZE_Z = 10;       // depth in blocks
 const STONE_LAYERS = 80;       // how many stone layers under the surface
-const BASE_GROUND_Y = 1260;    // base pixel Y of the grass/top layer
-const groundY = BASE_GROUND_Y; // top-surface Y of layer 0 (pixel)
-const eyeHeight = 120;         // camera eye height in px above feet
+const groundY = 0;             // Ground surface Y is zero now
+const eyeHeight = 120;
 
 // === Player state ===
 let posX = 0;
-const characterYOffset = 280;  // distance from posY to model feet
-let posY = groundY + characterYOffset; // start so feet at groundY (1260)
+let posY = 0;
 let posZ = 0;
 let yaw = 0, pitch = 0;
+
+// character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
+// posY is the vertical position of the player's **feet + characterYOffset**
+// So to start feet at groundY (0), posY = characterYOffset
+const characterYOffset = 280;
+posY = characterYOffset; // player feet at ground (y=0)
 
 // === Movement / physics ===
 const keys = {};
 const speed = 2;
-const gravity = 1.5;
+const gravity = 1.5;  // positive gravity pulls player down (increasing Y)
 const jumpStrength = 70;
 let velY = 0;
 let grounded = false;
@@ -46,7 +47,7 @@ function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 document.body.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && grounded) {
-    velY = -jumpStrength; // negative is up (inverted Y)
+    velY = -jumpStrength; // negative velocity moves player up (jump)
     grounded = false;
   }
 });
@@ -54,7 +55,6 @@ document.body.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
 
-// pointer lock + mouse look
 document.body.addEventListener('click', () => {
   document.body.requestPointerLock();
 });
@@ -82,7 +82,7 @@ function createBlockElement(gx, gy, gz, type, exposedFaces) {
   el.className = `block ${type}`;
   const px = gx * BLOCK_SIZE;
   const pz = gz * BLOCK_SIZE;
-  const py = groundY + gy * BLOCK_SIZE;
+  const py = gy * BLOCK_SIZE; // groundY = 0, so block y is just layer * block size
   el.style.transform = `translate3d(${px}px, ${py}px, ${pz}px)`;
 
   for (const face of exposedFaces) {
@@ -96,8 +96,8 @@ function createBlockElement(gx, gy, gz, type, exposedFaces) {
 // === Face culling ===
 function getExposedFacesFor(gx, gy, gz) {
   const neighbors = [
-    {dx: 0, dy: -1, dz: 0, name: 'top'},     
-    {dx: 0, dy: 1, dz: 0, name: 'bottom'},   
+    {dx: 0, dy: -1, dz: 0, name: 'top'},     // above in grid (smaller Y)
+    {dx: 0, dy: 1, dz: 0, name: 'bottom'},   // below (larger Y)
     {dx: 0, dy: 0, dz: -1, name: 'front'},
     {dx: 0, dy: 0, dz: 1, name: 'back'},
     {dx: -1, dy: 0, dz: 0, name: 'left'},
@@ -154,7 +154,7 @@ function generateMultiLayerWorld() {
 
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
-      const dirtLayers = Math.floor(Math.random() * 2) + 2;
+      const dirtLayers = Math.floor(Math.random() * 2) + 2; // 2 or 3 dirt layers
       worldData.set(keyAt(gx, 0, gz), 'grass');
       for (let y = 1; y <= dirtLayers; y++) {
         worldData.set(keyAt(gx, y, gz), 'dirt');
@@ -200,9 +200,10 @@ function generateMultiLayerWorld() {
   console.log('generateMultiLayerWorld: worldData size', worldData.size, 'created DOM blocks', created);
 }
 
-// === Character creation ===
+// === Character creation (CSS-based) ===
 function createCharacter() {
   playerModel.innerHTML = '';
+
   const parts = [
     { className: 'torso' },
     { className: 'head' },
@@ -211,6 +212,7 @@ function createCharacter() {
     { className: 'leg left' },
     { className: 'leg right' },
   ];
+
   parts.forEach(({ className }) => {
     const part = document.createElement('div');
     part.className = `part ${className}`;
@@ -223,13 +225,13 @@ function createCharacter() {
   });
 }
 
-// === Collision helper ===
+// === Collision helper: get highest block top surface under player ===
 function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
   for (let gy = 0; gy < STONE_LAYERS; gy++) {
     if (worldData.has(keyAt(gx, gy, gz))) {
-      return groundY + gy * BLOCK_SIZE;
+      return gy * BLOCK_SIZE; // return top surface Y (pixel)
     }
   }
   return undefined;
@@ -246,9 +248,11 @@ function updatePlayerPosition() {
   posX += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
   posZ += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
 
+  // vertical movement and gravity
   velY += gravity;
   posY += velY;
 
+  // collision check
   const surface = getTopSurfaceYUnderPlayer();
   const playerFeetY = posY - characterYOffset;
 
@@ -261,8 +265,9 @@ function updatePlayerPosition() {
       grounded = false;
     }
   } else {
-    if (posY > groundY + STONE_LAYERS * BLOCK_SIZE) {
-      posY = groundY + STONE_LAYERS * BLOCK_SIZE;
+    // fallback clamp
+    if (posY > STONE_LAYERS * BLOCK_SIZE + characterYOffset) {
+      posY = STONE_LAYERS * BLOCK_SIZE + characterYOffset;
       velY = 0;
       grounded = true;
     } else {
@@ -274,17 +279,14 @@ function updatePlayerPosition() {
 // === Transforms ===
 function updateTransforms() {
   const cameraDistance = 200;
-  const cameraHeight = eyeHeight + 50;
+  const cameraHeight = eyeHeight + characterYOffset;
   const rad = yaw * Math.PI / 180;
   const camX = posX - Math.sin(rad) * cameraDistance;
   const camZ = posZ - Math.cos(rad) * cameraDistance;
+  const camY = posY - cameraHeight;
 
-  // Fix camera Y: use posY - eyeHeight to get eye-level (camera) height above feet
-  const camY = posY - eyeHeight;
-
-  // Debug logs
-  const playerFeetY = posY - characterYOffset;
-  console.log(`Character elevation: posY=${posY.toFixed(2)}, feetY=${playerFeetY.toFixed(2)}, groundY=${groundY}`);
+  // Debug log player elevation
+  console.log(`Player elevation (feet Y): ${(posY - characterYOffset).toFixed(2)}`);
 
   const sceneTransform = `
     rotateX(${pitch}deg)
@@ -315,5 +317,5 @@ function animate() {
 // === Start ===
 generateMultiLayerWorld();
 createCharacter();
-console.log('World generated. posY start:', posY, 'groundY:', groundY);
+console.log('World generated. Starting posY:', posY, 'groundY:', groundY);
 animate();
