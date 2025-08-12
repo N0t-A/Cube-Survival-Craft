@@ -21,15 +21,15 @@ let posY = 0;
 let posZ = 0;
 let yaw = 0, pitch = 0;
 
-// character offset (distance from posY to where the model is drawn)
-// posY is player feet + characterYOffset, so feet at ground 0 means posY = characterYOffset
+// character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
+// posY is the vertical position of the player's feet + characterYOffset
 const characterYOffset = 280;
-posY = characterYOffset; // start feet at ground (y=0)
+posY = characterYOffset; // player feet at ground (y=0)
 
 // === Movement / physics ===
 const keys = {};
 const speed = 2;
-const gravity = 1.5;  // gravity pulls player down (increasing Y)
+const gravity = 1.5;  // positive gravity pulls player down (increasing Y)
 const jumpStrength = 70;
 let velY = 0;
 let grounded = false;
@@ -228,12 +228,12 @@ function createCharacter() {
 function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
-  for (let gy = 0; gy < STONE_LAYERS; gy++) {
+  for (let gy = STONE_LAYERS - 1; gy >= 0; gy--) {
     if (worldData.has(keyAt(gx, gy, gz))) {
-      return gy * BLOCK_SIZE; // top surface pixel Y
+      return (gy + 1) * BLOCK_SIZE; // return top surface Y (pixel)
     }
   }
-  return undefined;
+  return 0; // no block found, surface at zero (air)
 }
 
 // === Movement & collision update ===
@@ -278,13 +278,13 @@ function updatePlayerPosition() {
 // === Transforms ===
 function updateTransforms() {
   const cameraDistance = 200;
-  const cameraHeight = eyeHeight;
+  const cameraHeight = eyeHeight + characterYOffset;
   const rad = yaw * Math.PI / 180;
   const camX = posX - Math.sin(rad) * cameraDistance;
   const camZ = posZ - Math.cos(rad) * cameraDistance;
   const camY = posY - cameraHeight;
 
-  // Log player elevation (feet)
+  // Debug log player elevation
   console.log(`Player elevation (feet Y): ${(posY - characterYOffset).toFixed(2)}`);
 
   const sceneTransform = `
@@ -293,10 +293,9 @@ function updateTransforms() {
     translate3d(${-camX}px, ${-camY}px, ${-camZ}px)
   `;
   const playerTransform = `
-    translate3d(${posX}px, ${posY + characterYOffset}px, ${posZ}px)
+    translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
-
   if (sceneTransform !== lastSceneTransform) {
     scene.style.transform = sceneTransform;
     lastSceneTransform = sceneTransform;
