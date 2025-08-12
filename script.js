@@ -13,7 +13,7 @@ const CHUNK_SIZE_X = 10;       // width in blocks
 const CHUNK_SIZE_Z = 10;       // depth in blocks
 const STONE_LAYERS = 80;       // how many stone layers under the surface
 const groundY = 0;             // Ground surface Y is zero now
-const eyeHeight = 120;
+const eyeHeight = 120;         // camera eye height above player feet (px)
 
 // === Player state ===
 let posX = 0;
@@ -22,9 +22,9 @@ let posZ = 0;
 let yaw = 0, pitch = 0;
 
 // character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
-// posY is the vertical position of the player's feet + characterYOffset
-const characterYOffset = 280;
-posY = characterYOffset; // player feet at ground (y=0)
+// posY is player's feet + characterYOffset
+const characterYOffset = 420;  // 6 blocks * 70px per block = 420px
+posY = characterYOffset;       // player feet at ground level (Y=0)
 
 // === Movement / physics ===
 const keys = {};
@@ -54,34 +54,18 @@ document.body.addEventListener('keyup', (e) => {
   keys[e.key.toLowerCase()] = false;
 });
 
-// === Pointer Lock Setup ===
-scene.addEventListener("click", () => {
-    scene.requestPointerLock =
-        scene.requestPointerLock ||
-        scene.mozRequestPointerLock ||
-        scene.webkitRequestPointerLock;
-
-    scene.requestPointerLock();
+document.body.addEventListener('click', () => {
+  document.body.requestPointerLock();
 });
-
-document.addEventListener("pointerlockchange", lockChangeAlert, false);
-document.addEventListener("mozpointerlockchange", lockChangeAlert, false);
-document.addEventListener("webkitpointerlockchange", lockChangeAlert, false);
-
-function lockChangeAlert() {
-    if (
-        document.pointerLockElement === scene ||
-        document.mozPointerLockElement === scene ||
-        document.webkitPointerLockElement === scene
-    ) {
-        console.log("Pointer locked");
-        document.addEventListener("mousemove", onMouseMove, false);
-    } else {
-        console.log("Pointer unlocked");
-        document.removeEventListener("mousemove", onMouseMove, false);
-    }
-}
-
+document.addEventListener('pointerlockchange', () => {
+  if (document.pointerLockElement === document.body) {
+    document.addEventListener('mousemove', onMouseMove);
+    console.log('pointer lock ON');
+  } else {
+    document.removeEventListener('mousemove', onMouseMove);
+    console.log('pointer lock OFF');
+  }
+});
 function onMouseMove(e) {
   const sensitivity = 0.1;
   yaw += e.movementX * sensitivity;
@@ -294,7 +278,7 @@ function updatePlayerPosition() {
 // === Transforms ===
 function updateTransforms() {
   const cameraDistance = 200;
-  const cameraHeight = eyeHeight + characterYOffset;
+  const cameraHeight = eyeHeight + characterYOffset;  // camera sits above player feet by eyeHeight + offset
   const rad = yaw * Math.PI / 180;
   const camX = posX - Math.sin(rad) * cameraDistance;
   const camZ = posZ - Math.cos(rad) * cameraDistance;
