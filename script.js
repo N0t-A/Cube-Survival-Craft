@@ -22,15 +22,14 @@ let posZ = 0;
 let yaw = 0, pitch = 0;
 
 // character offset (distance from posY to where the model is drawn; adjust to fit CSS model)
-// posY is the vertical position of the player's **feet + characterYOffset**
-// So to start feet at groundY (0), posY = characterYOffset
+// posY is the vertical position of the player's feet + characterYOffset
 const characterYOffset = 280;
 posY = characterYOffset; // player feet at ground (y=0)
 
 // === Movement / physics ===
 const keys = {};
 const speed = 2;
-const gravity = 1.5;  // positive gravity pulls player down (increasing Y)
+const gravity = 1.5;  // gravity pulls player down by decreasing posY
 const jumpStrength = 70;
 let velY = 0;
 let grounded = false;
@@ -47,7 +46,7 @@ function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 document.body.addEventListener('keydown', (e) => {
   keys[e.key.toLowerCase()] = true;
   if (e.code === 'Space' && grounded) {
-    velY = -jumpStrength; // negative velocity moves player up (jump)
+    velY = jumpStrength; // jump adds positive velocity upwards (posY increases)
     grounded = false;
   }
 });
@@ -248,21 +247,32 @@ function updatePlayerPosition() {
   posX += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
   posZ += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
 
-  // Apply gravity
-  velY += gravity;  // gravity is positive, pulls player down (increasing posY)
+  // Apply gravity (pulling down means decreasing posY)
+  velY -= gravity;
   posY += velY;
 
-  // Collision detection against ground surface
-  const surface = getTopSurfaceYUnderPlayer();
+  // Collision detection
+  const surface = getTopSurfaceYUnderPlayer(); // in px, block top Y
   const playerFeetY = posY - characterYOffset;
 
-  if (playerFeetY >= surface) {
-    // Player is below or at surface, clamp to surface and reset velocity
-    posY = surface + characterYOffset;
-    velY = 0;
-    grounded = true;
+  if (surface !== undefined) {
+    if (playerFeetY < surface) {
+      // Player's feet below surface? Clamp feet to surface
+      posY = surface + characterYOffset;
+      velY = 0;
+      grounded = true;
+    } else {
+      grounded = false;
+    }
   } else {
-    grounded = false;
+    // fallback clamp to bottom of world
+    if (posY < characterYOffset) {
+      posY = characterYOffset;
+      velY = 0;
+      grounded = true;
+    } else {
+      grounded = false;
+    }
   }
 }
 
