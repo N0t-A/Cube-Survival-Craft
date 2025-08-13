@@ -1,6 +1,5 @@
 console.log("Script running");
 
-// === Game setup ===
 const playerModel = document.getElementById('player-model');
 const cameraYaw = document.getElementById('camera-yaw');
 const cameraPitch = document.getElementById('camera-pitch');
@@ -8,40 +7,16 @@ const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 
-let posX = 0;
-let posZ = 0;
+scene.tabIndex = 0; // Ensure scene is focusable for pointer lock
+scene.style.outline = 'none';
 
-// === Corrected Player Spawn Position ===
-// Block size in pixels
-const blockSize = 70;
+// ====== Pointer Lock Setup ======
+scene.addEventListener('click', () => {
+    if (document.pointerLockElement !== scene) {
+        scene.requestPointerLock();
+    }
+});
 
-// Ground Y in pixels
-const groundLevelYPixels = -40; // Grass layer is here
-// Convert ground Y to blocks
-const groundLevelYBlocks = groundLevelYPixels / blockSize;
-
-// Character height in pixels
-const characterHeightPixels = 130;
-const characterHeightBlocks = characterHeightPixels / blockSize;
-
-// Calculate posY so feet rest exactly on top of grass layer
-let posY = (groundLevelYBlocks - characterHeightBlocks) * blockSize;
-
-console.log("Spawn Y position (px):", posY);
-
-let velY = 0;
-let gravity = 2.5;
-let onGround = false;
-
-let yaw = 0;
-let pitch = 0;
-let moveForward = false;
-let moveBackward = false;
-let moveLeft = false;
-let moveRight = false;
-let jump = false;
-
-// === Pointer Lock Debugging ===
 document.addEventListener('pointerlockchange', () => {
     if (document.pointerLockElement === scene) {
         console.log("Pointer lock ON");
@@ -50,117 +25,105 @@ document.addEventListener('pointerlockchange', () => {
     }
 });
 
-scene.addEventListener('click', () => {
-    scene.requestPointerLock();
+document.addEventListener('pointerlockerror', () => {
+    console.error("Pointer lock request failed.");
 });
 
-// === Terrain Generation ===
-function generateChunk(chunkX, chunkZ) {
-    const chunkSize = 16;
-    const chunkElement = document.createElement('div');
-    chunkElement.className = 'chunk';
-    chunkElement.style.transform = `translate3d(${chunkX * chunkSize * blockSize}px, 0px, ${chunkZ * chunkSize * blockSize}px)`;
+// ====== Player Variables ======
+let posX = 0;
+let posY = -40 - (70 * 3); // Start 3 blocks above ground level
+let posZ = 0;
+let velY = 0;
+const gravity = 0.98;
+const jumpStrength = -17; // Negative because -Y is up
+const moveSpeed = 5;
+let onGround = false;
 
+// ====== Input Tracking ======
+let keys = {};
+document.addEventListener('keydown', e => { keys[e.code] = true; });
+document.addEventListener('keyup', e => { keys[e.code] = false; });
+
+// ====== Mouse Look ======
+let yaw = 0;
+let pitch = 0;
+document.addEventListener('mousemove', e => {
+    if (document.pointerLockElement === scene) {
+        yaw += e.movementX * 0.1;
+        pitch -= e.movementY * 0.1;
+        pitch = Math.max(-90, Math.min(90, pitch));
+        cameraYaw.style.transform = `rotateY(${yaw}deg)`;
+        cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+    }
+});
+
+// ====== World Generation ======
+function generateChunk() {
+    const chunkSize = 16;
+    const blockSize = 70;
     for (let x = 0; x < chunkSize; x++) {
         for (let z = 0; z < chunkSize; z++) {
-            let height = 1; // Flat for now
-
-            for (let y = 0; y < height + 80; y++) {
-                const block = document.createElement('div');
+            for (let y = 0; y < 80; y++) {
+                let block = document.createElement('div');
                 block.classList.add('block');
 
                 if (y === 0) {
                     block.classList.add('grass');
-                } else if (y <= 3) {
+                } else if (y < 3) {
                     block.classList.add('dirt');
                 } else {
                     block.classList.add('stone');
                 }
 
-                block.style.transform = `translate3d(${x * blockSize}px, ${-y * blockSize}px, ${z * blockSize}px)`;
-                chunkElement.appendChild(block);
+                block.style.transform = `translate3d(${x * blockSize}px, ${y * blockSize}px, ${z * blockSize}px)`;
+                world.appendChild(block);
             }
         }
     }
-    world.appendChild(chunkElement);
 }
+generateChunk();
 
-generateChunk(0, 0);
-
-// === Movement & Physics ===
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'KeyW') moveForward = true;
-    if (e.code === 'KeyS') moveBackward = true;
-    if (e.code === 'KeyA') moveLeft = true;
-    if (e.code === 'KeyD') moveRight = true;
-    if (e.code === 'Space') jump = true;
-});
-
-document.addEventListener('keyup', (e) => {
-    if (e.code === 'KeyW') moveForward = false;
-    if (e.code === 'KeyS') moveBackward = false;
-    if (e.code === 'KeyA') moveLeft = false;
-    if (e.code === 'KeyD') moveRight = false;
-    if (e.code === 'Space') jump = false;
-});
-
-document.addEventListener('mousemove', (e) => {
-    yaw += e.movementX * 0.1;
-    pitch -= e.movementY * 0.1;
-    pitch = Math.max(-89, Math.min(89, pitch));
-});
-
-// === Game Loop ===
+// ====== Game Loop ======
 function gameLoop() {
-    let speed = 5;
-
-    if (moveForward) {
-        posX -= Math.sin(yaw * Math.PI / 180) * speed;
-        posZ -= Math.cos(yaw * Math.PI / 180) * speed;
-    }
-    if (moveBackward) {
-        posX += Math.sin(yaw * Math.PI / 180) * speed;
-        posZ += Math.cos(yaw * Math.PI / 180) * speed;
-    }
-    if (moveLeft) {
-        posX -= Math.cos(yaw * Math.PI / 180) * speed;
-        posZ += Math.sin(yaw * Math.PI / 180) * speed;
-    }
-    if (moveRight) {
-        posX += Math.cos(yaw * Math.PI / 180) * speed;
-        posZ -= Math.sin(yaw * Math.PI / 180) * speed;
-    }
-
-    // Apply gravity
+    // Gravity
     if (!onGround) {
-        velY -= gravity;
-    } else {
-        velY = 0;
+        velY += gravity;
     }
 
-    if (jump && onGround) {
-        velY = 30; // Jump strength
+    // Jump
+    if (keys["Space"] && onGround) {
+        velY = jumpStrength;
         onGround = false;
     }
 
     posY += velY;
 
-    // Collision with ground
-    const groundY = groundLevelYPixels - (characterHeightPixels);
-    if (posY <= groundY) {
-        posY = groundY;
+    // Ground collision check
+    const groundLevel = -40; // Ground Y level
+    if (posY >= groundLevel) {
+        posY = groundLevel;
+        velY = 0;
         onGround = true;
     }
 
+    // Movement (basic)
+    let forward = 0;
+    let right = 0;
+    if (keys["KeyW"]) forward += 1;
+    if (keys["KeyS"]) forward -= 1;
+    if (keys["KeyD"]) right += 1;
+    if (keys["KeyA"]) right -= 1;
+
+    const radYaw = yaw * (Math.PI / 180);
+    posX += (forward * Math.sin(radYaw) + right * Math.cos(radYaw)) * moveSpeed;
+    posZ += (forward * Math.cos(radYaw) - right * Math.sin(radYaw)) * moveSpeed;
+
     // Update transforms
     playerModel.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px)`;
-    cameraYaw.style.transform = `rotateY(${yaw}deg)`;
-    cameraPitch.style.transform = `rotateX(${pitch}deg)`;
-    cameraEye.style.transform = `translate3d(0px, ${-(posY - 120)}px, 0px)`;
+    cameraEye.style.transform = `translate3d(0px, ${posY - 120}px, 0px)`;
 
-    console.log("Player elevation (px):", posY);
+    console.log(`Character elevation: ${posY}`);
 
     requestAnimationFrame(gameLoop);
 }
-
 gameLoop();
