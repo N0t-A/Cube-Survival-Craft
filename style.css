@@ -9175,7 +9175,7 @@ grass.small-stairs .face.top {
   transform: rotateX(-90deg) translateZ(35px);
 }
 
-.wood-crafting-station {
+.maple-crafting-station {
   width: 70px;
   height: 70px;
   background-size: cover;
@@ -9185,41 +9185,41 @@ grass.small-stairs .face.top {
   transform: translate3d(0, 0, 0);
 }
 
-.wood-crafting-station.block.face {
+.maple-crafting-station.block.face {
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-.wood-crafting-station.block.face.top {
+.maple-crafting-station.block.face.top {
   transform: rotateX(90deg) translateZ(35px);
   background-image: url('wood-crafting-station-top.png');
 }
 
-.wood-crafting-station.block.face.front {
+.maple-crafting-station.block.face.front {
   transform: rotateY(0deg) translateZ(35px);
   background-image: url('wood-crafting-station.png');
 }
 
-.wood-crafting-station.block.face.right {
+.maple-crafting-station.block.face.right {
   transform: rotateY(90deg) translateZ(35px);
   background-image: url('wood-crafting-station.png');
 }
 
-.wood-crafting-station.block.face.back {
+.maple-crafting-station.block.face.back {
   transform: rotateY(180deg) translateZ(35px);
   background-image: url('wood-crafting-station.png');
 }
 
-.wood-crafting-station.block.face.left {
+.maple-crafting-station.block.face.left {
   transform: rotateY(-90deg) translateZ(35px);
   background-image: url('wood-crafting-station.png');
 }
 
-.wood-crafting-station.block.face.bottom {
+.maple-crafting-station.block.face.bottom {
   transform: rotateX(-90deg) translateZ(35px);
 }
 
-.stone-crafting-station {
+.pine-crafting-station {
   width: 70px;
   height: 70px;
   background-size: cover;
@@ -9229,41 +9229,41 @@ grass.small-stairs .face.top {
   transform: translate3d(0, 0, 0);
 }
 
-.stone-crafting-station.block.face {
+.pine-crafting-station.block.face {
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-.stone-crafting-station.block.face.top {
+.pine-crafting-station.block.face.top {
   transform: rotateX(90deg) translateZ(35px);
-  background-image: url('stone-crafting-station-top.png');
+  background-image: url('wood-crafting-station-top.png');
 }
 
-.stone-crafting-station.block.face.front {
+.pine-crafting-station.block.face.front {
   transform: rotateY(0deg) translateZ(35px);
-  background-image: url('stone-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.stone-crafting-station.block.face.right {
+.pine-crafting-station.block.face.right {
   transform: rotateY(90deg) translateZ(35px);
-  background-image: url('stone-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.stone-crafting-station.block.face.back {
+.pine-crafting-station.block.face.back {
   transform: rotateY(180deg) translateZ(35px);
-  background-image: url('stone-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.stone-crafting-station.block.face.left {
+.pine-crafting-station.block.face.left {
   transform: rotateY(-90deg) translateZ(35px);
-  background-image: url('stone-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.stone-crafting-station.block.face.bottom {
+.pine-crafting-station.block.face.bottom {
   transform: rotateX(-90deg) translateZ(35px);
 }
 
-.copper-crafting-station {
+.oak-crafting-station {
   width: 70px;
   height: 70px;
   background-size: cover;
@@ -9273,41 +9273,41 @@ grass.small-stairs .face.top {
   transform: translate3d(0, 0, 0);
 }
 
-.copper-crafting-station.block.face {
+.oak-crafting-station.block.face {
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-.copper-crafting-station.block.face.top {
+.oak-crafting-station.block.face.top {
   transform: rotateX(90deg) translateZ(35px);
-  background-image: url('copper-crafting-station-top.png');
+  background-image: url('wood-crafting-station-top.png');
 }
 
-.copper-crafting-station.block.face.front {
+.oak-crafting-station.block.face.front {
   transform: rotateY(0deg) translateZ(35px);
-  background-image: url('copper-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.copper-crafting-station.block.face.right {
+.oak-crafting-station.block.face.right {
   transform: rotateY(90deg) translateZ(35px);
-  background-image: url('copper-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.copper-crafting-station.block.face.back {
+.oak-crafting-station.block.face.back {
   transform: rotateY(180deg) translateZ(35px);
-  background-image: url('copper-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.copper-crafting-station.block.face.left {
+.oak-crafting-station.block.face.left {
   transform: rotateY(-90deg) translateZ(35px);
-  background-image: url('copper-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.copper-crafting-station.block.face.bottom {
+.oak-crafting-station.block.face.bottom {
   transform: rotateX(-90deg) translateZ(35px);
 }
 
-.bronze-crafting-station {
+.cedar-crafting-station {
   width: 70px;
   height: 70px;
   background-size: cover;
@@ -9317,37 +9317,41 @@ grass.small-stairs .face.top {
   transform: translate3d(0, 0, 0);
 }
 
-.bronze-crafting-station.block.face {
+.cedar-crafting-station.block.face {
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-.bronze-crafting-station.block.face.top {
+.cedar-crafting-station.block.face.top {
   transform: rotateX(90deg) translateZ(35px);
-  background-image: url('bronze-crafting-station-top.png');
+  background-image: url('wood-crafting-station-top.png');
 }
 
-.bronze-crafting-station.block.face.front {
+.cedar-crafting-station.block.face.front {
   transform: rotateY(0deg) translateZ(35px);
-  background-image: url('bronze-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.bronze-crafting-station.block.face.right {
+.cedar-crafting-station.block.face.right {
   transform: rotateY(90deg) translateZ(35px);
-  background-image: url('bronze-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.bronze-crafting-station.block.face.back {
+.cedar-crafting-station.block.face.back {
   transform: rotateY(180deg) translateZ(35px);
-  background-image: url('bronze-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.bronze-crafting-station.block.face.left {
+.cedar-crafting-station.block.face.left {
   transform: rotateY(-90deg) translateZ(35px);
-  background-image: url('bronze-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.iron-crafting-station {
+.cedar-crafting-station.block.face.bottom {
+  transform: rotateX(-90deg) translateZ(35px);
+}
+
+.birch-crafting-station {
   width: 70px;
   height: 70px;
   background-size: cover;
@@ -9357,114 +9361,38 @@ grass.small-stairs .face.top {
   transform: translate3d(0, 0, 0);
 }
 
-.iron-crafting-station.block.face {
+.birch-crafting-station.block.face {
   background-size: cover;
   background-repeat: no-repeat;
 }
 
-.iron-crafting-station.block.face.top {
+.birch-crafting-station.block.face.top {
   transform: rotateX(90deg) translateZ(35px);
-  background-image: url('iron-crafting-station-top.png');
+  background-image: url('wood-crafting-station-top.png');
 }
 
-.iron-crafting-station.block.face.front {
+.birch-crafting-station.block.face.front {
   transform: rotateY(0deg) translateZ(35px);
-  background-image: url('iron-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.iron-crafting-station.block.face.right {
+.birch-crafting-station.block.face.right {
   transform: rotateY(90deg) translateZ(35px);
-  background-image: url('iron-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.iron-crafting-station.block.face.back {
+.birch-crafting-station.block.face.back {
   transform: rotateY(180deg) translateZ(35px);
-  background-image: url('iron-crafting-station.png');
+  background-image: url('wood-crafting-station.png');
 }
 
-.iron-crafting-station.block.face.left {
+.birch-crafting-station.block.face.left {
   transform: rotateY(-90deg) translateZ(35px);
-  background-image: url('iron-crafting-station.png')
+  background-image: url('wood-crafting-station.png');
 }
 
-.steel-crafting-station {
-  width: 70px;
-  height: 70px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: absolute;
-  transform-style: preserve-3d;
-  transform: translate3d(0, 0, 0);
-}
-
-.steel-crafting-station.block.face {
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.steel-crafting-station.block.face.top {
-  transform: rotateX(90deg) translateZ(35px);
-  background-image: url('steel-crafting-station-top.png');
-}
-
-.steel-crafting-station.block.face.front {
-  transform: rotateY(0deg) translateZ(35px);
-  background-image: url('steel-crafting-station.png');
-}
-
-.steel-crafting-station.block.face.right {
-  transform: rotateY(90deg) translateZ(35px);
-  background-image: url('steel-crafting-station.png');
-}
-
-.steel-crafting-station.block.face.back {
-  transform: rotateY(180deg) translateZ(35px);
-  background-image: url('steel-crafting-station.png');
-}
-
-.steel-crafting-station.block.face.left {
-  transform: rotateY(-90deg) translateZ(35px);
-  background-image: url('steel-crafting-station.png')
-}
-
-.diamond-crafting-station {
-  width: 70px;
-  height: 70px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: absolute;
-  transform-style: preserve-3d;
-  transform: translate3d(0, 0, 0);
-}
-
-.diamond-crafting-station.block.face {
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.diamond-crafting-station.block.face.top {
-  transform: rotateX(90deg) translateZ(35px);
-  background-image: url('diamond-crafting-station-top.png');
-}
-
-.diamond-crafting-station.block.face.front {
-  transform: rotateY(0deg) translateZ(35px);
-  background-image: url('diamond-crafting-station.png');
-}
-
-.diamond-crafting-station.block.face.right {
-  transform: rotateY(90deg) translateZ(35px);
-  background-image: url('diamond-crafting-station.png');
-}
-
-.diamond-crafting-station.block.face.back {
-  transform: rotateY(180deg) translateZ(35px);
-  background-image: url('diamond-crafting-station.png');
-}
-
-.diamond-crafting-station.block.face.left {
-  transform: rotateY(-90deg) translateZ(35px);
-  background-image: url('diamond-crafting-station.png')
+.birch-crafting-station.block.face.bottom {
+  transform: rotateX(-90deg) translateZ(35px);
 }
 
 .smelting-station {
