@@ -102,8 +102,8 @@ function getExposedFacesFor(gx, gy, gz) {
   return faces;
 }
 
-// === Crafting recipies ===
-const recipies = [
+// === Crafting recipes ===
+const sharedCraftingRecipes = [
   {
     output: { item: 'maple-crafting-station', count: 1},
     pattern: [
@@ -190,7 +190,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'coal-block', count: 1},
+    output: { item: 'coal.block', count: 1},
     patern: [
       ['coal', 'coal', 'coal'],
       ['coal', 'coal', 'coal'],
@@ -198,7 +198,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'copper-block', count: 1},
+    output: { item: 'copper.block', count: 1},
     patern: [
       ['copper-bar', 'copper-bar', 'copper-bar'],
       ['copper-bar', 'copper-bar', 'copper-bar'],
@@ -206,7 +206,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'tin-block', count: 1},
+    output: { item: 'tin.block', count: 1},
     patern: [
       ['tin-bar', 'tin-bar', 'tin-bar'],
       ['tin-bar', 'tin-bar', 'tin-bar'],
@@ -214,7 +214,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'bronze-block', count: 1},
+    output: { item: 'bronze.block', count: 1},
     patern: [
       ['bronze-bar', 'bronze-bar', 'bronze-bar'],
       ['bronze-bar', 'bronze-bar', 'bronze-bar'],
@@ -222,7 +222,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'iron-block', count: 1},
+    output: { item: 'iron.block', count: 1},
     patern: [
       ['iron-bar', 'iron-bar', 'iron-bar'],
       ['iron-bar', 'iron-bar', 'iron-bar'],
@@ -230,7 +230,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'steel-block', count: 1},
+    output: { item: 'steel.block', count: 1},
     patern: [
       ['steel-bar', 'steel-bar', 'steel-bar'],
       ['steel-bar', 'steel-bar', 'steel-bar'],
@@ -238,7 +238,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'diamond-block', count: 1},
+    output: { item: 'diamond.block', count: 1},
     patern: [
       ['diamond', 'diamond', 'diamond'],
       ['diamond', 'diamond', 'diamond'],
@@ -246,7 +246,7 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'amber-block', count: 1},
+    output: { item: 'amber.block', count: 1},
     patern: [
       ['amber-chunk', 'amber-chunk', 'amber-chunk'],
       ['amber-chunk', 'amber-chunk', 'amber-chunk'],
@@ -254,13 +254,189 @@ const recipies = [
       ]
   },
   {
-    output: { item: 'ruby-block', count: 1},
+    output: { item: 'ruby.block', count: 1},
     patern: [
       ['ruby', 'ruby', 'ruby'],
       ['ruby', 'ruby', 'ruby'],
       ['ruby', 'ruby', 'ruby'],
       ]
   },
+  {
+    output: { item: 'saw', count: 1},
+    patern: [
+     [null, 'iron-bar', null],
+     ['iron-bar', null, 'iron-bar'],
+     [null, 'iron-bar', null]
+     ]
+  },
+  {
+    output: { item: 'cutting-station.block', count: 1},
+    patern: [
+      [null, 'saw'],
+      [null, maple-crafting-station]
+      ]
+  },
+  {
+    output: { item: 'chisel', count: 1},
+    patern: [
+      [null, 'iron-bar'],
+      [null, 'maple-planks.block']
+      ]
+  },
+  {
+    output: { item: 'engraving-station.block', count: 1},
+    patern: [
+      [null, 'chisel'],
+      [null, 'maple-crafting-station']
+      ]
+  },
+  {
+    output: { item: 'plate', count: 1},
+    patern: [
+      [null, 'copper-bar', null],
+      ['copper-bar', null, 'copper-bar'],
+      [null, 'copper-bar', null]
+      ]
+  },
+  {
+    output: { item: 'cooking-station', count: 1},
+    patern: [
+      [null, 'plate'],
+      [null, 'maple-crafting-station']
+      ]
+  },
+  {
+    output: { item: 'bowl', count: 1},
+    patern: [
+      [null, null, null,],
+      ['copper-bar', null, 'copper-bar'],
+      [null, 'copper-bar', null]
+      ]
+  }
+  ];
+
+const smeltingRecipes = [
+  {
+    input: [
+      ['copper-ore.block', null],
+      [null, null]
+      ],
+    output: [
+      ['copper-bar', null],
+      [null, null]
+      ],
+      time: 5
+  }
+  ];
+
+const cuttingRecipes = {
+  'maple-planks': [
+    {
+      item: 'maple-planks.slab',
+      count: 2
+    },
+    {
+      items: [
+        { item: 'maple-planks.large-stairs', count: 1},
+        { item: 'maple-planks.small-stairs', count: 1}
+        ]
+    },
+    {
+      item: 'maple-planks.small-stairs',
+      count: 4
+    }
+    ]
+};
+
+const engravingRecipes = {
+  'stone.block': [
+    { item: 'stone-bricks.block', count: 1},
+    { item: 'chisled-stone.block', count: 1}
+    ]
+};
+
+const cookingRecipes = [
+  {
+    output: { item: 'dough', count: 1},
+    patern: [
+      [null, null],
+      ['wheat', 'water-bucket']
+      ]
+  },
+  {
+    output: { item: 'loaf', count: 1},
+    patern: [
+      [null, null],
+      [null, 'dough']
+      ]
+  },
+  {
+    output: { item: 'noodles', count: 1},
+    patern: [
+      [null, null],
+      ['dough', 'dough']
+      ]
+  },
+  {
+    output: { item: 'spagheti', count: 1},
+    patern: [
+      ['noodles', 'tomato'],
+      ['plate', null]
+      ]
+  },
+  {
+    output: { item: 'soup', count: 1},
+    patern: [
+      ['tomato', 'potato'],
+      ['bowl', 'carrot']
+      ]
+  },
+  {
+    output: { item: 'pumpkin-pie', count: 1},
+    patern: [
+      ['pumpkin', 'dough'],
+      [null, null]
+      ]
+  },
+  {
+    output: { item: 'bread', count: 8},
+    patern: [
+      [null, null],
+      [null, 'loaf']
+      ]
+  },
+  {
+    output: { item: 'sandwich', count: 1},
+    patern: [
+      ['bread', 'tomato'],
+      ['tomato', 'bread'],
+      ]
+  },
+  {
+    output: { item: 'pancakes', count: 1},
+    patern: [
+      ['dough', null],
+      ['plate', null]
+      ]
+  },
+  {
+    output: { item: 'pancakes-with-syrup', count: 1},
+    patern: [
+      ['bucket-of-syrup', null],
+      ['pancakes', null]
+      ]
+  };
+
+const allRecipes = {
+  'maple-crafting-station': sharedCraftingRecipes,
+  'pine-crafting-station': sharedCraftingRecipes,
+  'oak-crafting-station': sharedCraftingRecipes,
+  'cedar-crafting-station': sharedCraftingRecipes,
+  'birch-crafting-station': sharedCraftingRecipes,
+  'smelting-station': smeltingRecipes,
+  'cutting-station': cuttingRecipes,
+  'engraving-station': engravingRecipes,
+  'cooking-station': cookingRecipes
       
 // === Ore vein generator ===
 function generateVein(startGX, startGY, startGZ, size, type) {
