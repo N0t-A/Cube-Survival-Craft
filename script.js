@@ -102,6 +102,16 @@ function getExposedFacesFor(gx, gy, gz) {
   return faces;
 }
 
+// === Crafting recipies ===
+const recipies = [
+  {
+    output: { item: 'crafting-station', count: 1},
+    pattern: [
+      ['maple-planks', 'maple-planks'],
+      ['maple-planks', 'maple-planks']
+      ]
+  },
+
 // === Ore vein generator ===
 function generateVein(startGX, startGY, startGZ, size, type) {
   const placed = [];
