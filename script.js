@@ -105,35 +105,35 @@ function getExposedFacesFor(gx, gy, gz) {
 // === Crafting recipies ===
 const recipies = [
   {
-    output: { item: 'wood-crafting-station', count: 1},
+    output: { item: 'maple-crafting-station', count: 1},
     pattern: [
       ['maple-planks', 'maple-planks'],
       ['maple-planks', 'maple-planks']
       ]
   },
   {
-    output: { item: 'wood-crafting-station', count: 1},
+    output: { item: 'pine-crafting-station', count: 1},
     patern: [
       ['pine-planks', 'pine-planks'],
       ['pine-planks', 'pine-planks']
       ]
   },
   {
-    output: { item: 'wood-crafting-station', count: 1},
+    output: { item: 'oak-crafting-station', count: 1},
     patern: [
       ['oak-planks', 'oak-planks'],
       ['oak-planks', 'oak-planks']
       ]
   },
   {
-    output: { item: 'wood-crafting-station', count: 1},
+    output: { item: 'cedar-crafting-station', count: 1},
     patern: [
       ['cedar-planks', 'cedar-planks'],
       ['cedar-planks', 'cedar-planks']
       ]
   },
   {
-    output: { item: 'wood-crafting-station', count: 1},
+    output: { item: 'birch-crafting-station', count: 1},
     patern: [
       ['birch-planks', 'birch-planks'],
       ['birch-planks', 'birch-planks']
