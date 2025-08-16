@@ -111,7 +111,157 @@ const recipies = [
       ['maple-planks', 'maple-planks']
       ]
   },
-
+  {
+    output: { item: 'wood-crafting-station', count: 1},
+    patern: [
+      ['pine-planks', 'pine-planks'],
+      ['pine-planks', 'pine-planks']
+      ]
+  },
+  {
+    output: { item: 'wood-crafting-station', count: 1},
+    patern: [
+      ['oak-planks', 'oak-planks'],
+      ['oak-planks', 'oak-planks']
+      ]
+  },
+  {
+    output: { item: 'wood-crafting-station', count: 1},
+    patern: [
+      ['cedar-planks', 'cedar-planks'],
+      ['cedar-planks', 'cedar-planks']
+      ]
+  },
+  {
+    output: { item: 'wood-crafting-station', count: 1},
+    patern: [
+      ['birch-planks', 'birch-planks'],
+      ['birch-planks', 'birch-planks']
+      ]
+  },
+  {
+    output: { item: 'maple-planks', count: 4},
+    patern: [
+      [null, null],
+      [null, 'maple-log']
+      ]
+  },
+  {
+    output: { item: 'pine-planks', count: 4},
+    patern: [
+      [null, null],
+      [null, 'pine-log']
+      ]
+  },
+  {
+    output: { item: 'oak-planks', count: 4},
+    patern: [
+      [null, null],
+      [null, 'oak-log']
+      ]
+  },
+  {
+    output: { item: 'cedar-planks', count: 4},
+    patern: [
+      [null, null],
+      [null, 'cedar-log']
+      ]
+  },
+  {
+    output: { item: 'birch-planks', count: 4},
+    patern: [
+      [null, null],
+      [null, 'birch-log']
+      ]
+  },
+  {
+    output: { item: 'stick', count: 16},
+    pattern: [
+      [null, 'maple-planks'],
+      [null, 'maple-planks']
+      ]
+  },
+  {
+    output: { item: 'stick-block', count: 1},
+    patern: [
+      ['stick', 'stick', 'stick'],
+      ['stick', 'stick', 'stick'],
+      ['stick', 'stick', 'stick']
+      ]
+  },
+  {
+    output: { item: 'coal-block', count: 1},
+    patern: [
+      ['coal', 'coal', 'coal'],
+      ['coal', 'coal', 'coal'],
+      ['coal', 'coal', 'coal']
+      ]
+  },
+  {
+    output: { item: 'copper-block', count: 1},
+    patern: [
+      ['copper-bar', 'copper-bar', 'copper-bar'],
+      ['copper-bar', 'copper-bar', 'copper-bar'],
+      ['copper-bar', 'copper-bar', 'copper-bar']
+      ]
+  },
+  {
+    output: { item: 'tin-block', count: 1},
+    patern: [
+      ['tin-bar', 'tin-bar', 'tin-bar'],
+      ['tin-bar', 'tin-bar', 'tin-bar'],
+      ['tin-bar', 'tin-bar', 'tin-bar']
+      ]
+  },
+  {
+    output: { item: 'bronze-block', count: 1},
+    patern: [
+      ['bronze-bar', 'bronze-bar', 'bronze-bar'],
+      ['bronze-bar', 'bronze-bar', 'bronze-bar'],
+      ['bronze-bar', 'bronze-bar', 'bronze-bar']
+      ]
+  },
+  {
+    output: { item: 'iron-block', count: 1},
+    patern: [
+      ['iron-bar', 'iron-bar', 'iron-bar'],
+      ['iron-bar', 'iron-bar', 'iron-bar'],
+      ['iron-bar', 'iron-bar', 'iron-bar']
+      ]
+  },
+  {
+    output: { item: 'steel-block', count: 1},
+    patern: [
+      ['steel-bar', 'steel-bar', 'steel-bar'],
+      ['steel-bar', 'steel-bar', 'steel-bar'],
+      ['steel-bar', 'steel-bar', 'steel-bar']
+      ]
+  },
+  {
+    output: { item: 'diamond-block', count: 1},
+    patern: [
+      ['diamond', 'diamond', 'diamond'],
+      ['diamond', 'diamond', 'diamond'],
+      ['diamond', 'diamond', 'diamond'],
+      ]
+  },
+  {
+    output: { item: 'amber-block', count: 1},
+    patern: [
+      ['amber-chunk', 'amber-chunk', 'amber-chunk'],
+      ['amber-chunk', 'amber-chunk', 'amber-chunk'],
+      ['amber-chunk', 'amber-chunk', 'amber-chunk']
+      ]
+  },
+  {
+    output: { item: 'ruby-block', count: 1},
+    patern: [
+      ['ruby', 'ruby', 'ruby'],
+      ['ruby', 'ruby', 'ruby'],
+      ['ruby', 'ruby', 'ruby'],
+      ]
+  },
+      
 // === Ore vein generator ===
 function generateVein(startGX, startGY, startGZ, size, type) {
   const placed = [];
