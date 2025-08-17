@@ -182,7 +182,35 @@ const sharedCraftingRecipes = [
       ]
   },
   {
-    output: { item: 'stick-block', count: 1},
+    output: { item: 'stick', count: 16},
+    patern: [
+      [null, 'pine-planks.block'],
+      [null, 'pine-planks.block']
+      ]
+  },
+  {
+    output: { item: 'stick', count: 16},
+    patern: [
+      [null, 'oak-planks.block'],
+      [null, 'oak-planks.block']
+      ]
+  },
+  {
+    output: { item: 'stick', count: 16},
+    patern: [
+      [null, 'cedar-planks.block'],
+      [null, 'cedar-planks.block']
+      ]
+  },
+  {
+    output: { item: 'stick', count: 16},
+    patern: [
+      [null, 'birch-planks.block'],
+      [null, 'birch-planks.block']
+      ]
+  },
+  {
+    output: { item: 'stick.block', count: 1},
     patern: [
       ['stick', 'stick', 'stick'],
       ['stick', 'stick', 'stick'],
@@ -270,107 +298,107 @@ const sharedCraftingRecipes = [
      ]
   },
   {
-    output: { item: 'cutting-station.block', count: 1},
+    output: { item: 'maple-cutting-station.block', count: 1},
     patern: [
       [null, 'saw'],
       [null, 'maple-crafting-station.block']
       ]
   },
   {
-    output: { item: 'cutting-station.block', count: 1},
+    output: { item: 'pine-cutting-station.block', count: 1},
     patern: [
       [null, 'saw'],
       [null, 'pine-cafting-station.block']
       ]
   },
   {
-    output: { item: 'cutting-station.block', count: 1},
+    output: { item: 'oak-cutting-station.block', count: 1},
     patern: [
       [null, 'saw'],
       [null, 'oak-crafting-station.block']
       ]
   },
   {
-    output: { item: 'cutting-station.block', count: 1},
+    output: { item: 'cedar-cutting-station.block', count: 1},
     patern: [
       [null, 'saw'],
       [null, 'cedar-crafting-station.block']
       ]
   },
   {
-    output: { item: 'cutting-station.block', count: 1},
+    output: { item: 'birch-cutting-station.block', count: 1},
     patern: [
       [null, 'saw'],
       [null, 'birch-crafting-station']
       ]
   },
   {
-    output: { item: 'chisel', count: 1},
+    output: { item: 'maple-chisel', count: 1},
     patern: [
       [null, 'iron-bar'],
       [null, 'maple-planks.block']
       ]
   },
   {
-    output: { item: 'chisel', count: 1},
+    output: { item: 'pine-chisel', count: 1},
     patern: [
       [null, 'iron-bar'],
       [null, 'pine-planks.block']
       ]
   },
   {
-    output: { item: 'chisel', count: 1},
+    output: { item: 'oak-chisel', count: 1},
     patern: [
       [null, 'iron-bar'],
       [null, 'oak-planks.block']
       ]
   },
   {
-    output: { item: 'chisel', count: 1},
+    output: { item: 'cedar-chisel', count: 1},
     patern: [
       [null, 'iron-bar'],
       [null, 'cedar-planks.block']
       ]
   },
   {
-    output: { item: 'chisel', count: 1},
+    output: { item: 'birch-chisel', count: 1},
     patern: [
       [null, 'iron-bar'],
       [null, 'birch-planks.block']
       ]
   },
   {
-    output: { item: 'engraving-station.block', count: 1},
+    output: { item: 'maple-engraving-station.block', count: 1},
     patern: [
-      [null, 'chisel'],
+      [null, 'maple-chisel'],
       [null, 'maple-crafting-station.block']
       ]
   },
   {
-    output: { item: 'engraving-station.block', count: 1},
+    output: { item: 'pine-engraving-station.block', count: 1},
     patern: [
-      [null, 'chisel'],
+      [null, 'pine-chisel'],
       [null, 'pine-crafting-station.block']
       ]
   },
   {
-    output: { item: 'engraving-station.block', count: 1},
+    output: { item: 'oak-engraving-station.block', count: 1},
     patern: [
-      [null, 'chisel'],
+      [null, 'oak-chisel'],
       [null, 'oak-crafting-station.block']
       ]
   },
   {
-    output: { item: 'engraving-station.block', count: 1},
+    output: { item: 'cedar-engraving-station.block', count: 1},
     patern: [
-      [null, 'chisel'],
+      [null, 'cedar-chisel'],
       [null, 'cedar-crafting-station.block']
       ]
   },
   {
-    output: { item: 'engraving-station.block', count: 1},
+    output: { item: 'birch-engraving-station.block', count: 1},
     patern: [
-      [null, 'chisel'],
+      [null, 'birch-chisel'],
       [null, 'birch-crafting-station.block']
       ]
   },
@@ -383,10 +411,38 @@ const sharedCraftingRecipes = [
       ]
   },
   {
-    output: { item: 'cooking-station', count: 1},
+    output: { item: 'maple-cooking-station', count: 1},
     patern: [
       [null, 'plate'],
       [null, 'maple-crafting-station']
+      ]
+  },
+  {
+    output: { item: 'pine-cooking-station', count: 1},
+    patern: [
+      [null, 'plate'],
+      [null, 'pine-crafting-station']
+      ]
+  },
+  {
+    output: { item: 'oak-cooking-station', count: 1},
+    patern: [
+      [null, 'plate'],
+      [null, 'oak-crafting-station']
+      ]
+  },
+  {
+    output: { item: 'cedar-cooking-station', count: 1},
+    patern: [
+      [null, 'plate'],
+      [null, 'cedar-crafting-station']
+      ]
+  },
+  {
+    output: { item: 'birch-cooking-station', count: 1},
+    patern: [
+      [null, 'plate'],
+      [null, 'birch-crafting-station']
       ]
   },
   {
@@ -396,7 +452,15 @@ const sharedCraftingRecipes = [
       ['copper-bar', null, 'copper-bar'],
       [null, 'copper-bar', null]
       ]
-  }
+  },
+  {
+    output: { item: 'smelting-station', count: 1},
+    patern: [
+      ['cobblestone.block', 'cobblestone.block', 'cobblestone.block'],
+      ['cobblestone.block', 'cobblestone.block', 'cobblestone.block'],
+      ['cobblestone.block', 'cobblestone.block', 'cobblestone.block']
+      ]
+  },
   ];
 
 const smeltingRecipes = [
