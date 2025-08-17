@@ -103,7 +103,7 @@ function getExposedFacesFor(gx, gy, gz) {
 }
 
 // === Crafting recipes ===
-const sharedCraftingRecipes = [
+const basicRecipes = [
   {
     output: { item: 'maple-crafting-station', count: 1},
     pattern: [
@@ -576,15 +576,30 @@ const cookingRecipes = [
   };
 
 const allRecipes = {
-  'maple-crafting-station': sharedCraftingRecipes,
-  'pine-crafting-station': sharedCraftingRecipes,
-  'oak-crafting-station': sharedCraftingRecipes,
-  'cedar-crafting-station': sharedCraftingRecipes,
-  'birch-crafting-station': sharedCraftingRecipes,
-  'smelting-station': smeltingRecipes,
-  'cutting-station': cuttingRecipes,
-  'engraving-station': engravingRecipes,
-  'cooking-station': cookingRecipes
+  'maple-crafting-station.block': basicRecipes,
+  'pine-crafting-station.block': basicRecipes,
+  'oak-crafting-station.block': basicRecipes,
+  'cedar-crafting-station.block': basicRecipes,
+  'birch-crafting-station.block': basicRecipes,
+  'maple-cutting-station.block': cuttingRecipes,
+  'pine-cutting-station.block': cuttingRecipes,
+  'oak-cutting-station.block': cuttingRecipes,
+  'cedar-cutting-station.block': cuttingRecipes,
+  'birch-cutting-station.block': cuttingRecipes,
+  'maple-engraving-station.block': engravingRecipes,
+  'pine-engraving-station.block': engravingRecipes,
+  'oak-engraving-station.block': engravingRecipes,
+  'cedar-engraving-station.block': engravingRecipes,
+  'birch-engraving-station.block': engravingRecipes,
+  'maple-cooking-station.block': cookingRecipes,
+  'pine-cooking-station.block': cookingRecipes,
+  'oak-cooking-station.block': cookingRecipes,
+  'cedar-cooking-station.block': cookingRecipes,
+  'birch-cooking-station.block': cookingRecipes,
+  'smelting-station.block': smeltingRecipes,
+};
+    
+  
       
 // === Ore vein generator ===
 function generateVein(startGX, startGY, startGZ, size, type) {
