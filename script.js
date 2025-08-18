@@ -623,41 +623,147 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper-sword', count: 1},
-    patern: 
+    patern: [
+      ['copper-bar', 'copper-bar', 'copper-bar'],
+      [null, 'stick', null],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'tin-sword', count: 1},
+    patern: [
+      ['tin-bar', 'tin-bar', 'tin-bar'],
+      [null, 'stick', null],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'bronze-sword', count: 1},
+    patern: [
+      ['bronze-bar', 'bronze-bar', 'bronze-bar'],
+      [null, 'stick', null],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'iron-sword', count: 1},
+    patern: [
+      ['iron-bar', 'iron-bar', 'iron-bar'],
+      [null, 'stick', null],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'steel-sword', count; 1},
+    patern: [
+      ['steel-bar', 'steel-bar', 'steel-bar'],
+      [null, 'stick', null],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'diamond-sword', count: 1},
+    patern: [
+      ['diamond', 'diamond', 'diamond'],
+      [null, 'stick', null],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'solid-copper-sword', count: 1},
+    patern: [
+      ['copper.block', 'copper.block', 'copper.block'],
+      [null, 'stick.block', null],
+      [null, 'stick.block', null]
+      ]
+  },
   {
     output: { item: 'solid-tin-sword', count: 1},
+    patern: [
+      ['tin.block', 'tin.block', 'tin.block'],
+      [null, 'stick.block', null],
+      [null, 'stick.block', null]
+      ]
+  },
   {
     output: { item: 'solid-bronze-sword', count: 1},
+    patern: [
+      ['bronze.block', 'bronze.block', 'bronze.block'],
+      [null, 'stick.block', null],
+      [null, 'stick.block', null]
+      ]
+  },
   {
     output: { item: 'solid-iron-sword', count: 1},
+    patern: [
+      ['iron.block', 'iron.block', 'iron.block'],
+      [null, 'stick.block', null],
+      [null, 'stick.block', null]
+      ]
+  },
   {
     output: { item: 'solid-steel-sword', count: 1},
+    patern: [
+      ['steel.block', 'steel.block', 'steel.block'],
+      [null, 'stick.block', null],
+      [null, 'stick.block', null]
+      ]
+  },
   {
-    output: { item: 'solid-steel-sword', count: 1},
+    output: { item: 'solid-diamond-sword', count: 1},
+    patern: [
+      ['diamond.block', 'diamond.block', 'diamond.block'],
+      [null, 'stick.block', null],
+      [null, 'stick.block', null]
+      ]
+  },
   {
     output: { item: 'dragon-sword-blade-tip', count: 1},
+    patern: [
+      [null, 'dragon-scale', 'dragon-scale'],
+      ['dragon-scale', 'dragon-scale', 'dragon-scale'],
+      ['dragon-scale', 'dragon-scale', null]
+      ]
+  },
   {
     output: { item: 'dragon-sword-blade-midsection', count: 1},
+    patern: [
+      [null, 'dragon-scale', null],
+      ['dragon-scale', 'dragon-scale', 'dragon-scale'],
+      [null, 'dragon-scale', null]
+      ]
+  },
   {
     output: { item: 'dragon-sword-blade-base', count: 1},
+    patern: [
+      [null, 'dragon-scale', null],
+      ['dragon-scale', 'dragon-scale', 'dragon-scale'],
+      ['dragon-scale', 'dragon-scale', null]
+      ]
+  },
   {
     output: { item: 'dragon-sword-blade', count: 1},
+    patern: [
+      [null, null, 'dragon-sword-blade-tip'],
+      [null, 'dragon-sword-blade-midsection', null],
+      ['dragon-sword-blade-base', null, null]
+      ]
+  },
   {
     output: { item: 'dragon-sword-handle', count: 1},
+    patern: [
+      ['stick', null, 'amber-chunk'],
+      [null, 'ruby', null],
+      ['stick', null, 'stick']
+      ]
+  },
   {
     output: { item: 'dragon-sword', count: 1},
+    patern: [
+      [null, 'dragon-sword-blade'],
+      ['dragon-sword-handle', null]
+      ]
+  },
   {
     output: { item: 'absolute-unit-sword-blade-tip', count: 1},
   {
@@ -680,104 +786,146 @@ const basicRecipes = [
     output: { item: 'tin-axe', count: 1},
   {
     output: { item: 'bronze-axe', count: 1},
-    {
+  {
     output: { item: 'iron-axe', count: 1},
-    {
+  {
     output: { item: 'steel-axe', count: 1},
-    {
+  {
     output: { item: 'diamond-axe', count: 1},
-    {
+  {
     output: { item: 'solid-copper-axe', count: 1},
-    {
+  {
     output: { item: 'soid-tin-axe', count: 1},
-    {
+  {
     output: { item: 'solid-bronze-axe', count: 1},
-    {
+  {
     output: { item: 'solid-iron-axe', count: 1},
-    {
+  {
     output: { item: 'solid-steel-axe', count: 1},
-    {
+  {
     output: { item: 'solid-diamond-axe', count: 1},
-    {
+  {
     output: { item: 'wood-shovel', count: 1},
-    {
+  {
     output: { item: 'wood-shovel', count: 1},
-    {
+  {
     output: { item: 'stone-shovel', count: 1},
-    {
+  {
     output: { item: 'copper-shovel', count: 1},
-    {
+  {
     output: { item: 'tin-shovel', count: 1},
-    {
+  {
     output: { item: 'bronze-shovel', count: 1},
-    {
+  {
     output: { item: 'iron-shovel', count: 1},
-    {
+  {
     output: { item: 'steel-shovel', count: 1},
-    {
+  {
     output: { item: 'diamond-shovel', count: 1},
-    {
+  {
     output: { item: 'solid-copper-shovel', count: 1},
-    {
+  {
     output: { item: 'solid-tin-shovel', count: 1},
-    {
+  {
     output: { item: 'solid-bronze-shovel', count: 1},
-    {
+  {
     output: { item: 'solid-iron-shovel', count: 1},
-    {
+  {
     output: { item: 'solid-steel-shovel', count: 1},
-    {
+  {
     output: { item: 'solid-diamond-shovel', count: 1},
-    {
+  {
     output: { item: 'wood-hoe', count: 1},
-    {
+  {
     output: { item: 'stone-hoe', count: 1},
-    {
+  {
     output: { item: 'copper-hoe', count: 1},
-    {
+  {
     output: { item: 'tin-hoe', count: 1},
-    {
+  {
     output: { item: 'bronze-hoe', count: 1},
-    {
+  {
     output: { item: 'iron-hoe', count: 1},
-    {
+  {
     output: { item: 'steel-hoe', count: 1},
-    {
+  {
     output: { item: 'diamond-hoe', count: 1},
-    {
+  {
     output: { item: 'solid-copper-hoe', count: 1},
-    {
+  {
     output: { item: 'solid-tin-hoe', count: 1},
-    {
+  {
     output: { item: 'solid-bronze-hoe', count: 1},
-    {
+  {
     output: { item: 'solid-iron-hoe', count: 1},
-    {
+  {
     output: { item: 'solid-steel-hoe', count: 1},
-    {
+  {
     output: { item: 'solid-diamond-hoe', count: 1},
-    {
+  {
     output: { item: 'maple-locker.block', count: 1},
-    {
+    patern: [
+      ['maple-planks.block', 'maple-planks.block', 'maple-planks.block'],
+      ['maple-planks.block', null, 'maple-planks.block'],
+      ['maple-planks.block', 'maple-planks.block', 'maple-planks.block']
+      ]
+  },
+  {
     output: { item: 'stone-locker.block', count: 1},
-    {
+    patern: [
+      ['cobblestone.block', 'cobblestone.block', 'cobblestone.block'],
+      ['cobblestone.block', 'maple-locker.block', 'cobblestone.block'],
+      ['cobblestone.block', 'cobblestone.block', 'cobblestone.block']
+      ]
+  },
+  {
     output: { item: 'copper-locker.block', count: 1},
-    {
+    patern: [
+      ['copper-bar', 'copper-bar', 'copper-bar'],
+      ['copper-bar', 'stone-locker.block', 'copper.block'],
+      ['copper-bar', 'copper-bar', 'copper-bar']
+      ]
+  },
+  {
     output: { item: 'tin-locker.block', count: 1},
-    {
+    patern: [
+      ['tin-bar', 'tin-bar', 'tin-bar'],
+      ['tin-bar', 'copper-locker.block', 'tin-bar'],
+      ['tin-bar', 'tin-bar', 'tin-bar']
+      ]
+  },
+  {
     output: { item: 'bronze-locker.block', count: 1},
-    {
+    patern: [
+      ['bronze-bar', 'bronze-bar', 'bronze-bar'],
+      ['bronze-bar', 'tin-locker.block', 'bronze-bar'],
+      ['bronze-bar', 'bronze-bar', 'bronze-bar']
+      ]
+  },
+  {
     output: { item: 'iron-locker.block', count: 1},
-    {
+    patern: [
+      ['iron-bar', 'iron-bar', 'iron-bar'],
+      ['iron-bar', 'bronze-locker.block', 'iron-bar'],
+      ['iron-bar', 'iron-bar', 'iron-bar']
+      ]
+  },
+  {
     output: { item: 'steel-locker.block', count: 1},
-    {
+    patern: [
+      ['steel-bar', 'steel-bar', 'steel-bar'],
+      ['steel-bar', 'iron-locker.block', 'steel-bar'],
+      ['steel-bar', 'steel-bar', 'steel-bar']
+      ]
+  },
+  {
     output: { item: 'diamond-locker.block', count: 1},
-    {
-    output: { item: 'maple-door.block', count: 1},
-    {
-    output: { item: 'maple-fence.block', count: 1},
-    {
-    output: { item: 'maple-fence-gate.block', count: 1},
+    patern: [
+      ['diamond', 'diamond', 'diamond'],
+      ['diamond', 'steel-locker.block', 'diamond'],
+      ['diamond', 'diamond', 'diamond']
+      ]
+  },
     ];
 const smeltingRecipes = [
   {
