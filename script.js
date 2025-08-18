@@ -766,12 +766,34 @@ const basicRecipes = [
   },
   {
     output: { item: 'absolute-unit-sword-blade-tip', count: 1},
+    patern: [
+      [null, 'dragon-scale.block', 'dragon-scale.block'],
+      ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
+      ['dragon-scale.block', 'dragon-scale.block', null]
+      ]
+  },
   {
     output: { item: 'absolute-unit-sword-blade-midsection', count: 1},
+    patern: [
+      [null, 'dragon-scale.block', null],
+      ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
+      [null, 'dragon-scale.block', null]
+      ]
+  },
   {
     output: { item: 'absolute-unit-sword-blade-base', count: 1},
+    patern: [
+      [null, 'dragon-scale.block', null],
+      ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
+      ['dragon-scale.block', 'dragon-scale.block', null]
   {
     output: { item: 'absolute-unit-sword-blade', count: 1},
+    patern: [
+      [null, null, 'absolute-unit-sword-blade-tip'],
+      [null, 'absolute-unit-sword-blade-midsection', null],
+      ['absolute-unit-sword-blade-base', null]
+      ]
+  },
   {
     output: { item: 'absolute-unit-sword-handle', count: 1},
   {
