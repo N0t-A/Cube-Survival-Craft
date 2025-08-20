@@ -796,14 +796,38 @@ const basicRecipes = [
   },
   {
     output: { item: 'absolute-unit-sword-handle', count: 1},
+    patern: [
+      ['stick.block', null, 'amber.block'],
+      [null, 'ruby.block', null],
+      ['stick.block', null, 'stick.block']
+      ]
+  },
   {
     output: { item: 'absolute-unit-sword', count: 1},
+    patern: [
+      [null, 'absolute-unit-sword-blade'],
+      ['absolute-unit-sword-handle', null]
+      ]
+  },
   {
     output: { item: 'wood-axe', count: 1},
+    patern: [
+      [null, 'maple-planks.block', 'maple-planks.block'],
+      [null, 'stick', 'maple-planks.block'],
+      [null, 'stick', 'stick']
+      ]
+  },
   {
     output: { item: 'stone-axe', count: 1},
+    patern: [
+      [null, 'cobblestone.block', 'cobblestone.block'],
+      [null, 'stick', 'cobblestone'],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'copper-axe', count: 1},
+    patern: [
   {
     output: { item: 'tin-axe', count: 1},
   {
