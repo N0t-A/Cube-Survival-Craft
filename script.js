@@ -828,16 +828,49 @@ const basicRecipes = [
   {
     output: { item: 'copper-axe', count: 1},
     patern: [
+      [null, 'copper-bar', 'copper-bar'],
+      [null, 'stick', 'copper-bar'],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'tin-axe', count: 1},
+    patern: [
+      [null, 'tin-bar', 'tin-bar'],
+      [null, 'stick', 'tin-bar'],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'bronze-axe', count: 1},
+    patern: [
+      [null, 'bronze-bar', 'bronze-bar'],
+      [null, 'stick', 'bronze-bar'],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'iron-axe', count: 1},
+    patern: [
+      [null, 'iron-bar', 'iron-bar'],
+      [null, 'stick', 'iron-bar'],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'steel-axe', count: 1},
+    patern: [
+      [null, 'steel-bar', 'steel-bar'],
+      [null, 'stick', 'steel-bar'],
+      [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'diamond-axe', count: 1},
+    patern: [
+      [null, 'diamond', 'diamond'],
+      [null, 'stick', 'diamond'],
+      [null, 'stick', null]
   {
     output: { item: 'solid-copper-axe', count: 1},
   {
