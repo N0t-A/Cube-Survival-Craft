@@ -686,7 +686,7 @@ const basicRecipes = [
       ]
   },
   {
-    output: { item: 'steel-sword', count; 1},
+    output: { item: 'steel-sword', count: 1},
     pattern: [
       [null, 'steel-bar', null],
       [null, 'steel-bar', null],
@@ -818,6 +818,7 @@ const basicRecipes = [
       [null, 'dragon-scale.block', null],
       ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
       ['dragon-scale.block', 'dragon-scale.block', null]
+      ]
   },
   {
     output: { item: 'absolute-unit-sword-blade', count: 1},
@@ -904,6 +905,8 @@ const basicRecipes = [
       [null, 'diamond', 'diamond'],
       [null, 'stick', 'diamond'],
       [null, 'stick', null]
+      ]
+  },
   {
     output: { item: 'solid-copper-axe', count: 1},
     pattern: [
@@ -1063,6 +1066,7 @@ const basicRecipes = [
       [null, 'stick.block', null],
       [null, 'stick.block', null]
       ]
+  },
   {
     output: { item: 'solid-bronze-shovel', count: 1},
     pattern: [
