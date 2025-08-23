@@ -1454,38 +1454,192 @@ class SmeltingStation {
 }
       
 const cuttingRecipes = {
+  // Blocks with slabs and stairs
   'maple-planks.block': [
-    {
-      item: 'maple-planks.slab',
-      count: 2
+    { item: 'maple-planks.slab', count: 2 },
+    { items: [
+        { item: 'maple-planks.large-stairs', count: 1 },
+        { item: 'maple-planks.small-stairs', count: 1 }
+      ] 
     },
-    {
-      items: [
-        { item: 'maple-planks.large-stairs', count: 1},
-        { item: 'maple-planks.small-stairs', count: 1}
-        ]
-    },
-    {
-      item: 'maple-planks.small-stairs',
-      count: 4
-    },
-    ],
+    { item: 'maple-planks.small-stairs', count: 4 }
+  ],
   'pine-planks.block': [
-    {
-      item: 'pine-planks.slab',
-      count: 2
+    { item: 'pine-planks.slab', count: 2 },
+    { items: [
+        { item: 'pine-planks.large-stairs', count: 1 },
+        { item: 'pine-planks.small-stairs', count: 1 }
+      ] 
     },
-    {
-      items: [
-        { item: 'pine-planks.large-stairs', count: 1},
-        { item: 'pine-planks.small-stairs', count: 1}
-        ]
+    { item: 'pine-planks.small-stairs', count: 4 }
+  ],
+  'oak-planks.block': [
+    { item: 'oak-planks.slab', count: 2 },
+    { items: [
+        { item: 'oak-planks.large-stairs', count: 1 },
+        { item: 'oak-planks.small-stairs', count: 1 }
+      ] 
     },
-    {
-      item: 'pine-planks.small-stairs',
-      count: 4
+    { item: 'oak-planks.small-stairs', count: 4 }
+  ],
+  'cedar-planks.block': [
+    { item: 'cedar-planks.slab', count: 2 },
+    { items: [
+        { item: 'cedar-planks.large-stairs', count: 1 },
+        { item: 'cedar-planks.small-stairs', count: 1 }
+      ] 
     },
-    ]
+    { item: 'cedar-planks.small-stairs', count: 4 }
+  ],
+  'birch-planks.block': [
+    { item: 'birch-planks.slab', count: 2 },
+    { items: [
+        { item: 'birch-planks.large-stairs', count: 1 },
+        { item: 'birch-planks.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'birch-planks.small-stairs', count: 4 }
+  ],
+  'maple-log.block': [
+    { item: 'maple-log.slab', count: 2 },
+    { items: [
+        { item: 'maple-log.large-stairs', count: 1 },
+        { item: 'maple-log.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'maple-log.small-stairs', count: 4 }
+  ],
+  'pine-log.block': [
+    { item: 'pine-log.slab', count: 2 },
+    { items: [
+        { item: 'pine-log.large-stairs', count: 1 },
+        { item: 'pine-log.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'pine-log.small-stairs', count: 4 }
+  ],
+  'oak-log.block': [
+    { item: 'oak-log.slab', count: 2 },
+    { items: [
+        { item: 'oak-log.large-stairs', count: 1 },
+        { item: 'oak-log.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'oak-log.small-stairs', count: 4 }
+  ],
+  'cedar-log.block': [
+    { item: 'cedar-log.slab', count: 2 },
+    { items: [
+        { item: 'cedar-log.large-stairs', count: 1 },
+        { item: 'cedar-log.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'cedar-log.small-stairs', count: 4 }
+  ],
+  'birch-log.block': [
+    { item: 'birch-log.slab', count: 2 },
+    { items: [
+        { item: 'birch-log.large-stairs', count: 1 },
+        { item: 'birch-log.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'birch-log.small-stairs', count: 4 }
+  ],
+  'stone.block': [
+    { item: 'stone.slab', count: 2 },
+    { items: [
+        { item: 'stone.large-stairs', count: 1 },
+        { item: 'stone.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'stone.small-stairs', count: 4 }
+  ],
+  'cobblestone.block': [
+    { item: 'cobblestone.slab', count: 2 },
+    { items: [
+        { item: 'cobblestone.large-stairs', count: 1 },
+        { item: 'cobblestone.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'cobblestone.small-stairs', count: 4 }
+  ],
+  'stone-bricks.block': [
+    { item: 'stone-bricks.slab', count: 2 },
+    { items: [
+        { item: 'stone-bricks.large-stairs', count: 1 },
+        { item: 'stone-bricks.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'stone-bricks.small-stairs', count: 4 }
+  ],
+  'chisled-stone.block': [
+    { item: 'chisled-stone.slab', count: 2 },
+    { items: [
+        { item: 'chisled-stone.large-stairs', count: 1 },
+        { item: 'chisled-stone.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'chisled-stone.small-stairs', count: 4 }
+  ],
+  'cobblestone-bricks.block': [
+    { item: 'cobblestone-bricks.slab', count: 2 },
+    { items: [
+        { item: 'cobblestone-bricks.large-stairs', count: 1 },
+        { item: 'cobblestone-bricks.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'cobblestone-bricks.small-stairs', count: 4 }
+  ],
+  'copper.block': [
+    { item: 'copper.slab', count: 2 },
+    { items: [
+        { item: 'copper.large-stairs', count: 1 },
+        { item: 'copper.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'copper.small-stairs', count: 4 }
+  ],
+  'tin.block': [
+    { item: 'tin.slab', count: 2 },
+    { items: [
+        { item: 'tin.large-stairs', count: 1 },
+        { item: 'tin.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'tin.small-stairs', count: 4 }
+  ],
+  'bronze.block': [
+    { item: 'bronze.slab', count: 2 },
+    { items: [
+        { item: 'bronze.large-stairs', count: 1 },
+        { item: 'bronze.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'bronze.small-stairs', count: 4 }
+  ],
+  'steel.block': [
+    { item: 'steel.slab', count: 2 },
+    { items: [
+        { item: 'steel.large-stairs', count: 1 },
+        { item: 'steel.small-stairs', count: 1 }
+      ] 
+    },
+    { item: 'steel.small-stairs', count: 4 }
+  ],
+
+  // Blocks with slabs only
+  'sand.block': [ { item: 'sand.slab', count: 2 } ],
+  'gravel.block': [ { item: 'gravel.slab', count: 2 } ],
+  'maple-leaves.block': [ { item: 'maple-leaves.slab', count: 2 } ],
+  'pine-leaves.block': [ { item: 'pine-leaves.slab', count: 2 } ],
+  'oak-leaves.block': [ { item: 'oak-leaves.slab', count: 2 } ],
+  'cedar-leaves.block': [ { item: 'cedar-leaves.slab', count: 2 } ],
+  'birch-leaves.block': [ { item: 'birch-leaves.slab', count: 2 } ],
+  'coal.block': [ { item: 'coal.slab', count: 2 } ],
+  'iron.block': [ { item: 'iron.slab', count: 2 } ],
+  'diamond.block': [ { item: 'diamond.slab', count: 2 } ],
+  'ruby.block': [ { item: 'ruby.slab', count: 2 } ],
+  'amber.block': [ { item: 'amber.slab', count: 2 } ]
 };
 
 const engravingRecipes = {
