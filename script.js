@@ -1995,6 +1995,7 @@ function updatePlayerPosition(){
   }
 }
 
+
 // === Game loop ===
 function animate(){
   updatePlayerPosition();
