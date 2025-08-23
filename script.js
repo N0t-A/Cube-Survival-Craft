@@ -74,7 +74,7 @@ function updateCamera() {
   scene.style.transform = `rotateY(${-yaw}deg) translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)`;
 
   // Pitch = rotate camera-eye up/down (vertical look)
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+  scene.style.transform = `rotateX(${pitch}deg)`;
 
   // Rotate the player model to match yaw (left/right)
   playerModel.style.transform = `translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px) rotateY(${yaw}deg)`;
