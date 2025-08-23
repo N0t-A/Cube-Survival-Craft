@@ -1322,7 +1322,7 @@ const fuelItems = {
     'pine-planks.large-stairs': 3,
     'oak-log.block': 6,
     'oak-planks.block': 4,
-    'oak-planks.slab: 2,
+    'oak-planks.slab': 2,
     'oak-planks.small-stairs': 1,
     'oak-planks.large-stairs': 3,
     'cedar-log.block': 6,
