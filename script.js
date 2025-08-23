@@ -69,6 +69,21 @@ function onMouseMove(e) {
   console.log(`Camera rotation - yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
 }
 
+function updateCamera() {
+  // Yaw = rotate scene horizontally (left/right)
+  scene.style.transform = `rotateY(${yaw}deg)`;
+
+  // Pitch = look up/down (only rotate the eye, not the whole scene)
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+
+  // Keep camera at player position + eye height
+  const cameraY = posY - eyeHeight;
+  cameraYaw.style.transform = `translate3d(${-posX}px, ${-cameraY}px, ${-posZ}px)`;
+
+  // Rotate player model to match yaw
+  playerModel.style.transform = `translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px) rotateY(${yaw}deg)`;
+}
+
 // === Block helpers ===
 function createBlockElement(gx, gy, gz, type, exposedFaces) {
   const el = document.createElement('div');
@@ -1986,6 +2001,7 @@ function updateTransforms(){
 function animate(){
   updatePlayerPosition();
   updateTransforms();
+  updateCamera();
   requestAnimationFrame(animate);
 }
 
