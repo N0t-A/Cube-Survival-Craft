@@ -1655,76 +1655,139 @@ const engravingRecipes = {
 
 const cookingRecipes = [
   {
-    output: { item: 'dough', count: 1},
-    patern: [
+    output: { item: 'dough', count: 1 },
+    pattern: [
       [null, null],
       ['wheat', 'water-bucket']
-      ]
+    ]
   },
   {
-    output: { item: 'loaf', count: 1},
-    patern: [
+    output: { item: 'loaf', count: 1 },
+    pattern: [
       [null, null],
       [null, 'dough']
-      ]
+    ]
   },
   {
-    output: { item: 'noodles', count: 1},
-    patern: [
+    output: { item: 'noodles', count: 1 },
+    pattern: [
       [null, null],
       ['dough', 'dough']
-      ]
+    ]
   },
   {
-    output: { item: 'spagheti', count: 1},
-    patern: [
+    output: { item: 'spagheti', count: 1 },
+    pattern: [
       ['noodles', 'tomato'],
       ['plate', null]
-      ]
+    ]
   },
   {
-    output: { item: 'soup', count: 1},
-    patern: [
+    output: { item: 'soup', count: 1 },
+    pattern: [
       ['tomato', 'potato'],
       ['bowl', 'carrot']
-      ]
+    ]
   },
   {
-    output: { item: 'pumpkin-pie', count: 1},
-    patern: [
+    output: { item: 'pumpkin-pie', count: 1 },
+    pattern: [
       ['pumpkin', 'dough'],
       [null, null]
-      ]
+    ]
   },
   {
-    output: { item: 'bread', count: 8},
-    patern: [
+    output: { item: 'bread', count: 8 },
+    pattern: [
       [null, null],
       [null, 'loaf']
-      ]
+    ]
   },
   {
-    output: { item: 'sandwich', count: 1},
-    patern: [
+    output: { item: 'sandwich', count: 1 },
+    pattern: [
       ['bread', 'tomato'],
-      ['tomato', 'bread'],
-      ]
+      ['tomato', 'bread']
+    ]
   },
   {
-    output: { item: 'pancakes', count: 1},
-    patern: [
+    output: { item: 'pancakes', count: 1 },
+    pattern: [
       ['dough', null],
       ['plate', null]
-      ]
+    ]
   },
   {
-    output: { item: 'pancakes-with-syrup', count: 1},
-    patern: [
+    output: { item: 'pancakes-with-syrup', count: 1 },
+    pattern: [
       ['bucket-of-syrup', null],
       ['pancakes', null]
-      ]
+    ]
   }
-  ];
+];
+
+class CookingStation {
+  constructor() {
+    this.inputGrid = [
+      [null, null],
+      [null, null]
+    ];
+    this.outputSlot = null;
+    this.recipes = cookingRecipes; // Use the recipes you already defined
+  }
+
+  // Set an item in the input grid
+  setInput(x, y, item) {
+    this.inputGrid[y][x] = item;
+    this.updateOutput();
+  }
+
+  // Check all recipes and update the output slot
+  updateOutput() {
+    this.outputSlot = null; // Reset first
+    for (let recipe of this.recipes) {
+      if (this.matchesPattern(recipe.pattern)) {
+        this.outputSlot = { ...recipe.output }; // Copy the output
+        break;
+      }
+    }
+  }
+
+  // Check if the input grid matches a recipe pattern exactly
+  matchesPattern(pattern) {
+    for (let y = 0; y < 2; y++) {
+      for (let x = 0; x < 2; x++) {
+        if ((this.inputGrid[y][x] || null) !== (pattern[y][x] || null)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  // Called when player clicks the output slot
+  craftOutput(playerInventory) {
+    if (!this.outputSlot) return false;
+
+    // Check inventory space first
+    if (!playerInventory.canAdd(this.outputSlot.item, this.outputSlot.count)) {
+      return false; // Can't craft, no room
+    }
+
+    // Remove ingredients
+    for (let y = 0; y < 2; y++) {
+      for (let x = 0; x < 2; x++) {
+        this.inputGrid[y][x] = null;
+      }
+    }
+
+    // Add result to inventory
+    playerInventory.add(this.outputSlot.item, this.outputSlot.count);
+    this.updateOutput();
+    return true;
+  }
+}
+
 
 const allRecipes = {
   'maple-crafting-station.block': basicRecipes,
