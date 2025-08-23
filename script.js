@@ -308,7 +308,7 @@ const basicRecipes = [
     output: { item: 'pine-cutting-station.block', count: 1},
     pattern: [
       [null, 'saw'],
-      [null, 'pine-cafting-station.block']
+      [null, 'pine-crafting-station.block']
       ]
   },
   {
@@ -329,7 +329,7 @@ const basicRecipes = [
     output: { item: 'birch-cutting-station.block', count: 1},
     pattern: [
       [null, 'saw'],
-      [null, 'birch-crafting-station']
+      [null, 'birch-crafting-station.block']
       ]
   },
   {
@@ -584,7 +584,7 @@ const basicRecipes = [
   {
     output: { item: 'solid-iron-pickaxe', count: 1},
     pattern: [
-      ['iron.block', 'iron.block', 'iron.bock'],
+      ['iron.block', 'iron.block', 'iron.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
       ]
@@ -855,7 +855,7 @@ const basicRecipes = [
     output: { item: 'stone-axe', count: 1},
     pattern: [
       [null, 'cobblestone.block', 'cobblestone.block'],
-      [null, 'stick', 'cobblestone'],
+      [null, 'stick', 'cobblestone.block'],
       [null, 'stick', null]
       ]
   },
@@ -1061,7 +1061,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-tin-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1152,7 +1152,7 @@ const basicRecipes = [
     pattern: [
       [null, 'copper-bar', 'copper-bar'],
       [null, 'stick', null],
-      [null, 'stick' null]
+      [null, 'stick', null]
       ]
   },
   {
@@ -1306,7 +1306,7 @@ const basicRecipes = [
       ['diamond', 'steel-locker.block', 'diamond'],
       ['diamond', 'diamond', 'diamond']
       ]
-  },
+  }
     ];
 // --- Fuel definitions ---
 const fuelItems = {
