@@ -72,6 +72,7 @@ body {
   background: green;
   transform: translate3d(-500px, 0px, -500px); /* remove rotateX */
   transform-origin: center;
+}
 
 #player-model {
   position: absolute;
