@@ -1454,7 +1454,7 @@ class SmeltingStation {
 }
       
 const cuttingRecipes = {
-  'maple-planks': [
+  'maple-planks.block': [
     {
       item: 'maple-planks.slab',
       count: 2
@@ -1467,6 +1467,22 @@ const cuttingRecipes = {
     },
     {
       item: 'maple-planks.small-stairs',
+      count: 4
+    },
+    ],
+  'pine-planks.block': [
+    {
+      item: 'pine-planks.slab',
+      count: 2
+    },
+    {
+      items: [
+        { item: 'pine-planks.large-stairs', count: 1},
+        { item: 'pine-planks.small-stairs', count: 1}
+        ]
+    },
+    {
+      item: 'pine-planks.small-stairs',
       count: 4
     },
     ]
