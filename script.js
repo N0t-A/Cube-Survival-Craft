@@ -1961,21 +1961,6 @@ function updatePlayerPosition(){
     } else grounded=false;
   }
 }
-
-// === Transforms (camera = eyes) ===
-function updateTransforms() {
-  // --- Debug logs ---
-  console.log(`Player pos: X:${posX.toFixed(2)} Y:${posY.toFixed(2)} Z:${posZ.toFixed(2)}`);
-  console.log(`Camera rotation: yaw:${yaw.toFixed(2)} pitch:${pitch.toFixed(2)}`);
-
-  // --- Move the scene opposite to the player ---
-  const sceneTransform = `translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)`;
-  if (sceneTransform !== lastSceneTransform) {
-    scene.style.transform = sceneTransform;
-    lastSceneTransform = sceneTransform;
-    console.log('Scene transform updated');
-  }
-
   // --- Rotate player model horizontally ---
   function updateTransforms() {
   // Log player position & camera rotation
