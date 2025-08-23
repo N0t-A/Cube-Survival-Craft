@@ -69,17 +69,6 @@ function onMouseMove(e) {
   console.log(`Camera rotation - yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
 }
 
-function updateCamera() {
-  // Rotate and move the scene opposite to player
-  scene.style.transform = `translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px) rotateY(${-yaw}deg)`;
-
-  // Rotate the camera wrapper vertically (pitch)
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
-
-  // Rotate the player model horizontally (yaw)
-  playerModel.style.transform = `translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px) rotateY(${yaw}deg)`;
-}
-
 // === Block helpers ===
 function createBlockElement(gx, gy, gz, type, exposedFaces) {
   const el = document.createElement('div');
@@ -1974,30 +1963,43 @@ function updatePlayerPosition(){
 }
 
 // === Transforms (camera = eyes) ===
-function updateTransforms(){
-  const camX=posX - Math.sin(yaw*Math.PI/180)*200;
-  const camZ=posZ - Math.cos(yaw*Math.PI/180)*200;
-  const camY=(posY - characterYOffset) + eyeHeight; // camera at eyes
-  console.log(`Player elevation (feet Y): ${(posY-characterYOffset).toFixed(2)}`);
+function updateTransforms() {
+  // Log player position & camera rotation
+  console.log(`Player pos: X:${posX.toFixed(2)} Y:${posY.toFixed(2)} Z:${posZ.toFixed(2)}`);
+  console.log(`Camera rotation: yaw:${yaw.toFixed(2)} pitch:${pitch.toFixed(2)}`);
 
-  const sceneTransform=`
-    rotateX(${pitch}deg)
-    rotateY(${yaw}deg)
-    translate3d(${-camX}px,${-camY}px,${-camZ}px)
+  // Scene moves opposite to player and rotates Y (yaw only)
+  const sceneTransform = `
+    translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
+    rotateY(${-yaw}deg)
   `;
-  const playerTransform=`
-    translate3d(${posX}px,${posY-characterYOffset}px,${posZ}px)
+
+  // Player model moves & rotates horizontally to match yaw
+  const playerTransform = `
+    translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
-  if(sceneTransform!==lastSceneTransform){scene.style.transform=sceneTransform;lastSceneTransform=sceneTransform;}
-  if(playerTransform!==lastPlayerTransform){playerModel.style.transform=playerTransform;lastPlayerTransform=playerTransform;}
+
+  // Camera wrapper rotates vertically (pitch)
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+
+  // Apply transforms only if changed
+  if (sceneTransform !== lastSceneTransform) {
+    scene.style.transform = sceneTransform;
+    lastSceneTransform = sceneTransform;
+    console.log('Scene transform updated');
+  }
+  if (playerTransform !== lastPlayerTransform) {
+    playerModel.style.transform = playerTransform;
+    lastPlayerTransform = playerTransform;
+    console.log('Player transform updated');
+  }
 }
 
 // === Game loop ===
 function animate(){
   updatePlayerPosition();
   updateTransforms();
-  updateCamera();
   requestAnimationFrame(animate);
 }
 
