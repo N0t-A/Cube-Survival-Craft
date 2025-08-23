@@ -70,13 +70,13 @@ function onMouseMove(e) {
 }
 
 function updateCamera() {
-  // Rotate the scene horizontally opposite to yaw
-  scene.style.transform = `rotateY(${-yaw}deg) translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)`;
+  // Rotate and move the scene opposite to player
+  scene.style.transform = `translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px) rotateY(${-yaw}deg)`;
 
-  // Pitch = rotate camera-eye up/down (vertical look)
-  scene.style.transform = `rotateX(${pitch}deg)`;
+  // Rotate the camera wrapper vertically (pitch)
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
 
-  // Rotate the player model to match yaw (left/right)
+  // Rotate the player model horizontally (yaw)
   playerModel.style.transform = `translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px) rotateY(${yaw}deg)`;
 }
 
