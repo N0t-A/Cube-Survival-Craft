@@ -1304,30 +1304,134 @@ const basicRecipes = [
       ]
   },
     ];
+// --- Fuel definitions ---
+const fuelItems = {
+    'maple-log.block': 6,
+    'maple-planks.block': 4,
+    'maple-planks.slab': 2,
+    'maple-planks.small-stairs': 1,
+    'maple-planks.large-stairs': 3,
+    'stick': 1,
+    'coal': 25,
+    'charcoal': 10,
+};
+
+// --- Smelting recipes ---
 const smeltingRecipes = [
-  {
-    input: [
-      ['copper-ore.block', null],
-      [null, null]
-      ],
-    output: [
-      ['copper-bar', null],
-      [null, null]
-      ],
-      time: 5
-  },
-  {
-    input: [
-      ['tin-ore.block', null],
-      [null, null]
-      ],
-    output: [
-      ['tin-bar', null],
-      [null, null]
-      ],
-    time: 5
-  },
-  ];
+    // Single-item smelting
+    { input: ['copper-ore.block'], output: ['copper-bar'] },
+    { input: ['tin-ore.block'], output: ['tin-bar'] },
+    { input: ['iron-ore.block'], output: ['iron-bar'] },
+    { input: ['maple-log.block'], output: ['charcoal'] },
+    { input: ['pine-log.block'], output: ['charcoal'] },
+    { input: ['oak-log.block'], output: ['charcoal'] },
+    { input: ['cedar-log.block'], output: ['charcoal'] },
+    { input: ['birch-log.block'], output: ['charcoal'] },
+
+    // Two-item recipes
+    { input: ['copper-bar', 'tin-bar'], output: ['bronze-bar', 'bronze-bar'] },
+    { input: ['iron-bar', 'charcoal'], output: ['steel-bar'] },
+];
+
+// --- Smelting station state ---
+class SmeltingStation {
+    constructor() {
+        this.input = [
+            [null, null],
+            [null, null]
+        ]; // 2x2 input grid
+        this.output = [
+            [null, null],
+            [null, null]
+        ]; // 2x2 output grid
+        this.fuelSlot = null; // single fuel slot
+        this.fuelAmount = 0; // remaining items of fuel
+        this.progressGrid = [
+            [0, 0],
+            [0, 0]
+        ]; // smelting progress for each input
+        this.recipeGrid = [
+            [null, null],
+            [null, null]
+        ]; // matched recipe for each slot
+    }
+
+    // Check if a single item has a smelting recipe
+    getRecipeForItem(item) {
+        for (const recipe of smeltingRecipes) {
+            if (recipe.input.length === 1 && recipe.input[0] === item) return recipe;
+            if (recipe.input.length === 2 && recipe.input.includes(item)) return recipe;
+        }
+        return null;
+    }
+
+    // Check if output grid has space for a given item
+    canOutput(item) {
+        for (let y = 0; y < 2; y++) {
+            for (let x = 0; x < 2; x++) {
+                if (!this.output[y][x] || this.output[y][x].count < 64) return true;
+            }
+        }
+        return false;
+    }
+
+    // Add smelted item to output grid
+    addToOutput(item) {
+        for (let y = 0; y < 2; y++) {
+            for (let x = 0; x < 2; x++) {
+                if (!this.output[y][x]) {
+                    this.output[y][x] = { item: item, count: 1 };
+                    return true;
+                } else if (this.output[y][x].item === item && this.output[y][x].count < 64) {
+                    this.output[y][x].count++;
+                    return true;
+                }
+            }
+        }
+        return false; // no space
+    }
+
+    // Main smelting update function, called every animation frame
+    update() {
+        for (let y = 0; y < 2; y++) {
+            for (let x = 0; x < 2; x++) {
+                const slotItem = this.input[y][x];
+                if (!slotItem) {
+                    this.progressGrid[y][x] = 0;
+                    this.recipeGrid[y][x] = null;
+                    continue;
+                }
+
+                // Get the recipe for this item
+                let recipe = this.getRecipeForItem(slotItem.item);
+                if (!recipe) continue;
+
+                // Check if output can accept the item
+                const outputItem = recipe.output[0]; // single output for single-item recipes
+                if (!this.canOutput(outputItem)) continue;
+
+                // Consume fuel if needed
+                if (this.fuelAmount <= 0) {
+                    if (!this.fuelSlot || !fuelItems[this.fuelSlot.item]) continue;
+                    this.fuelAmount += fuelItems[this.fuelSlot.item];
+                    this.fuelSlot.count--;
+                    if (this.fuelSlot.count <= 0) this.fuelSlot = null;
+                }
+
+                // Advance progress
+                this.progressGrid[y][x]++;
+                if (this.progressGrid[y][x] >= 600) { // 600 frames = 10 seconds
+                    if (this.addToOutput(outputItem)) {
+                        slotItem.count--;
+                        if (slotItem.count <= 0) this.input[y][x] = null;
+                        this.progressGrid[y][x] = 0;
+                        this.fuelAmount--;
+                    }
+                }
+            }
+        }
+    }
+}
       
 const cuttingRecipes = {
   'maple-planks': [
@@ -1630,6 +1734,7 @@ function animate(){
 
 // === Start ===
 generateMultiLayerWorld();
+myStation.update();
 createCharacter();
 console.log('World generated. Starting posY:', posY,'groundY:',groundY);
 animate();
