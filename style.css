@@ -70,9 +70,8 @@ body {
   width: 1000px;
   height: 1000px;
   background: green;
-  transform: translate3d(-500px, -40px, -500px) rotateX(90deg);
+  transform: translate3d(-500px, 0px, -500px); /* remove rotateX */
   transform-origin: center;
-}
 
 #player-model {
   position: absolute;
