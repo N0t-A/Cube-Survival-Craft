@@ -818,6 +818,7 @@ const basicRecipes = [
       [null, 'dragon-scale.block', null],
       ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
       ['dragon-scale.block', 'dragon-scale.block', null]
+  },
   {
     output: { item: 'absolute-unit-sword-blade', count: 1},
     patern: [
@@ -912,7 +913,7 @@ const basicRecipes = [
       ]
   },
   {
-    output: { item: 'soid-tin-axe', count: 1},
+    output: { item: 'solid-tin-axe', count: 1},
     patern: [
       [null, 'tin.block', 'tin.block'],
       [null, 'stick.block', 'tin.block'],
@@ -921,6 +922,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-bronze-axe', count: 1},
+    patern: [
     [null, 'bronze.block', 'bronze.block'],
     [null, 'stick.block', 'bronze.block'],
     [null, 'stick.block', null]
@@ -1025,7 +1027,7 @@ const basicRecipes = [
   {
     output: { item: 'iron-shovel', count: 1},
     patern: [
-      [null, 'iron-bar', null'],
+      [null, 'iron-bar', null],
       [null, 'stick', null],
       [null, 'stick', null]
       ]
@@ -1060,6 +1062,7 @@ const basicRecipes = [
       [null, 'tin.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
+      ]
   {
     output: { item: 'solid-bronze-shovel', count: 1},
     patern: [
@@ -1127,7 +1130,7 @@ const basicRecipes = [
   {
     output: { item: 'wood-hoe', count: 1},
     patern: [
-      [null, 'birch-planks.block', 'birch-planks.block']
+      [null, 'birch-planks.block', 'birch-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
       ]
