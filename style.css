@@ -1,11 +1,7 @@
-html {
-  height: 100%;
-  width: 100%;
-}
-
-html,
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   background: #87CEEB;
@@ -14,10 +10,10 @@ body {
 #game-container {
   width: 100%;
   height: 100vh;
-  transform-style: preserve-3d;
-  position: relative;
   perspective: 800px;
   perspective-origin: center center;
+  position: relative;
+  transform-style: preserve-3d;
   cursor: pointer;
 }
 
@@ -26,8 +22,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 24px; /* Adjust size if needed */
-  color: white;     /* Or any color that contrasts with your sky */
+  font-size: 24px;
+  color: white;
   pointer-events: none;
   z-index: 9999;
   user-select: none;
@@ -36,19 +32,13 @@ body {
 #camera-wrapper,
 #camera-yaw,
 #camera-pitch,
-#camera {
-  transform-style: preserve-3d;
-  width: 100%;
-  height: 100%;
+#camera-eye {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-#camera-eye {
-  transform-style: preserve-3d;
   width: 100%;
   height: 100%;
+  transform-style: preserve-3d;
 }
 
 #scene {
@@ -62,7 +52,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  transform-style: preserve-3d
+  transform-style: preserve-3d;
 }
 
 #ground {
@@ -70,16 +60,16 @@ body {
   width: 1000px;
   height: 1000px;
   background: green;
-  transform: translate3d(-500px, 0px, -500px); /* remove rotateX */
+  transform: translate3d(-500px, -40px, -500px) rotateX(90deg);
   transform-origin: center;
 }
 
 #player-model {
   position: absolute;
+  width: 50px;
+  height: 130px; /* total stacked blocks */
   transform-style: preserve-3d;
-  transform-origin: bottom center;
 }
-
 
 /* Common cube face style */
 .part {
