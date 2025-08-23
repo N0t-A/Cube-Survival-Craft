@@ -105,113 +105,113 @@ function getExposedFacesFor(gx, gy, gz) {
 // === Crafting recipes ===
 const basicRecipes = [
   {
-    output: { item: 'maple-crafting-station', count: 1},
+    output: { item: 'maple-crafting-station.block', count: 1},
     pattern: [
-      ['maple-planks', 'maple-planks'],
-      ['maple-planks', 'maple-planks']
+      ['maple-planks.block', 'maple-planks.block'],
+      ['maple-planks.block', 'maple-planks.block']
       ]
   },
   {
-    output: { item: 'pine-crafting-station', count: 1},
-    patern: [
-      ['pine-planks', 'pine-planks'],
-      ['pine-planks', 'pine-planks']
+    output: { item: 'pine-crafting-station.block', count: 1},
+    pattern: [
+      ['pine-planks.block', 'pine-planks.block'],
+      ['pine-planks.block', 'pine-planks.block']
       ]
   },
   {
-    output: { item: 'oak-crafting-station', count: 1},
-    patern: [
-      ['oak-planks', 'oak-planks'],
-      ['oak-planks', 'oak-planks']
+    output: { item: 'oak-crafting-station.block', count: 1},
+    pattern: [
+      ['oak-planks.block', 'oak-planks.block'],
+      ['oak-planks.block', 'oak-planks.block']
       ]
   },
   {
-    output: { item: 'cedar-crafting-station', count: 1},
-    patern: [
-      ['cedar-planks', 'cedar-planks'],
-      ['cedar-planks', 'cedar-planks']
+    output: { item: 'cedar-crafting-station.block', count: 1},
+    pattern: [
+      ['cedar-planks.block', 'cedar-planks.block'],
+      ['cedar-planks.block', 'cedar-planks.block']
       ]
   },
   {
-    output: { item: 'birch-crafting-station', count: 1},
-    patern: [
-      ['birch-planks', 'birch-planks'],
-      ['birch-planks', 'birch-planks']
+    output: { item: 'birch-crafting-station.block', count: 1},
+    pattern: [
+      ['birch-planks.block', 'birch-planks.block'],
+      ['birch-planks.block', 'birch-planks.block']
       ]
   },
   {
-    output: { item: 'maple-planks', count: 4},
-    patern: [
+    output: { item: 'maple-planks.block', count: 4},
+    pattern: [
       [null, null],
-      [null, 'maple-log']
+      [null, 'maple-log.block']
       ]
   },
   {
-    output: { item: 'pine-planks', count: 4},
-    patern: [
+    output: { item: 'pine-planks.block', count: 4},
+    pattern: [
       [null, null],
-      [null, 'pine-log']
+      [null, 'pine-log.block']
       ]
   },
   {
-    output: { item: 'oak-planks', count: 4},
-    patern: [
+    output: { item: 'oak-planks.block', count: 4},
+    pattern: [
       [null, null],
-      [null, 'oak-log']
+      [null, 'oak-log.block']
       ]
   },
   {
-    output: { item: 'cedar-planks', count: 4},
-    patern: [
+    output: { item: 'cedar-planks.block', count: 4},
+    pattern: [
       [null, null],
-      [null, 'cedar-log']
+      [null, 'cedar-log.block']
       ]
   },
   {
-    output: { item: 'birch-planks', count: 4},
-    patern: [
+    output: { item: 'birch-planks.block', count: 4},
+    pattern: [
       [null, null],
-      [null, 'birch-log']
+      [null, 'birch-log.block']
       ]
   },
   {
     output: { item: 'stick', count: 16},
     pattern: [
-      [null, 'maple-planks'],
-      [null, 'maple-planks']
+      [null, 'maple-planks.block'],
+      [null, 'maple-planks.block']
       ]
   },
   {
     output: { item: 'stick', count: 16},
-    patern: [
+    pattern: [
       [null, 'pine-planks.block'],
       [null, 'pine-planks.block']
       ]
   },
   {
     output: { item: 'stick', count: 16},
-    patern: [
+    pattern: [
       [null, 'oak-planks.block'],
       [null, 'oak-planks.block']
       ]
   },
   {
     output: { item: 'stick', count: 16},
-    patern: [
+    pattern: [
       [null, 'cedar-planks.block'],
       [null, 'cedar-planks.block']
       ]
   },
   {
     output: { item: 'stick', count: 16},
-    patern: [
+    pattern: [
       [null, 'birch-planks.block'],
       [null, 'birch-planks.block']
       ]
   },
   {
     output: { item: 'stick.block', count: 1},
-    patern: [
+    pattern: [
       ['stick', 'stick', 'stick'],
       ['stick', 'stick', 'stick'],
       ['stick', 'stick', 'stick']
@@ -219,7 +219,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'coal.block', count: 1},
-    patern: [
+    pattern: [
       ['coal', 'coal', 'coal'],
       ['coal', 'coal', 'coal'],
       ['coal', 'coal', 'coal']
@@ -227,7 +227,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper.block', count: 1},
-    patern: [
+    pattern: [
       ['copper-bar', 'copper-bar', 'copper-bar'],
       ['copper-bar', 'copper-bar', 'copper-bar'],
       ['copper-bar', 'copper-bar', 'copper-bar']
@@ -235,7 +235,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'tin.block', count: 1},
-    patern: [
+    pattern: [
       ['tin-bar', 'tin-bar', 'tin-bar'],
       ['tin-bar', 'tin-bar', 'tin-bar'],
       ['tin-bar', 'tin-bar', 'tin-bar']
@@ -243,7 +243,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'bronze.block', count: 1},
-    patern: [
+    pattern: [
       ['bronze-bar', 'bronze-bar', 'bronze-bar'],
       ['bronze-bar', 'bronze-bar', 'bronze-bar'],
       ['bronze-bar', 'bronze-bar', 'bronze-bar']
@@ -251,7 +251,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'iron.block', count: 1},
-    patern: [
+    pattern: [
       ['iron-bar', 'iron-bar', 'iron-bar'],
       ['iron-bar', 'iron-bar', 'iron-bar'],
       ['iron-bar', 'iron-bar', 'iron-bar']
@@ -259,7 +259,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'steel.block', count: 1},
-    patern: [
+    pattern: [
       ['steel-bar', 'steel-bar', 'steel-bar'],
       ['steel-bar', 'steel-bar', 'steel-bar'],
       ['steel-bar', 'steel-bar', 'steel-bar']
@@ -267,7 +267,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'diamond.block', count: 1},
-    patern: [
+    pattern: [
       ['diamond', 'diamond', 'diamond'],
       ['diamond', 'diamond', 'diamond'],
       ['diamond', 'diamond', 'diamond'],
@@ -275,7 +275,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'amber.block', count: 1},
-    patern: [
+    pattern: [
       ['amber-chunk', 'amber-chunk', 'amber-chunk'],
       ['amber-chunk', 'amber-chunk', 'amber-chunk'],
       ['amber-chunk', 'amber-chunk', 'amber-chunk']
@@ -283,7 +283,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'ruby.block', count: 1},
-    patern: [
+    pattern: [
       ['ruby', 'ruby', 'ruby'],
       ['ruby', 'ruby', 'ruby'],
       ['ruby', 'ruby', 'ruby'],
@@ -291,7 +291,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'saw', count: 1},
-    patern: [
+    pattern: [
      [null, 'iron-bar', null],
      ['iron-bar', null, 'iron-bar'],
      [null, 'iron-bar', null]
@@ -299,112 +299,112 @@ const basicRecipes = [
   },
   {
     output: { item: 'maple-cutting-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'saw'],
       [null, 'maple-crafting-station.block']
       ]
   },
   {
     output: { item: 'pine-cutting-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'saw'],
       [null, 'pine-cafting-station.block']
       ]
   },
   {
     output: { item: 'oak-cutting-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'saw'],
       [null, 'oak-crafting-station.block']
       ]
   },
   {
     output: { item: 'cedar-cutting-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'saw'],
       [null, 'cedar-crafting-station.block']
       ]
   },
   {
     output: { item: 'birch-cutting-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'saw'],
       [null, 'birch-crafting-station']
       ]
   },
   {
     output: { item: 'maple-chisel', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar'],
       [null, 'maple-planks.block']
       ]
   },
   {
     output: { item: 'pine-chisel', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar'],
       [null, 'pine-planks.block']
       ]
   },
   {
     output: { item: 'oak-chisel', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar'],
       [null, 'oak-planks.block']
       ]
   },
   {
     output: { item: 'cedar-chisel', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar'],
       [null, 'cedar-planks.block']
       ]
   },
   {
     output: { item: 'birch-chisel', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar'],
       [null, 'birch-planks.block']
       ]
   },
   {
     output: { item: 'maple-engraving-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'maple-chisel'],
       [null, 'maple-crafting-station.block']
       ]
   },
   {
     output: { item: 'pine-engraving-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'pine-chisel'],
       [null, 'pine-crafting-station.block']
       ]
   },
   {
     output: { item: 'oak-engraving-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'oak-chisel'],
       [null, 'oak-crafting-station.block']
       ]
   },
   {
     output: { item: 'cedar-engraving-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'cedar-chisel'],
       [null, 'cedar-crafting-station.block']
       ]
   },
   {
     output: { item: 'birch-engraving-station.block', count: 1},
-    patern: [
+    pattern: [
       [null, 'birch-chisel'],
       [null, 'birch-crafting-station.block']
       ]
   },
   {
     output: { item: 'plate', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper-bar', null],
       ['copper-bar', null, 'copper-bar'],
       [null, 'copper-bar', null]
@@ -412,42 +412,42 @@ const basicRecipes = [
   },
   {
     output: { item: 'maple-cooking-station', count: 1},
-    patern: [
+    pattern: [
       [null, 'plate'],
       [null, 'maple-crafting-station']
       ]
   },
   {
     output: { item: 'pine-cooking-station', count: 1},
-    patern: [
+    pattern: [
       [null, 'plate'],
       [null, 'pine-crafting-station']
       ]
   },
   {
     output: { item: 'oak-cooking-station', count: 1},
-    patern: [
+    pattern: [
       [null, 'plate'],
       [null, 'oak-crafting-station']
       ]
   },
   {
     output: { item: 'cedar-cooking-station', count: 1},
-    patern: [
+    pattern: [
       [null, 'plate'],
       [null, 'cedar-crafting-station']
       ]
   },
   {
     output: { item: 'birch-cooking-station', count: 1},
-    patern: [
+    pattern: [
       [null, 'plate'],
       [null, 'birch-crafting-station']
       ]
   },
   {
     output: { item: 'bowl', count: 1},
-    patern: [
+    pattern: [
       [null, null, null,],
       ['copper-bar', null, 'copper-bar'],
       [null, 'copper-bar', null]
@@ -455,15 +455,15 @@ const basicRecipes = [
   },
   {
     output: { item: 'smelting-station', count: 1},
-    patern: [
+    pattern: [
       ['cobblestone.block', 'cobblestone.block', 'cobblestone.block'],
-      ['cobblestone.block', 'cobblestone.block', 'cobblestone.block'],
+      ['cobblestone.block', null, 'cobblestone.block'],
       ['cobblestone.block', 'cobblestone.block', 'cobblestone.block']
       ]
   },
   {
     output: { item: 'wood-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['maple-planks.block', 'maple-planks.block', 'maple-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -471,7 +471,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['pine-planks.block', 'pine-planks.block', 'pine-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -479,7 +479,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['oak-planks.block', 'oak-planks.block', 'oak-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -487,7 +487,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['cedar-planks.block', 'cedar-planks.block', 'cedar-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -495,7 +495,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['birch-planks.block', 'birch-planks.block', 'birch-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -503,7 +503,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'stone-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['cobblestone.block', 'cobblestone.block', 'cobblestone.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -511,7 +511,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['copper-bar', 'copper-bar', 'copper-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -519,7 +519,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'tin-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['tin-bar', 'tin-bar', 'tin-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -527,7 +527,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'bronze-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['bronze-bar', 'bronze-bar', 'bronze-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -535,7 +535,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'iron-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['iron-bar', 'iron-bar', 'iron-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -543,7 +543,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'steel-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['steel-bar', 'steel-bar', 'steel-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -551,7 +551,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'diamond-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['diamond', 'diamond', 'diamond'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -559,7 +559,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-copper-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['copper.block', 'copper.block', 'copper.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -567,7 +567,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-tin-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['tin.block', 'tin.block', 'tin.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -575,15 +575,15 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-bronze-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['bronze.block', 'bronze.block', 'bronze.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
       ]
   },
   {
-    output: { item: 'solid-iron-pickaxe', count; 1},
-    patern: [
+    output: { item: 'solid-iron-pickaxe', count: 1},
+    pattern: [
       ['iron.block', 'iron.block', 'iron.bock'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -591,7 +591,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-steel-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['steel.block', 'steel.block', 'steel.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -599,7 +599,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-diamond-pickaxe', count: 1},
-    patern: [
+    pattern: [
       ['diamond.block', 'diamond.block', 'diamond.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -607,7 +607,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-sword', count: 1},
-    patern: [
+    pattern: [
       ['maple-planks.block', 'maple-planks.block', 'maple-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -615,7 +615,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'pine-planks.block', null],
       [null, 'pine-planks.block', null],
       [null, 'stick', null]
@@ -623,7 +623,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'oak-planks.block', null],
       [null, 'oak-planks.block', null],
       [null, 'stick', null]
@@ -631,7 +631,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'cedar-planks.block', null],
       [null, 'cedar-planks.block', null],
       [null, 'stick', null]
@@ -639,7 +639,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'birch-planks.block', null],
       [null, 'birch-planks.block', null],
       [null, 'stick', null]
@@ -647,7 +647,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'stone-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'cobblestone.block', null],
       [null, 'cobblestone.block', null],
       [null, 'stick', null]
@@ -655,7 +655,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper-bar', null],
       [null, 'copper-bar', null],
       [null, 'stick', null]
@@ -663,7 +663,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'tin-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin-bar', null],
       [null, 'tin-bar', null],
       [null, 'stick', null]
@@ -671,7 +671,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'bronze-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'bronze-bar', null],
       [null, 'bronze-bar', null],
       [null, 'stick', null]
@@ -679,7 +679,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'iron-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar', null],
       [null, 'iron-bar', null],
       [null, 'stick', null]
@@ -687,7 +687,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'steel-sword', count; 1},
-    patern: [
+    pattern: [
       [null, 'steel-bar', null],
       [null, 'steel-bar', null],
       [null, 'stick', null]
@@ -695,7 +695,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'diamond-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond', null],
       [null, 'diamond', null],
       [null, 'stick', null]
@@ -703,7 +703,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-copper-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper.block', null],
       [null, 'copper.block', null],
       [null, 'stick.block', null]
@@ -711,7 +711,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-tin-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin.block', null],
       [null, 'tin.block', null],
       [null, 'stick.block', null]
@@ -719,7 +719,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-bronze-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'bronze.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -727,7 +727,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-iron-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron.block', null],
       [null, 'iron.block', null],
       [null, 'stick.block', null]
@@ -735,7 +735,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-steel-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'steel.block', null],
       [null, 'steel.block', null],
       [null, 'stick.block', null]
@@ -743,7 +743,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-diamond-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond.block', null],
       [null, 'diamond.block', null],
       [null, 'stick.block', null]
@@ -751,7 +751,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'dragon-sword-blade-tip', count: 1},
-    patern: [
+    pattern: [
       [null, 'dragon-scale', 'dragon-scale'],
       ['dragon-scale', 'dragon-scale', 'dragon-scale'],
       ['dragon-scale', 'dragon-scale', null]
@@ -759,7 +759,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'dragon-sword-blade-midsection', count: 1},
-    patern: [
+    pattern: [
       [null, 'dragon-scale', null],
       ['dragon-scale', 'dragon-scale', 'dragon-scale'],
       [null, 'dragon-scale', null]
@@ -767,7 +767,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'dragon-sword-blade-base', count: 1},
-    patern: [
+    pattern: [
       [null, 'dragon-scale', null],
       ['dragon-scale', 'dragon-scale', 'dragon-scale'],
       ['dragon-scale', 'dragon-scale', null]
@@ -775,7 +775,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'dragon-sword-blade', count: 1},
-    patern: [
+    pattern: [
       [null, null, 'dragon-sword-blade-tip'],
       [null, 'dragon-sword-blade-midsection', null],
       ['dragon-sword-blade-base', null, null]
@@ -783,7 +783,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'dragon-sword-handle', count: 1},
-    patern: [
+    pattern: [
       ['stick', null, 'amber-chunk'],
       [null, 'ruby', null],
       ['stick', null, 'stick']
@@ -791,14 +791,14 @@ const basicRecipes = [
   },
   {
     output: { item: 'dragon-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'dragon-sword-blade'],
       ['dragon-sword-handle', null]
       ]
   },
   {
     output: { item: 'absolute-unit-sword-blade-tip', count: 1},
-    patern: [
+    pattern: [
       [null, 'dragon-scale.block', 'dragon-scale.block'],
       ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
       ['dragon-scale.block', 'dragon-scale.block', null]
@@ -806,7 +806,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'absolute-unit-sword-blade-midsection', count: 1},
-    patern: [
+    pattern: [
       [null, 'dragon-scale.block', null],
       ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
       [null, 'dragon-scale.block', null]
@@ -814,14 +814,14 @@ const basicRecipes = [
   },
   {
     output: { item: 'absolute-unit-sword-blade-base', count: 1},
-    patern: [
+    pattern: [
       [null, 'dragon-scale.block', null],
       ['dragon-scale.block', 'dragon-scale.block', 'dragon-scale.block'],
       ['dragon-scale.block', 'dragon-scale.block', null]
   },
   {
     output: { item: 'absolute-unit-sword-blade', count: 1},
-    patern: [
+    pattern: [
       [null, null, 'absolute-unit-sword-blade-tip'],
       [null, 'absolute-unit-sword-blade-midsection', null],
       ['absolute-unit-sword-blade-base', null]
@@ -829,7 +829,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'absolute-unit-sword-handle', count: 1},
-    patern: [
+    pattern: [
       ['stick.block', null, 'amber.block'],
       [null, 'ruby.block', null],
       ['stick.block', null, 'stick.block']
@@ -837,14 +837,14 @@ const basicRecipes = [
   },
   {
     output: { item: 'absolute-unit-sword', count: 1},
-    patern: [
+    pattern: [
       [null, 'absolute-unit-sword-blade'],
       ['absolute-unit-sword-handle', null]
       ]
   },
   {
     output: { item: 'wood-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'maple-planks.block', 'maple-planks.block'],
       [null, 'stick', 'maple-planks.block'],
       [null, 'stick', 'stick']
@@ -852,7 +852,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'stone-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'cobblestone.block', 'cobblestone.block'],
       [null, 'stick', 'cobblestone'],
       [null, 'stick', null]
@@ -860,7 +860,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper-bar', 'copper-bar'],
       [null, 'stick', 'copper-bar'],
       [null, 'stick', null]
@@ -868,7 +868,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'tin-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin-bar', 'tin-bar'],
       [null, 'stick', 'tin-bar'],
       [null, 'stick', null]
@@ -876,7 +876,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'bronze-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'bronze-bar', 'bronze-bar'],
       [null, 'stick', 'bronze-bar'],
       [null, 'stick', null]
@@ -884,7 +884,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'iron-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar', 'iron-bar'],
       [null, 'stick', 'iron-bar'],
       [null, 'stick', null]
@@ -892,7 +892,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'steel-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'steel-bar', 'steel-bar'],
       [null, 'stick', 'steel-bar'],
       [null, 'stick', null]
@@ -900,13 +900,13 @@ const basicRecipes = [
   },
   {
     output: { item: 'diamond-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond', 'diamond'],
       [null, 'stick', 'diamond'],
       [null, 'stick', null]
   {
     output: { item: 'solid-copper-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper.block', 'copper.block'],
       [null, 'stick.block', 'copper.block'],
       [null, 'stick.block', null]
@@ -914,7 +914,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-tin-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin.block', 'tin.block'],
       [null, 'stick.block', 'tin.block'],
       [null, 'stick.block', null]
@@ -922,7 +922,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-bronze-axe', count: 1},
-    patern: [
+    pattern: [
     [null, 'bronze.block', 'bronze.block'],
     [null, 'stick.block', 'bronze.block'],
     [null, 'stick.block', null]
@@ -930,7 +930,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-iron-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron.block', 'iron.block'],
       [null, 'stick.block', 'iron.block'],
       [null, 'stick.block', null]
@@ -938,7 +938,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-steel-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'steel.block', 'steel.block'],
       [null, 'stick.block', 'steel.block'],
       [null, 'stick.block', null]
@@ -946,7 +946,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-diamond-axe', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond.block', 'diamond.block'],
       [null, 'stick.block', 'diamond.block'],
       [null, 'stick.block', null]
@@ -954,7 +954,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'maple-planks.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -962,7 +962,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'pine-planks.block', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -970,7 +970,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'oak-planks.block', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -978,7 +978,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'cedar-planks.block', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -986,7 +986,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'birch-planks.block', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -994,7 +994,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'stone-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'cobblestone.block', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1002,7 +1002,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper-bar', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1010,7 +1010,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'tin-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin-bar', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1018,7 +1018,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'bronze-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'bronze-bar', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1026,7 +1026,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'iron-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1034,7 +1034,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'steel-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'steel-bar', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1042,7 +1042,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'diamond-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond', null],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1050,7 +1050,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-copper-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1065,7 +1065,7 @@ const basicRecipes = [
       ]
   {
     output: { item: 'solid-bronze-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'bronze.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1073,7 +1073,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-iron-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1081,7 +1081,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-steel-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'steel.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1089,7 +1089,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-diamond-shovel', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond.block', null],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1097,7 +1097,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'maple-planks.block', 'maple-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1105,7 +1105,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'pine-planks.block', 'pine-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1113,7 +1113,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'oak-planks.block', 'oak-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1121,7 +1121,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'cedar-planks.block', 'cedar-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1129,7 +1129,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'wood-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'birch-planks.block', 'birch-planks.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1137,7 +1137,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'stone-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'cobblestone.block', 'cobblestone.block'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1145,7 +1145,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper-bar', 'copper-bar'],
       [null, 'stick', null],
       [null, 'stick' null]
@@ -1153,7 +1153,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'tin-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin-bar', 'tin-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1161,7 +1161,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'bronze-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'bronze-bar', 'bronze-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1169,7 +1169,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'iron-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron-bar', 'iron-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1177,7 +1177,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'steel-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'steel-bar', 'steel-bar'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1185,7 +1185,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'diamond-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond', 'diamond'],
       [null, 'stick', null],
       [null, 'stick', null]
@@ -1193,7 +1193,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-copper-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'copper.block', 'copper.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1201,7 +1201,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-tin-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'tin.block', 'tin.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1209,7 +1209,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-bronze-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'bronze.block', 'bronze.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1217,7 +1217,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-iron-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'iron.block', 'iron.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1225,7 +1225,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-steel-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'steel.block', 'steel.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1233,7 +1233,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'solid-diamond-hoe', count: 1},
-    patern: [
+    pattern: [
       [null, 'diamond.block', 'diamond.block'],
       [null, 'stick.block', null],
       [null, 'stick.block', null]
@@ -1241,7 +1241,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'maple-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['maple-planks.block', 'maple-planks.block', 'maple-planks.block'],
       ['maple-planks.block', null, 'maple-planks.block'],
       ['maple-planks.block', 'maple-planks.block', 'maple-planks.block']
@@ -1249,7 +1249,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'stone-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['cobblestone.block', 'cobblestone.block', 'cobblestone.block'],
       ['cobblestone.block', 'maple-locker.block', 'cobblestone.block'],
       ['cobblestone.block', 'cobblestone.block', 'cobblestone.block']
@@ -1257,7 +1257,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'copper-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['copper-bar', 'copper-bar', 'copper-bar'],
       ['copper-bar', 'stone-locker.block', 'copper.block'],
       ['copper-bar', 'copper-bar', 'copper-bar']
@@ -1265,7 +1265,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'tin-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['tin-bar', 'tin-bar', 'tin-bar'],
       ['tin-bar', 'copper-locker.block', 'tin-bar'],
       ['tin-bar', 'tin-bar', 'tin-bar']
@@ -1273,7 +1273,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'bronze-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['bronze-bar', 'bronze-bar', 'bronze-bar'],
       ['bronze-bar', 'tin-locker.block', 'bronze-bar'],
       ['bronze-bar', 'bronze-bar', 'bronze-bar']
@@ -1281,7 +1281,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'iron-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['iron-bar', 'iron-bar', 'iron-bar'],
       ['iron-bar', 'bronze-locker.block', 'iron-bar'],
       ['iron-bar', 'iron-bar', 'iron-bar']
@@ -1289,7 +1289,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'steel-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['steel-bar', 'steel-bar', 'steel-bar'],
       ['steel-bar', 'iron-locker.block', 'steel-bar'],
       ['steel-bar', 'steel-bar', 'steel-bar']
@@ -1297,7 +1297,7 @@ const basicRecipes = [
   },
   {
     output: { item: 'diamond-locker.block', count: 1},
-    patern: [
+    pattern: [
       ['diamond', 'diamond', 'diamond'],
       ['diamond', 'steel-locker.block', 'diamond'],
       ['diamond', 'diamond', 'diamond']
@@ -1311,6 +1311,26 @@ const fuelItems = {
     'maple-planks.slab': 2,
     'maple-planks.small-stairs': 1,
     'maple-planks.large-stairs': 3,
+    'pine-log.block': 6,
+    'pine-planks.slab': 4,
+    'pine-planks.block': 2,
+    'pine-planks.small-stairs': 1,
+    'pine-planks.large-stairs': 3,
+    'oak-log.block': 6,
+    'oak-planks.block': 4,
+    'oak-planks.slab: 2,
+    'oak-planks.small-stairs': 1,
+    'oak-planks.large-stairs': 3,
+    'cedar-log.block': 6,
+    'cedar-planks.block': 4,
+    'cedar-planks.slab: 2,
+    'cedar-planks.small-stairs': 1,
+    'cedar-planks.large-stairs': 3,
+    'birch-log.block': 6,
+    'birch-planks.block': 4,
+    'birch-planks.slab': 2,
+    'birch-planks.small-stairs': 1,
+    'birch-planks.large-stairs': 3,
     'stick': 1,
     'coal': 25,
     'charcoal': 10,
