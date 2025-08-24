@@ -1963,10 +1963,10 @@ function updateTransforms() {
   // Move the world opposite to the player position
   // AND rotate it according to mouse look
   world.style.transform = `
-    translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
-    rotateX(${-pitch}deg)
-    rotateY(${-yaw}deg)
-  `;
+  translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
+  rotateY(${yaw}deg)
+  rotateX(${pitch}deg)
+`;
 
   // Keep the camera static (no rotation needed)
   cameraYaw.style.transform = `none`;
