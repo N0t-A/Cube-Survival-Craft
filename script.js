@@ -1963,19 +1963,22 @@ function updatePlayerPosition(){
 }
   // --- Rotate player model horizontally ---
 function updateTransforms() {
-  // Move & rotate the world so it appears the player is looking around
+  // Move world relative to player position (static rotation)
   world.style.transform = `
     translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
-    rotateX(${pitch}deg)
-    rotateY(${-yaw}deg)
   `;
 
-  // Optional: rotate the player model horizontally to match yaw
+  // Rotate the player model horizontally
   playerModel.style.transform = `
     translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
+
+  // Rotate camera to simulate looking around
+  cameraYaw.style.transform = `rotateY(${yaw}deg)`;
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
 }
+
 
 // === Game loop ===
 function animate(){
