@@ -1960,17 +1960,18 @@ function updatePlayerPosition() {
 
   // --- Rotate player model horizontally ---
 function updateTransforms() {
-  // Move the world so the camera-eye stays at the player's position
+  // Move world relative to camera-eye
   world.style.transform = `
-    translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
+    translate3d(${-posX}px, ${-(posY - eyeHeight) + 700}px, ${-posZ}px)
     rotateX(${-pitch}deg)
     rotateY(${-yaw}deg)
   `;
 
-  // Keep camera-eye fixed at player's head
+  // Keep camera wrappers neutral
   cameraYaw.style.transform = '';
   cameraPitch.style.transform = '';
 }
+
 
 // === Game loop ===
 function animate(){
