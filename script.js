@@ -1960,19 +1960,21 @@ function updatePlayerPosition() {
 
   // --- Rotate player model horizontally ---
 function updateTransforms() {
-  // Camera rotations (nested wrappers)
-  cameraYaw.style.transform = `rotateY(${yaw}deg)`;   // horizontal only
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`; // vertical only
-
-  // Move player model (camera is nested inside)
-  playerModel.style.transform = `
-    translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
-  `;
-
-  // Move world opposite to player/camera
+  // Move world opposite to player position
+  // Rotate world only horizontally (yaw)
   world.style.transform = `
     translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
+    rotateY(${-yaw}deg)
   `;
+
+  // Move player model (optional: rotate horizontally)
+  playerModel.style.transform = `
+    translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
+    rotateY(${yaw}deg)
+  `;
+
+  // Camera pitch rotates independently
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
 }
 
 
