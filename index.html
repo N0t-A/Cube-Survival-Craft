@@ -8,20 +8,17 @@
 </head>
 <body>
   <div id="game-container">
-    <div id="scene">
-      <!-- Camera transform wrappers -->
+    <!-- World blocks live here -->
+    <div id="world"></div>
+
+    <!-- Player model (camera nested inside) -->
+    <div id="player-model">
       <div id="camera-yaw">
         <div id="camera-pitch">
           <div id="camera-eye"></div>
         </div>
       </div>
-
-      <!-- World blocks live here -->
-      <div id="world"></div>
     </div>
-
-    <!-- Player model -->
-    <div id="player-model"></div>
 
     <!-- Crosshair -->
     <div id="crosshair">+</div>
