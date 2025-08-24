@@ -1960,24 +1960,21 @@ function updatePlayerPosition() {
 
   // --- Rotate player model horizontally ---
 function updateTransforms() {
-  // Move the world opposite to the player position
-  // AND rotate it according to mouse look
-  world.style.transform = `
-  translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
-  rotateY(${yaw}deg)
-  rotateX(${pitch}deg)
-`;
+  // Camera rotations (nested wrappers)
+  cameraYaw.style.transform = `rotateY(${yaw}deg)`;   // horizontal only
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`; // vertical only
 
-  // Keep the camera static (no rotation needed)
-  cameraYaw.style.transform = `none`;
-  cameraPitch.style.transform = `none`;
-
-  // Optional: rotate the player model horizontally so it matches yaw
+  // Move player model (camera is nested inside)
   playerModel.style.transform = `
     translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
-    rotateY(${yaw}deg)
+  `;
+
+  // Move world opposite to player/camera
+  world.style.transform = `
+    translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
   `;
 }
+
 
 
 // === Game loop ===
