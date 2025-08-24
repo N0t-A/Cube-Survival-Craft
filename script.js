@@ -1958,6 +1958,13 @@ function updatePlayerPosition() {
   }
 }
 
+document.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() === 'e') {
+    const panel = document.getElementById('inventory-panel');
+    panel.classList.toggle('visible');
+  }
+});
+
   // --- Rotate player model horizontally ---
 let smoothPosX = posX;
 let smoothPosY = posY;
