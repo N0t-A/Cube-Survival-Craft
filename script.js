@@ -1963,11 +1963,13 @@ function updateTransforms() {
   // Move the world so the camera-eye stays at the player's position
   world.style.transform = `
     translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
+    rotateX(${pitch}deg)
+    rotateY(${-yaw}deg)
   `;
 
-  // Rotate the world around the camera-eye based on mouse movement
-  cameraYaw.style.transform = `rotateY(${-yaw}deg)`;
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+  // Keep camera-eye fixed at player's head
+  cameraYaw.style.transform = '';
+  cameraPitch.style.transform = '';
 }
 
 // === Game loop ===
