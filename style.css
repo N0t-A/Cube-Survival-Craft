@@ -81,19 +81,38 @@ html, body {
   pointer-events: auto; /* allow clicking if needed */
 }
 
+/* Inventory panel container */
 #inventory-panel {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 9999;        /* render above everything */
-  pointer-events: auto;  /* allow interaction */
-  display: none;         /* hidden by default */
+  z-index: 9999;
+  display: none; /* hidden by default */
+  background: rgba(30, 30, 30, 0.9); /* optional dark background */
+  padding: 20px;
+  border: 2px solid #888;
+  border-radius: 10px;
 }
 
+/* Show panel when visible */
 #inventory-panel.visible {
-  display: block;        /* show when toggled */
+  display: grid;
+  grid-template-columns: repeat(9, 50px); /* 9 slots per row */
+  grid-auto-rows: 50px;
+  gap: 5px;
 }
+
+/* Slot styling */
+#inventory-panel .slot {
+  width: 50px;
+  height: 50px;
+  background: #444;
+  border: 2px solid #222;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
 
 #player-model {
   position: absolute;
