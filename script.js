@@ -1998,6 +1998,93 @@ function updateTransforms() {
   `;
 }
 
+// --- Unified crafting update function ---
+function updateCraftingResult(grid, recipes, setResult, clearResult) {
+  function matchRecipe(grid, pattern) {
+    const rows = grid.length;
+    const cols = grid[0].length;
+    const pr = pattern.length;
+    const pc = pattern[0].length;
+
+    function matchesAtOffset(offsetY, offsetX, p) {
+      for (let y = 0; y < pr; y++) {
+        for (let x = 0; x < pc; x++) {
+          const gridItem = grid[y + offsetY][x + offsetX];
+          if (p[y][x] !== null && gridItem !== p[y][x]) return false;
+        }
+      }
+      return true;
+    }
+
+    function generateTransforms(p) {
+      const transforms = [p];
+
+      // 90, 180, 270 rotations
+      for (let i = 0; i < 3; i++) {
+        const prev = transforms[transforms.length - 1];
+        const rotated = prev[0].map((_, col) => prev.map(row => row[col]).reverse());
+        transforms.push(rotated);
+      }
+
+      // horizontal flips
+      const flips = transforms.map(t => t.map(row => row.slice().reverse()));
+      transforms.push(...flips);
+
+      return transforms;
+    }
+
+    const variants = generateTransforms(pattern);
+
+    for (const v of variants) {
+      const vRows = v.length;
+      const vCols = v[0].length;
+      if (vRows > rows || vCols > cols) continue;
+
+      for (let y = 0; y <= rows - vRows; y++) {
+        for (let x = 0; x <= cols - vCols; x++) {
+          if (matchesAtOffset(y, x, v)) return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  for (const recipe of recipes) {
+    if (matchRecipe(grid, recipe.pattern)) {
+      setResult(recipe.output);
+      return;
+    }
+  }
+
+  clearResult();
+}
+
+// --- Inventory update (2x2) ---
+function updateInventoryCrafting() {
+  const grid = [
+    [getItemAtSlot(0), getItemAtSlot(1)],
+    [getItemAtSlot(2), getItemAtSlot(3)]
+  ];
+  updateCraftingResult(grid, basicRecipes, setInventoryCraftingResult, clearInventoryCraftingResult);
+}
+
+// --- Crafting table update (3x3) ---
+function updateCraftingTable() {
+  const grid = [
+    [getTableSlot(0), getTableSlot(1), getTableSlot(2)],
+    [getTableSlot(3), getTableSlot(4), getTableSlot(5)],
+    [getTableSlot(6), getTableSlot(7), getTableSlot(8)]
+  ];
+  updateCraftingResult(grid, basicRecipes, setCraftingTableResult, clearCraftingTableResult);
+}
+
+// --- Call these inside your main game loop or on inventory/table change ---
+function refreshCrafting() {
+  updateInventoryCrafting();
+  updateCraftingTable();
+}
+
 
 // === Game loop ===
 function animate(){
