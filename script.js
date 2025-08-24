@@ -1963,37 +1963,18 @@ function updatePlayerPosition(){
 }
   // --- Rotate player model horizontally ---
 function updateTransforms() {
-  // Log player position & camera rotation
-  console.log(`Player pos: X:${posX.toFixed(2)} Y:${posY.toFixed(2)} Z:${posZ.toFixed(2)}`);
-  console.log(`Camera rotation: yaw:${yaw.toFixed(2)} pitch:${pitch.toFixed(2)}`);
-
-  // SCENE: moves opposite to player and rotates Y (yaw only)
-  const sceneTransform = `
+  // Move & rotate the world so it appears the player is looking around
+  world.style.transform = `
     translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
+    rotateX(${pitch}deg)
     rotateY(${-yaw}deg)
   `;
 
-  // PLAYER: moves & rotates to match yaw
-  const playerTransform = `
+  // Optional: rotate the player model horizontally to match yaw
+  playerModel.style.transform = `
     translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
-
-  // CAMERA: pitch (vertical rotation)
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
-
-  // APPLY transforms only if changed
-  if (sceneTransform !== lastSceneTransform) {
-    scene.style.transform = sceneTransform; // ✅ rotate the scene, not world
-    lastSceneTransform = sceneTransform;
-    console.log('Scene transform updated');
-  }
-
-  if (playerTransform !== lastPlayerTransform) {
-    playerModel.style.transform = playerTransform;
-    lastPlayerTransform = playerTransform;
-    console.log('Player transform updated');
-  }
 }
 
 // === Game loop ===
