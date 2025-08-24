@@ -81,6 +81,20 @@ html, body {
   pointer-events: auto; /* allow clicking if needed */
 }
 
+#inventory-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;        /* render above everything */
+  pointer-events: auto;  /* allow interaction */
+  display: none;         /* hidden by default */
+}
+
+#inventory-panel.visible {
+  display: block;        /* show when toggled */
+}
+
 #player-model {
   position: absolute;
   width: 50px;
