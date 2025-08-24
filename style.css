@@ -21,7 +21,7 @@ html, body {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) !important; /* override inherited transforms */
   font-size: 24px;
   color: white;
   pointer-events: none;
