@@ -1934,26 +1934,38 @@ function getTopSurfaceYUnderPlayer(){
 
 // === Player movement / collision ===
 function updatePlayerPosition() {
+  // Movement input
   let forward = 0, right = 0;
   if (keys['w']) forward += 1;
   if (keys['s']) forward -= 1;
   if (keys['d']) right += 1;
   if (keys['a']) right -= 1;
 
+  // Convert yaw to radians
   const rad = yaw * Math.PI / 180;
+
+  // Move relative to camera direction
   posX += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
   posZ += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
 
+  // Gravity
   velY += gravity;
   posY += velY;
 
+  // Ground collision
   const surfaceY = getTopSurfaceYUnderPlayer();
   const feetY = posY - characterYOffset;
-  if (surfaceY !== undefined && feetY > surfaceY) {
+  if (surfaceY !== undefined && feetY < surfaceY) {
     posY = surfaceY + characterYOffset;
     velY = 0;
     grounded = true;
   } else {
+    grounded = false;
+  }
+
+  // Jump
+  if (keys[' '] && grounded) {
+    velY = jumpStrength;
     grounded = false;
   }
 }
