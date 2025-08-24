@@ -21,25 +21,50 @@
   <div id="player-model"></div>
   </div>
 
-    <!-- Full Inventory Panel -->
-    <div id="inventory-panel" class="hidden">
-      <div id="inventory-wrapper">
-        <div id="crafting-container">
-          <div id="crafting-area" class="crafting-grid">
-            <div class="slot"></div><div class="slot"></div>
-            <div class="slot"></div><div class="slot"></div>
-          </div>
-          <div id="crafting-arrow">➡️</div>
-          <div id="crafting-result" class="slot"></div>
-        </div>
-        <div class="inventory-grid">
-          <!-- 9 rows × 3 columns -->
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-        </div>
+   <!-- Inventory Panel -->
+<div id="inventory-panel" class="hidden">
+  <div id="inventory-wrapper">
+
+    <!-- Top section: Armor and Crafting -->
+    <div id="top-section" class="top-section">
+      
+      <!-- Armor slots (4 slots vertical) -->
+      <div id="armor-container" class="armor-grid">
+        <div class="slot armor-slot"></div>
+        <div class="slot armor-slot"></div>
+        <div class="slot armor-slot"></div>
+        <div class="slot armor-slot"></div>
       </div>
+
+      <!-- Crafting area (2x2 grid) -->
+      <div id="crafting-container" class="crafting-grid">
+        <div class="slot"></div><div class="slot"></div>
+        <div class="slot"></div><div class="slot"></div>
+        <div id="crafting-arrow">➡️</div>
+        <div id="crafting-result" class="slot"></div>
+      </div>
+
     </div>
+
+    <!-- Bottom section: Main inventory 3x9 -->
+    <div id="main-inventory" class="main-inventory-grid">
+      <!-- 27 slots -->
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+      <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+    </div>
+
+  </div>
+</div>
+
   
 <!-- Crosshair -->
     <div id="crosshair">+</div>
