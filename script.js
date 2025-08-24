@@ -1962,32 +1962,29 @@ function updatePlayerPosition(){
   }
 }
   // --- Rotate player model horizontally ---
-  function updateTransforms() {
+ function updateTransforms() {
   // Log player position & camera rotation
   console.log(`Player pos: X:${posX.toFixed(2)} Y:${posY.toFixed(2)} Z:${posZ.toFixed(2)}`);
   console.log(`Camera rotation: yaw:${yaw.toFixed(2)} pitch:${pitch.toFixed(2)}`);
 
-  // World translation (move opposite to player)
-  const worldTranslate = `translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)`;
+  // WORLD: moves opposite to player and rotates Y (yaw only)
+  const worldTransform = `
+    translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
+    rotateY(${-yaw}deg)
+  `;
 
-  // World rotation (yaw only)
-  const worldRotate = `rotateY(${-yaw}deg)`;
-
-  // Combine translation and rotation
-  const worldTransform = `${worldTranslate} ${worldRotate}`;
-
-  // Player model moves & rotates to match yaw
+  // PLAYER: moves & rotates to match yaw
   const playerTransform = `
     translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
 
-  // Camera pitch (look up/down)
+  // CAMERA: pitch (vertical rotation)
   cameraPitch.style.transform = `rotateX(${pitch}deg)`;
 
-  // Apply transforms only if changed
+  // APPLY transforms only if changed
   if (worldTransform !== lastSceneTransform) {
-    world.style.transform = worldTransform; // Apply to #world
+    world.style.transform = worldTransform;
     lastSceneTransform = worldTransform;
     console.log('World transform updated');
   }
@@ -1998,6 +1995,7 @@ function updatePlayerPosition(){
     console.log('Player transform updated');
   }
 }
+
 
 
 
