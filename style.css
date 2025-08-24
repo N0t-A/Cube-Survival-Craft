@@ -70,41 +70,71 @@ html, body {
   background: green;
   transform-origin: center;
 }
-#inventory {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 5px;
-  z-index: 9999; /* above world */
-  pointer-events: auto; /* allow clicking if needed */
-}
-
-/* Inventory panel container */
 #inventory-panel {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 9999;
-  display: none; /* hidden by default */
-  background: rgba(30, 30, 30, 0.9); /* optional dark background */
-  padding: 20px;
+  background: rgba(40, 40, 40, 0.95);
+  padding: 15px;
   border: 2px solid #888;
   border-radius: 10px;
+  z-index: 9999;
+  display: none; /* hidden by default */
 }
 
-/* Show panel when visible */
+/* Visible state */
 #inventory-panel.visible {
+  display: block;
+}
+
+/* Top section: armor + crafting */
+.top-section {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* Armor grid: vertical 4 slots */
+.armor-grid {
   display: grid;
-  grid-template-columns: repeat(9, 50px); /* 9 slots per row */
-  grid-auto-rows: 50px;
+  grid-template-rows: repeat(4, 50px);
   gap: 5px;
 }
 
-/* Slot styling */
-#inventory-panel .slot {
+/* Crafting grid: 2x2 */
+.crafting-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 50px);
+  grid-template-rows: repeat(2, 50px);
+  gap: 5px;
+  position: relative;
+}
+
+/* Crafting arrow and result */
+#crafting-arrow {
+  position: absolute;
+  right: -30px;
+  top: 20px;
+  font-size: 18px;
+}
+
+#crafting-result {
+  position: absolute;
+  right: -70px;
+  top: 20px;
+}
+
+/* Main inventory: 3 rows x 9 cols */
+.main-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 50px);
+  grid-template-rows: repeat(3, 50px);
+  gap: 5px;
+}
+
+/* General slot styling */
+.slot {
   width: 50px;
   height: 50px;
   background: #444;
@@ -113,6 +143,16 @@ html, body {
   box-sizing: border-box;
 }
 
+/* Hotbar fixed at bottom */
+#inventory-hotbar {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 9999;
+}
 
 #player-model {
   position: absolute;
