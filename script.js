@@ -1960,17 +1960,14 @@ function updatePlayerPosition() {
 
   // --- Rotate player model horizontally ---
 function updateTransforms() {
-  // Position the world relative to the player's location
+  // Move the world so the camera-eye stays at the player's position
   world.style.transform = `
     translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
-    rotateX(${pitch}deg)
   `;
 
-  // Apply yaw to outer wrapper
+  // Rotate the world around the camera-eye based on mouse movement
   cameraYaw.style.transform = `rotateY(${-yaw}deg)`;
-
-  // Optional: reset pitch wrapper just in case
-  cameraPitch.style.transform = '';
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
 }
 
 // === Game loop ===
