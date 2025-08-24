@@ -9,19 +9,21 @@
 <body>
   <div id="game-container">
     <div id="scene">
+      <!-- World blocks live here -->
       <div id="world"></div>
+
+      <!-- Camera transform wrappers (moved inside #scene) -->
+      <div id="camera-pitch">
+        <div id="camera-yaw">
+          <div id="camera-eye"></div>
+        </div>
+      </div>
     </div>
 
     <!-- Player model -->
     <div id="player-model"></div>
 
-    <!-- Camera transform wrappers -->
-    <div id="camera-pitch">
-      <div id="camera-yaw">
-        <div id="camera-eye"></div>
-      </div>
-    </div>
-
+    <!-- Crosshair -->
     <div id="crosshair">+</div>
 
     <!-- Inventory Hotbar -->
@@ -44,9 +46,13 @@
         </div>
         <div class="inventory-grid">
           <!-- 3 rows × 9 columns -->
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
-          <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+          <div class="slot"></div><div class="slot"></div><div class="slot"></div>
         </div>
       </div>
     </div>
