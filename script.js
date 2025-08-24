@@ -1998,14 +1998,28 @@ function updateTransforms() {
   `;
 }
 
-// --- Unified crafting update function ---
-function updateCraftingResult(grid, recipes, setResult, clearResult) {
+// --- Unified station update function ---
+function updateStation(grid, recipes, setResult, clearResult, options = {}) {
+  const { strictPositions = false, multiOutput = false } = options;
+
   function matchRecipe(grid, pattern) {
     const rows = grid.length;
     const cols = grid[0].length;
     const pr = pattern.length;
     const pc = pattern[0].length;
 
+    if (strictPositions) {
+      // Exact-position matching for cooking / special stations
+      if (pr !== rows || pc !== cols) return false;
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          if (pattern[y][x] !== null && grid[y][x] !== pattern[y][x]) return false;
+        }
+      }
+      return true;
+    }
+
+    // Flexible matching for crafting/cutting/engraving
     function matchesAtOffset(offsetY, offsetX, p) {
       for (let y = 0; y < pr; y++) {
         for (let x = 0; x < pc; x++) {
@@ -2019,14 +2033,14 @@ function updateCraftingResult(grid, recipes, setResult, clearResult) {
     function generateTransforms(p) {
       const transforms = [p];
 
-      // 90, 180, 270 rotations
+      // Rotations: 90, 180, 270
       for (let i = 0; i < 3; i++) {
         const prev = transforms[transforms.length - 1];
         const rotated = prev[0].map((_, col) => prev.map(row => row[col]).reverse());
         transforms.push(rotated);
       }
 
-      // horizontal flips
+      // Horizontal flips
       const flips = transforms.map(t => t.map(row => row.slice().reverse()));
       transforms.push(...flips);
 
@@ -2052,7 +2066,7 @@ function updateCraftingResult(grid, recipes, setResult, clearResult) {
 
   for (const recipe of recipes) {
     if (matchRecipe(grid, recipe.pattern)) {
-      setResult(recipe.output);
+      setResult(recipe.output, multiOutput ? recipe : null);
       return;
     }
   }
@@ -2060,30 +2074,67 @@ function updateCraftingResult(grid, recipes, setResult, clearResult) {
   clearResult();
 }
 
-// --- Inventory update (2x2) ---
-function updateInventoryCrafting() {
+// --- Station-specific wrappers ---
+
+function update2x2Crafting() {
   const grid = [
-    [getItemAtSlot(0), getItemAtSlot(1)],
-    [getItemAtSlot(2), getItemAtSlot(3)]
+    [getCraftingSlot(0), getCraftingSlot(1)],
+    [getCraftingSlot(2), getCraftingSlot(3)]
   ];
-  updateCraftingResult(grid, basicRecipes, setInventoryCraftingResult, clearInventoryCraftingResult);
+  updateStation(grid, basicRecipes, setCraftingResult, clearCraftingResult);
 }
 
-// --- Crafting table update (3x3) ---
-function updateCraftingTable() {
+function update3x3CraftingTable() {
   const grid = [
     [getTableSlot(0), getTableSlot(1), getTableSlot(2)],
     [getTableSlot(3), getTableSlot(4), getTableSlot(5)],
     [getTableSlot(6), getTableSlot(7), getTableSlot(8)]
   ];
-  updateCraftingResult(grid, basicRecipes, setCraftingTableResult, clearCraftingTableResult);
+  updateStation(grid, advancedRecipes, setTableResult, clearTableResult);
 }
 
-// --- Call these inside your main game loop or on inventory/table change ---
-function refreshCrafting() {
-  updateInventoryCrafting();
-  updateCraftingTable();
+function updateCookingStation() {
+  const grid = [
+    [getCookingSlot(0), getCookingSlot(1)],
+    [getCookingSlot(2), getCookingSlot(3)]
+  ];
+  updateStation(grid, cookingRecipes, setCookingResult, clearCookingResult, { strictPositions: true });
 }
+
+function updateSmeltingStation() {
+  const grid = [
+    [getSmeltInput(0), getSmeltInput(1)],
+    [getSmeltInput(2), getSmeltInput(3)]
+  ];
+  updateStation(grid, smeltingRecipes, setSmeltingResult, clearSmeltingResult, { multiOutput: true });
+}
+
+function updateCuttingStation() {
+  const grid = [
+    [getCuttingSlot(0), getCuttingSlot(1)],
+    [getCuttingSlot(2), getCuttingSlot(3)]
+  ];
+  updateStation(grid, cuttingRecipes, setCuttingResult, clearCuttingResult);
+}
+
+function updateEngravingStation() {
+  const grid = [
+    [getEngravingSlot(0), getEngravingSlot(1)],
+    [getEngravingSlot(2), getEngravingSlot(3)]
+  ];
+  updateStation(grid, engravingRecipes, setEngravingResult, clearEngravingResult);
+}
+
+// --- Call in your game loop or on any station update ---
+function refreshAllStations() {
+  update2x2Crafting();
+  update3x3CraftingTable();
+  updateCookingStation();
+  updateSmeltingStation();
+  updateCuttingStation();
+  updateEngravingStation();
+}
+
 
 
 // === Game loop ===
