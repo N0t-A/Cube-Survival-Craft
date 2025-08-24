@@ -70,6 +70,16 @@ html, body {
   background: green;
   transform-origin: center;
 }
+#inventory {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 9999; /* above world */
+  pointer-events: auto; /* allow clicking if needed */
+}
 
 #player-model {
   position: absolute;
