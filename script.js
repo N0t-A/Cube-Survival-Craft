@@ -1962,7 +1962,7 @@ function updatePlayerPosition(){
   }
 }
   // --- Rotate player model horizontally ---
- function updateTransforms() {
+function updateTransforms() {
   // Log player position & camera rotation
   console.log(`Player pos: X:${posX.toFixed(2)} Y:${posY.toFixed(2)} Z:${posZ.toFixed(2)}`);
   console.log(`Camera rotation: yaw:${yaw.toFixed(2)} pitch:${pitch.toFixed(2)}`);
@@ -1984,7 +1984,7 @@ function updatePlayerPosition(){
 
   // APPLY transforms only if changed
   if (sceneTransform !== lastSceneTransform) {
-    scene.style.transform = sceneTransform; // <— rotate #scene now
+    scene.style.transform = sceneTransform; // ✅ rotate the scene, not world
     lastSceneTransform = sceneTransform;
     console.log('Scene transform updated');
   }
@@ -1995,11 +1995,6 @@ function updatePlayerPosition(){
     console.log('Player transform updated');
   }
 }
-
-
-
-
-
 
 // === Game loop ===
 function animate(){
