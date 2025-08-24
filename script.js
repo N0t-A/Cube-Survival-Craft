@@ -1959,17 +1959,36 @@ function updatePlayerPosition() {
 }
 
   // --- Rotate player model horizontally ---
-function updateTransforms() {
-  // Move world relative to camera-eye
-  world.style.transform = `
-    translate3d(${-posX}px, ${-(posY - eyeHeight) + 700}px, ${-posZ}px)
-    rotateX(${-pitch}deg)
-    rotateY(${-yaw}deg)
-  `;
+let smoothPosX = posX;
+let smoothPosY = posY;
+let smoothPosZ = posZ;
+let smoothYaw = yaw;
+let smoothPitch = pitch;
 
-  // Keep camera wrappers neutral
-  cameraYaw.style.transform = '';
-  cameraPitch.style.transform = '';
+// Linear interpolation helper
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+// === Updated updateTransforms with smoothing ===
+function updateTransforms() {
+  const smoothFactor = 0.15; // smaller = smoother
+
+  // Smoothly interpolate position
+  smoothPosX = lerp(smoothPosX, posX, smoothFactor);
+  smoothPosY = lerp(smoothPosY, posY, smoothFactor);
+  smoothPosZ = lerp(smoothPosZ, posZ, smoothFactor);
+
+  // Smoothly interpolate rotation
+  smoothYaw = lerp(smoothYaw, yaw, smoothFactor);
+  smoothPitch = lerp(smoothPitch, pitch, smoothFactor);
+
+  // Move & rotate the world relative to camera
+  world.style.transform = `
+    translate3d(${-smoothPosX}px, ${-smoothPosY + 700}px, ${-smoothPosZ}px)
+    rotateX(${-smoothPitch}deg)
+    rotateY(${-smoothYaw}deg)
+  `;
 }
 
 
