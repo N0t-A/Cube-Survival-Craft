@@ -10,7 +10,7 @@ html, body {
 #game-container {
   width: 100%;
   height: 100vh;
-  perspective: 800px;
+  perspective: 800px;           /* critical for 3D perspective */
   perspective-origin: center center;
   position: relative;
   transform-style: preserve-3d;
@@ -29,7 +29,7 @@ html, body {
   user-select: none;
 }
 
-#camera-wrapper,
+/* Camera hierarchy */
 #camera-yaw,
 #camera-pitch,
 #camera-eye {
@@ -41,6 +41,12 @@ html, body {
   transform-style: preserve-3d;
 }
 
+/* Camera-eye offset to player height */
+#camera-eye {
+  transform: translateY(110px); /* matches your eyeHeight in JS */
+}
+
+/* Scene container */
 #scene {
   position: absolute;
   width: 100%;
@@ -48,10 +54,15 @@ html, body {
   transform-style: preserve-3d;
 }
 
+/* World container */
 #world {
   position: absolute;
-  width: 
+  width: 1000px;   /* make sure world has a size */
+  height: 1000px;
+  transform-style: preserve-3d;
+}
 
+/* Example simple ground for testing */
 #ground {
   position: absolute;
   width: 1000px;
