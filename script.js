@@ -1963,7 +1963,7 @@ function updateTransforms() {
   // Move the world so the camera-eye stays at the player's position
   world.style.transform = `
     translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
-    rotateX(${pitch}deg)
+    rotateX(${-pitch}deg)
     rotateY(${-yaw}deg)
   `;
 
