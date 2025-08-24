@@ -67,6 +67,7 @@ function onMouseMove(e) {
   if (pitch > maxPitch) pitch = maxPitch;
   if (pitch < -maxPitch) pitch = -maxPitch;
   console.log(`Camera rotation - yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
+  updateTransforms();
 }
 
 // === Block helpers ===
@@ -1932,53 +1933,45 @@ function getTopSurfaceYUnderPlayer(){
 }
 
 // === Player movement / collision ===
-function updatePlayerPosition(){
-  let forward=0,right=0;
-  if(keys['w']) forward+=1;
-  if(keys['s']) forward-=1;
-  if(keys['d']) right+=1;
-  if(keys['a']) right-=1;
-  const rad=yaw*Math.PI/180;
-  posX+=(forward*Math.cos(rad)-right*Math.sin(rad))*speed;
-  posZ+=(forward*Math.sin(rad)+right*Math.cos(rad))*speed;
+function updatePlayerPosition() {
+  let forward = 0, right = 0;
+  if (keys['w']) forward += 1;
+  if (keys['s']) forward -= 1;
+  if (keys['d']) right += 1;
+  if (keys['a']) right -= 1;
 
-  velY+=gravity;
-  posY+=velY;
+  const rad = yaw * Math.PI / 180;
+  posX += (forward * Math.sin(rad) + right * Math.cos(rad)) * speed;
+  posZ += (forward * Math.cos(rad) - right * Math.sin(rad)) * speed;
 
-  const surface=getTopSurfaceYUnderPlayer();
-  const playerFeetY=posY-characterYOffset;
-  if(surface!==undefined){
-    if(playerFeetY>surface){
-      posY=surface+characterYOffset;
-      velY=0;
-      grounded=true;
-    } else grounded=false;
+  velY += gravity;
+  posY += velY;
+
+  const surfaceY = getTopSurfaceYUnderPlayer();
+  const feetY = posY - characterYOffset;
+  if (surfaceY !== undefined && feetY > surfaceY) {
+    posY = surfaceY + characterYOffset;
+    velY = 0;
+    grounded = true;
   } else {
-    if(posY>STONE_LAYERS*BLOCK_SIZE+characterYOffset){
-      posY=STONE_LAYERS*BLOCK_SIZE+characterYOffset;
-      velY=0;
-      grounded=true;
-    } else grounded=false;
+    grounded = false;
   }
 }
+
   // --- Rotate player model horizontally ---
 function updateTransforms() {
-  // Move world relative to player position (static rotation)
+  cameraYaw.style.transform = `rotateY(${yaw}deg)`;
+  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
+
   world.style.transform = `
     translate3d(${-posX}px, ${-(posY - eyeHeight)}px, ${-posZ}px)
   `;
 
-  // Rotate the player model horizontally
   playerModel.style.transform = `
     translate3d(${posX}px, ${posY - characterYOffset}px, ${posZ}px)
     rotateY(${yaw}deg)
   `;
-
-  // Rotate camera to simulate looking around
-  cameraYaw.style.transform = `rotateY(${yaw}deg)`;
-  cameraPitch.style.transform = `rotateX(${pitch}deg)`;
 }
-
 
 // === Game loop ===
 function animate(){
