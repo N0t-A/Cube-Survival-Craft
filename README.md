@@ -1,1 +1,1 @@
-these textures are for a game that I am working on making myself. Once the game is finished I will add more to this description.
+All of the work on this is for a game that I am making for a High-school final project, this took a long time to make and will possibly still be under construction for a long time.
