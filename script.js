@@ -15,6 +15,9 @@ const STONE_LAYERS = 80;
 const groundY = 0;             
 const eyeHeight = 110;         // Camera eye level (just below head)
 const characterYOffset = 280;  // feet-to-model offset
+const maxReach = 6;
+const rayStep = 0.5;
+let selectedBlock = null;
 
 // === Player state ===
 let posX = 0;
@@ -2147,10 +2150,100 @@ function refreshAllStations() {
   updateEngravingStation();
 }
 
+function raycastFromPlayer() {
+  const pitchRad = pitch * Math.PI / 180;
+  const yawRad = yaw * Math.PI / 180;
 
+  const dirX = Math.sin(yawRad) * Math.cos(pitchRad);
+  const dirY = -Math.sin(pitchRad); // Negative due to inverted Y
+  const dirZ = Math.cos(yawRad) * Math.cos(pitchRad);
+
+  let rayX = posX;
+  let rayY = posY;
+  let rayZ = posZ;
+
+  for (let i = 0; i < maxReach / rayStep; i++) {
+    rayX += dirX * rayStep;
+    rayY += dirY * rayStep;
+    rayZ += dirZ * rayStep;
+
+    const bx = Math.floor(rayX / blockSize);
+    const by = Math.floor(rayY / blockSize);
+    const bz = Math.floor(rayZ / blockSize);
+
+    const key = `${bx},${by},${bz}`;
+    if (blocks[key]) {
+      return { x: bx, y: by, z: bz, hit: true };
+    }
+  }
+  return { hit: false };
+}
+
+function updateBlockOutline() {
+  const result = raycastFromPlayer();
+
+  if (result.hit) {
+    selectedBlock = result;
+    // Highlight with a black outline or CSS effect
+    highlightBlock(result.x, result.y, result.z);
+  } else {
+    selectedBlock = null;
+    clearBlockHighlight();
+  }
+}
+
+document.addEventListener('mousedown', (e) => {
+  if (!selectedBlock) return;
+
+  if (e.button === 0) {
+    // Left-click: Break block
+    breakBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z);
+  }
+
+  if (e.button === 2) {
+    // Right-click: Place block
+    const placePos = getAdjacentPlacementPos(selectedBlock);
+    if (placePos) {
+      placeBlock(placePos.x, placePos.y, placePos.z, getSelectedHotbarBlock());
+    }
+  }
+});
+
+function getAdjacentPlacementPos(block) {
+  const offsetX = Math.sign((block.x + 0.5) * blockSize - posX);
+  const offsetY = Math.sign((block.y + 0.5) * blockSize - posY);
+  const offsetZ = Math.sign((block.z + 0.5) * blockSize - posZ);
+
+  const px = block.x + offsetX;
+  const py = block.y + offsetY;
+  const pz = block.z + offsetZ;
+
+  const key = `${px},${py},${pz}`;
+  if (!blocks[key]) {
+    return { x: px, y: py, z: pz };
+  }
+  return null;
+}
+
+function breakBlock(x, y, z) {
+  const key = `${x},${y},${z}`;
+  const block = blocks[key];
+  if (block) {
+    block.remove();
+    delete blocks[key];
+  }
+}
+
+function placeBlock(x, y, z, blockType) {
+  const key = `${x},${y},${z}`;
+  if (!blocks[key]) {
+    createBlock(x, y, z, blockType);
+  }
+}
 
 // === Game loop ===
 function animate(){
+  updateBlockOutline();
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
