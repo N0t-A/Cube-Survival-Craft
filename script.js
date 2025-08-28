@@ -2180,7 +2180,6 @@ function raycastFromCamera(maxDistance = 6, step = 0.5) {
   return { hit: false };
 }
 
-
 function getAdjacentPlacementPos(block) {
   const offsetX = Math.sign((block.x + 0.5) * blockSize - posX);
   const offsetY = Math.sign((block.y + 0.5) * blockSize - posY);
