@@ -430,6 +430,9 @@ html, body {
 }
 
 /* Blocks and Block Transforms */
+.block.highlighted .face {
+  outline: 2px solid black;
+}
 .grass.block {
   width: 70px;
   height: 70px;
