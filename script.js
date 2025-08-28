@@ -2257,6 +2257,20 @@ document.addEventListener('mousedown', (e) => {
 
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
+function getBlock(x, y, z) {
+  const key = `${x},${y},${z}`;
+  return world[key] || null;
+}
+
+function setBlock(x, y, z, blockType) {
+  const key = `${x},${y},${z}`;
+  if (blockType) {
+    world[key] = blockType;
+  } else {
+    delete world[key];
+  }
+}
+
 // === Game loop ===
 function animate(){
   updateBlockhighlight();
