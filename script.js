@@ -2150,64 +2150,36 @@ function refreshAllStations() {
   updateEngravingStation();
 }
 
-function raycastFromPlayer() {
-  const pitchRad = pitch * Math.PI / 180;
+function raycastFromCamera(maxDistance = 6, step = 0.5) {
   const yawRad = yaw * Math.PI / 180;
+  const pitchRad = pitch * Math.PI / 180;
 
   const dirX = Math.sin(yawRad) * Math.cos(pitchRad);
-  const dirY = -Math.sin(pitchRad); // Negative due to inverted Y
+  const dirY = -Math.sin(pitchRad); // Inverted Y-axis
   const dirZ = Math.cos(yawRad) * Math.cos(pitchRad);
 
-  let rayX = posX;
-  let rayY = posY;
-  let rayZ = posZ;
+  let x = posX;
+  let y = posY;
+  let z = posZ;
 
-  for (let i = 0; i < maxReach / rayStep; i++) {
-    rayX += dirX * rayStep;
-    rayY += dirY * rayStep;
-    rayZ += dirZ * rayStep;
+  for (let d = 0; d < maxDistance; d += step) {
+    x += dirX * step;
+    y += dirY * step;
+    z += dirZ * step;
 
-    const bx = Math.floor(rayX / blockSize);
-    const by = Math.floor(rayY / blockSize);
-    const bz = Math.floor(rayZ / blockSize);
+    const gx = Math.floor(x / BLOCK_SIZE);
+    const gy = Math.floor(y / BLOCK_SIZE);
+    const gz = Math.floor(z / BLOCK_SIZE);
 
-    const key = `${bx},${by},${bz}`;
-    if (blocks[key]) {
-      return { x: bx, y: by, z: bz, hit: true };
+    const block = getBlock(gx, gy, gz);
+    if (block && block !== 'air') {
+      return { hit: true, gx, gy, gz };
     }
   }
+
   return { hit: false };
 }
 
-function updateBlockOutline() {
-  const result = raycastFromPlayer();
-
-  if (result.hit) {
-    selectedBlock = result;
-    // Highlight with a black outline or CSS effect
-    highlightBlock(result.x, result.y, result.z);
-  } else {
-    selectedBlock = null;
-    clearBlockHighlight();
-  }
-}
-
-document.addEventListener('mousedown', (e) => {
-  if (!selectedBlock) return;
-
-  if (e.button === 0) {
-    // Left-click: Break block
-    breakBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z);
-  }
-
-  if (e.button === 2) {
-    // Right-click: Place block
-    const placePos = getAdjacentPlacementPos(selectedBlock);
-    if (placePos) {
-      placeBlock(placePos.x, placePos.y, placePos.z, getSelectedHotbarBlock());
-    }
-  }
-});
 
 function getAdjacentPlacementPos(block) {
   const offsetX = Math.sign((block.x + 0.5) * blockSize - posX);
@@ -2241,9 +2213,54 @@ function placeBlock(x, y, z, blockType) {
   }
 }
 
+let highlightedEl = null;
+
+function updateBlockHighlight() {
+  if (highlightedEl) highlightedEl.classList.remove('highlighted');
+
+  const result = raycastFromCamera();
+  if (!result.hit) return;
+
+  const key = `${result.gx},${result.gy},${result.gz}`;
+  const el = world.querySelector(`.block[data-key="${key}"]`);
+  if (el) {
+    el.classList.add('highlighted');
+    highlightedEl = el;
+  }
+}
+
+document.addEventListener('mousedown', (e) => {
+  const result = raycastFromCamera();
+  if (!result.hit) return;
+
+  const { gx, gy, gz } = result;
+
+  if (e.button === 0) {
+    // Left-click: Break block
+    setBlock(gx, gy, gz, null); // or worldData.delete(key)
+    generateMultiLayerWorld(); // refresh
+  }
+
+  if (e.button === 2) {
+    // Right-click: Place block
+    const selected = getSelectedHotbarBlock();
+    if (!selected) return;
+
+    const px = gx;
+    const py = gy + 1;
+    const pz = gz;
+    if (!getBlock(px, py, pz)) {
+      setBlock(px, py, pz, selected);
+      generateMultiLayerWorld();
+    }
+  }
+});
+
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
 // === Game loop ===
 function animate(){
-  updateBlockOutline();
+  updateBlockhighlight();
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
