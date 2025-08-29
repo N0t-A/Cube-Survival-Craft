@@ -431,8 +431,11 @@ html, body {
 
 /* Blocks and Block Transforms */
 .block.highlighted .face {
-  outline: 2px solid black;
+  outline: 3px solid black;
+  box-shadow: 0 0 10px black;
+  z-index: 1000;
 }
+
 .grass.block {
   width: 70px;
   height: 70px;
