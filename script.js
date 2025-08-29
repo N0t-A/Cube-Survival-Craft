@@ -73,6 +73,17 @@ function onMouseMove(e) {
   updateTransforms();
 }
 
+function getDirectionVector() {
+  const pitchRad = pitch * Math.PI / 180;
+  const yawRad = yaw * Math.PI / 180;
+
+  const dx = Math.sin(yawRad) * Math.cos(pitchRad);
+  const dy = Math.sin(pitchRad);
+  const dz = Math.cos(yawRad) * Math.cos(pitchRad);
+
+  return [dx, -dy, dz]; // -dy if Y axis is inverted in your world
+}
+
 // === Block helpers ===
 function createBlockElement(gx, gy, gz, type, exposedFaces) {
   const el = document.createElement('div');
