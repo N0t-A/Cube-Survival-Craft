@@ -2150,34 +2150,40 @@ function refreshAllStations() {
   updateEngravingStation();
 }
 
-function raycastFromCamera(maxDistance = 6, step = 0.5) {
-  const yawRad = yaw * Math.PI / 180;
-  const pitchRad = pitch * Math.PI / 180;
+function raycastFromCamera() {
+  const origin = [posX, posY, posZ];
+  const dir = getDirectionVector(); // Based on yaw/pitch
+  const maxReach = 5;
+  const step = 0.1;
 
-  const dirX = Math.sin(yawRad) * Math.cos(pitchRad);
-  const dirY = -Math.sin(pitchRad); // Inverted Y-axis
-  const dirZ = Math.cos(yawRad) * Math.cos(pitchRad);
+  let lastBlockPos = null;
+  let highlighted = null;
 
-  let x = posX;
-  let y = posY;
-  let z = posZ;
-
-  for (let d = 0; d < maxDistance; d += step) {
-    x += dirX * step;
-    y += dirY * step;
-    z += dirZ * step;
+  for (let t = 0; t < maxReach; t += step) {
+    const x = origin[0] + dir[0] * t;
+    const y = origin[1] + dir[1] * t;
+    const z = origin[2] + dir[2] * t;
 
     const gx = Math.floor(x / BLOCK_SIZE);
     const gy = Math.floor(y / BLOCK_SIZE);
     const gz = Math.floor(z / BLOCK_SIZE);
 
     const block = getBlock(gx, gy, gz);
-    if (block && block !== 'air') {
-      return { hit: true, gx, gy, gz };
+    if (block) {
+      highlighted = block;
+      break;
     }
   }
 
-  return { hit: false };
+  if (highlighted !== currentlyHighlightedBlock) {
+    if (currentlyHighlightedBlock) {
+      currentlyHighlightedBlock.classList.remove('highlighted');
+    }
+    if (highlighted) {
+      highlighted.classList.add('highlighted');
+    }
+    currentlyHighlightedBlock = highlighted;
+  }
 }
 
 function getAdjacentPlacementPos(block) {
@@ -2257,9 +2263,9 @@ document.addEventListener('mousedown', (e) => {
 
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-function getBlock(x, y, z) {
-  const key = `${x},${y},${z}`;
-  return world[key] || null;
+function getBlock(gx, gy, gz) {
+  const block = worldData.get(keyAt(gx, gy, gz));
+  return block ? block.element : null;
 }
 
 function setBlock(x, y, z, blockType) {
@@ -2270,6 +2276,13 @@ function setBlock(x, y, z, blockType) {
     delete world[key];
   }
 }
+
+const blockEl = createBlockElement(gx, gy, gz, type, exposedFaces);
+worldData.set(keyAt(gx, gy, gz), {
+  type: type,
+  element: blockEl
+});
+world.appendChild(blockEl);
 
 // === Game loop ===
 function animate(){
