@@ -2294,7 +2294,7 @@ document.addEventListener('mousedown', (e) => {
     setBlock(gx, gy, gz, null); // or worldData.delete(key)
     generateMultiLayerWorld(); // refresh
   }
-}
+})
 
   if (e.button === 2) {
     const selected = getSelectedHotbarBlock();
