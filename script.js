@@ -2225,15 +2225,29 @@ function raycastFromCamera() {
 }
 
 
-  if (highlighted !== currentlyHighlightedBlock) {
-    if (currentlyHighlightedBlock) {
-      currentlyHighlightedBlock.classList.remove('highlighted');
+  let currentlyHighlightedBlock = null;
+
+function updateHighlightedBlock() {
+    const result = raycastFromCamera(); // returns { hit, gx, gy, gz, normal }
+    
+    // Determine the DOM element for the block at the raycast hit position
+    let highlighted = null;
+    if (result.hit) {
+        const { gx, gy, gz } = result;
+        highlighted = document.querySelector(`.block[data-x='${gx}'][data-y='${gy}'][data-z='${gz}']`);
     }
-    if (highlighted) {
-      highlighted.classList.add('highlighted');
+
+    // Only update if it changed
+    if (highlighted !== currentlyHighlightedBlock) {
+        if (currentlyHighlightedBlock) {
+            currentlyHighlightedBlock.classList.remove('highlighted');
+        }
+        if (highlighted) {
+            highlighted.classList.add('highlighted');
+        }
+        currentlyHighlightedBlock = highlighted;
     }
-    currentlyHighlightedBlock = highlighted;
-  }
+}
 
 function getAdjacentPlacementPos(block) {
   const offsetX = Math.sign((block.x + 0.5) * blockSize - posX);
@@ -2463,6 +2477,7 @@ function animate(){
   updateBreaking();
   collectNearbyItems();
   updateBlockhighlight();
+  updateHighlightedBlock();
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
