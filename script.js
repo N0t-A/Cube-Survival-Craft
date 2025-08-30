@@ -53,18 +53,6 @@ document.body.addEventListener('keydown', e => {
 });
 document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
-// mouse look
-
-document.addEventListener('pointerlockchange', () => {
-  if (document.pointerLockElement === document.body) {
-    document.addEventListener('mousemove', onMouseMove);
-    console.log('pointer lock ON');
-  } else {
-    document.removeEventListener('mousemove', onMouseMove);
-    console.log('pointer lock OFF');
-  }
-});
-
 function onMouseMove(e) {
   const sensitivity = 0.1;
   yaw += e.movementX * sensitivity;
@@ -2274,8 +2262,8 @@ function updateBlockHighlight() {
 document.addEventListener('mousedown', (e) => {
   // Left click
   if (e.button === 0) {
-    if (document.pointerLockElement !== scene) {
-      scene.requestPointerLock(); // pointer lock
+    if (document.pointerLockElement !== document.body) {
+      document.body.requestPointerLock(); // pointer lock
     } else {
       breakBlock(); // your block-breaking logic
     }
@@ -2288,6 +2276,17 @@ document.addEventListener('mousedown', (e) => {
 });
 
 document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// mouse look
+document.addEventListener('pointerlockchange', () => {
+  if (document.pointerLockElement === document.body) {
+    document.addEventListener('mousemove', onMouseMove);
+    console.log('pointer lock ON');
+  } else {
+    document.removeEventListener('mousemove', onMouseMove);
+    console.log('pointer lock OFF');
+  }
+});
 
 function getBlock(gx, gy, gz) {
   const block = worldData.get(keyAt(gx, gy, gz));
