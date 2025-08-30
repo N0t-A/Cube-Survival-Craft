@@ -52,22 +52,7 @@ document.body.addEventListener('keydown', e => {
 });
 document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
-// pointer lock + mouse look
-document.addEventListener('mousedown', (e) => {
-  // 1️⃣ Ensure pointer lock is active
-  if (document.pointerLockElement !== scene) {
-    scene.requestPointerLock();
-    return; // don’t run any other code yet
-  }
-
-  // 2️⃣ Only run block breaking logic on the intended button
-  // e.button === 0 is left click, e.button === 2 is right click, adjust as needed
-  if (e.button === 0) { 
-    handleBlockBreaking();
-  } else if (e.button === 2) {
-    handleBlockPlacing();
-  }
-});
+// mouse look
 
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
@@ -2283,21 +2268,20 @@ function updateBlockHighlight() {
 }
 
 document.addEventListener('mousedown', (e) => {
-  const result = raycastFromCamera();
-  if (!result) return;
-
-  const { gx, gy, gz } = result;
-
+  // Left click
   if (e.button === 0) {
-    // Left-click: Break block
-    setBlock(gx, gy, gz, null); // or worldData.delete(key)
-    generateMultiLayerWorld(); // refresh
+    if (document.pointerLockElement !== scene) {
+      scene.requestPointerLock(); // pointer lock
+    } else {
+      handleBlockBreaking(); // your block-breaking logic
+    }
   }
-})
 
-  document.addEventListener('mousedown', (e) => {
-    if (e.button === 2) placeBlockFromRaycast();
-  });
+  // Right click
+  if (e.button === 2) {
+    handleBlockPlacing();
+  }
+});
 
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
