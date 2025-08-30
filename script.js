@@ -55,8 +55,8 @@ document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 // pointer lock + mouse look
 document.addEventListener('mousedown', (e) => {
   // 1️⃣ Ensure pointer lock is active
-  if (document.pointerLockElement !== gameContainer) {
-    gameContainer.requestPointerLock();
+  if (document.pointerLockElement !== scene) {
+    scene.requestPointerLock();
     return; // don’t run any other code yet
   }
 
