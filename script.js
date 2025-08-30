@@ -2200,29 +2200,30 @@ function refreshAllStations() {
 }
 
 function raycastFromCamera() {
-  const origin = [posX, posY, posZ];
-  const dir = getDirectionVector(); // Based on yaw/pitch
-  const maxReach = 5;
-  const step = 0.1;
+    const origin = [posX, posY, posZ];
+    const dir = getDirectionVector(); // Must return normalized [x,y,z]
+    const maxReach = 5;
+    const step = 0.1;
 
-  let lastBlockPos = null;
-  let highlighted = null;
+    let lastBlockPos = null;
+    for (let t = 0; t < maxReach; t += step) {
+        const x = origin[0] + dir[0] * t;
+        const y = origin[1] + dir[1] * t;
+        const z = origin[2] + dir[2] * t;
 
-  for (let t = 0; t < maxReach; t += step) {
-    const x = origin[0] + dir[0] * t;
-    const y = origin[1] + dir[1] * t;
-    const z = origin[2] + dir[2] * t;
+        const gx = Math.floor(x / BLOCK_SIZE);
+        const gy = Math.floor(y / BLOCK_SIZE);
+        const gz = Math.floor(z / BLOCK_SIZE);
 
-    const gx = Math.floor(x / BLOCK_SIZE);
-    const gy = Math.floor(y / BLOCK_SIZE);
-    const gz = Math.floor(z / BLOCK_SIZE);
-
-    const block = getBlock(gx, gy, gz);
-    if (block) {
-      highlighted = block;
-      break;
+        const block = getBlock(gx, gy, gz);
+        if (block) {
+            const normal = [0, 1, 0]; // you can calculate exact face if needed
+            return { hit: true, gx, gy, gz, normal };
+        }
     }
-  }
+    return { hit: false };
+}
+
 
   if (highlighted !== currentlyHighlightedBlock) {
     if (currentlyHighlightedBlock) {
@@ -2296,19 +2297,14 @@ document.addEventListener('mousedown', (e) => {
   }
 
   if (e.button === 2) {
-    // Right-click: Place block
     const selected = getSelectedHotbarBlock();
     if (!selected) return;
 
-    const px = gx;
-    const py = gy + 1;
-    const pz = gz;
-    if (!getBlock(px, py, pz)) {
-      setBlock(px, py, pz, selected);
-      generateMultiLayerWorld();
+    const pos = getAdjacentPlacementPos({ x: gx, y: gy, z: gz });
+    if (pos) {
+        placeBlock(pos.x, pos.y, pos.z, selected);
     }
-  }
-});
+}
 
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
@@ -2318,12 +2314,19 @@ function getBlock(gx, gy, gz) {
 }
 
 function setBlock(x, y, z, blockType) {
-  const key = `${x},${y},${z}`;
-  if (blockType) {
-    world[key] = blockType;
-  } else {
-    delete world[key];
-  }
+    const key = keyAt(x, y, z);
+    if (blockType) {
+        const exposedFaces = getExposedFacesFor(x, y, z);
+        const el = createBlockElement(x, y, z, blockType, exposedFaces);
+        worldData.set(key, { type: blockType, element: el });
+        world.appendChild(el);
+    } else {
+        const data = worldData.get(key);
+        if (data) {
+            data.element.remove();
+            worldData.delete(key);
+        }
+    }
 }
 
 const hit = raycastFromCamera();
