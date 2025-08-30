@@ -2294,12 +2294,25 @@ function setBlock(x, y, z, blockType) {
   }
 }
 
-const blockEl = createBlockElement(gx, gy, gz, type, exposedFaces);
-worldData.set(keyAt(gx, gy, gz), {
-  type: type,
-  element: blockEl
-});
-world.appendChild(blockEl);
+const hit = raycastFromCamera();
+if (hit) {
+  const { gx, gy, gz, normal } = hit;
+
+  // Place block one unit in the direction of the normal
+  const newGX = gx + normal[0];
+  const newGY = gy + normal[1];
+  const newGZ = gz + normal[2];
+
+  const type = selectedBlockType(); // Your current hotbar block
+  const exposedFaces = getExposedFacesFor(newGX, newGY, newGZ);
+  const blockEl = createBlockElement(newGX, newGY, newGZ, type, exposedFaces);
+
+  worldData.set(keyAt(newGX, newGY, newGZ), {
+    type: type,
+    element: blockEl
+  });
+  world.appendChild(blockEl);
+}
 
 // === Game loop ===
 function animate(){
