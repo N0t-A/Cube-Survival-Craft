@@ -6,6 +6,7 @@ const cameraPitch = document.getElementById('camera-pitch');
 const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
+const gameContainer = document.getElementById('game-container');
 let currentlyHighlightedBlock = null;
 
 // === Config / constants ===
@@ -2274,7 +2275,7 @@ document.addEventListener('mousedown', (e) => {
   // Left click
   if (e.button === 0) {
     if (document.pointerLockElement !== document) {
-      document.requestPointerLock(); // pointer lock
+      scene.requestPointerLock(); // pointer lock
     } else {
       breakBlock(); // your block-breaking logic
     }
