@@ -53,9 +53,19 @@ document.body.addEventListener('keydown', e => {
 document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
 // pointer lock + mouse look
-document.body.addEventListener('click', () => {
-  if (document.pointerLockElement !== document.body) {
-    document.body.requestPointerLock();
+document.addEventListener('mousedown', (e) => {
+  // 1️⃣ Ensure pointer lock is active
+  if (document.pointerLockElement !== gameContainer) {
+    gameContainer.requestPointerLock();
+    return; // don’t run any other code yet
+  }
+
+  // 2️⃣ Only run block breaking logic on the intended button
+  // e.button === 0 is left click, e.button === 2 is right click, adjust as needed
+  if (e.button === 0) { 
+    handleBlockBreaking();
+  } else if (e.button === 2) {
+    handleBlockPlacing();
   }
 });
 
