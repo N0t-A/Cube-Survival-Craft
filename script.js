@@ -53,17 +53,6 @@ document.body.addEventListener('keydown', e => {
 });
 document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
-function onMouseMove(e) {
-  const sensitivity = 0.1;
-  yaw += e.movementX * sensitivity;
-  pitch -= e.movementY * sensitivity;
-  const maxPitch = 90;
-  if (pitch > maxPitch) pitch = maxPitch;
-  if (pitch < -maxPitch) pitch = -maxPitch;
-  console.log(`Camera rotation - yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
-updateTransforms();
-}
-
 function getDirectionVector() {
   const pitchRad = pitch * Math.PI / 180;
   const yawRad = yaw * Math.PI / 180;
@@ -2287,6 +2276,17 @@ document.addEventListener('pointerlockchange', () => {
     console.log('pointer lock OFF');
   }
 });
+
+function onMouseMove(e) {
+  const sensitivity = 0.1;
+  yaw += e.movementX * sensitivity;
+  pitch -= e.movementY * sensitivity;
+  const maxPitch = 90;
+  if (pitch > maxPitch) pitch = maxPitch;
+  if (pitch < -maxPitch) pitch = -maxPitch;
+  console.log(`Camera rotation - yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
+updateTransforms();
+}
 
 function getBlock(gx, gy, gz) {
   const block = worldData.get(keyAt(gx, gy, gz));
