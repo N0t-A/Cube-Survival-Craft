@@ -52,7 +52,12 @@ document.body.addEventListener('keydown', e => {
 document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
 // pointer lock + mouse look
-document.body.addEventListener('click', () => document.body.requestPointerLock());
+document.body.addEventListener('click', () => {
+  if (document.pointerLockElement !== document.body) {
+    document.body.requestPointerLock();
+  }
+});
+
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === document.body) {
     document.addEventListener('mousemove', onMouseMove);
@@ -62,6 +67,7 @@ document.addEventListener('pointerlockchange', () => {
     console.log('pointer lock OFF');
   }
 });
+
 function onMouseMove(e) {
   const sensitivity = 0.1;
   yaw += e.movementX * sensitivity;
