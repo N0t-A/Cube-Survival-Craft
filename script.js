@@ -2286,16 +2286,9 @@ document.addEventListener('mousedown', (e) => {
 })
 
   document.addEventListener('mousedown', (e) => {
-    if (e.button === 2) {
-        const selected = getSelectedHotbarBlock();
-        if (!selected) return;
+    if (e.button === 2) placeBlockFromRaycast();
+  });
 
-        const pos = getAdjacentPlacementPos({ x: gx, y: gy, z: gz });
-        if (pos) {
-            placeBlock(pos.x, pos.y, pos.z, selected);
-        }
-    }
-});
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
 function getBlock(gx, gy, gz) {
