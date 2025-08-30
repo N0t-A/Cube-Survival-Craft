@@ -57,7 +57,7 @@ function onMouseMove(e) {
   const sensitivity = 0.1;
   yaw += e.movementX * sensitivity;
   pitch -= e.movementY * sensitivity;
-  const maxPitch = 90;
+  const maxPitch = 89;
   if (pitch > maxPitch) pitch = maxPitch;
   if (pitch < -maxPitch) pitch = -maxPitch;
   console.log(`Camera rotation - yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
