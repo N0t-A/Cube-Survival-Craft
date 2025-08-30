@@ -1844,84 +1844,115 @@ const allRecipes = {
 // === Ore vein generator ===
 function generateVein(startGX, startGY, startGZ, size, type) {
   const placed = [];
-  const stack = [{x:startGX,y:startGY,z:startGZ}];
+  const stack = [{ x: startGX, y: startGY, z: startGZ }];
   const visited = new Set();
+
   while (stack.length > 0 && placed.length < size) {
     const idx = Math.floor(Math.random() * stack.length);
-    const cur = stack.splice(idx,1)[0];
+    const cur = stack.splice(idx, 1)[0];
     const k = keyAt(cur.x, cur.y, cur.z);
     if (visited.has(k)) continue;
     visited.add(k);
 
-    const existing = worldData.get(k);
-    if (existing === 'stone') {
-      worldData.set(k,type);
-      placed.push({x:cur.x,y:cur.y,z:cur.z});
+    const existingData = worldData.get(k);
+    const existingType = existingData ? existingData.type : null;
+
+    if (existingType === 'stone') {
+      // Create the block element
+      const exposedFaces = getExposedFacesFor(cur.x, cur.y, cur.z);
+      const el = createBlockElement(cur.x, cur.y, cur.z, type, exposedFaces);
+
+      // Update worldData to store type + element
+      worldData.set(k, {
+        type: type,
+        element: el
+      });
+
+      world.appendChild(el);
+      placed.push({ x: cur.x, y: cur.y, z: cur.z });
     }
 
     const neighbors = [
-      {x:cur.x+1,y:cur.y,z:cur.z},
-      {x:cur.x-1,y:cur.y,z:cur.z},
-      {x:cur.x,y:cur.y+1,z:cur.z},
-      {x:cur.x,y:cur.y-1,z:cur.z},
-      {x:cur.x,y:cur.y,z:cur.z+1},
-      {x:cur.x,y:cur.y,z:cur.z-1},
+      { x: cur.x + 1, y: cur.y, z: cur.z },
+      { x: cur.x - 1, y: cur.y, z: cur.z },
+      { x: cur.x, y: cur.y + 1, z: cur.z },
+      { x: cur.x, y: cur.y - 1, z: cur.z },
+      { x: cur.x, y: cur.y, z: cur.z + 1 },
+      { x: cur.x, y: cur.y, z: cur.z - 1 }
     ];
+
     for (const n of neighbors) {
-      if (n.x<0||n.x>=CHUNK_SIZE_X||n.z<0||n.z>=CHUNK_SIZE_Z||n.y<0||n.y>=STONE_LAYERS) continue;
-      if (!visited.has(keyAt(n.x,n.y,n.z)) && Math.random()<0.9) stack.push(n);
+      if (
+        n.x < 0 || n.x >= CHUNK_SIZE_X ||
+        n.z < 0 || n.z >= CHUNK_SIZE_Z ||
+        n.y < 0 || n.y >= STONE_LAYERS
+      ) continue;
+      if (!visited.has(keyAt(n.x, n.y, n.z)) && Math.random() < 0.9) stack.push(n);
     }
   }
+
   return placed;
 }
 
-// === Multi-layer world generation ===
 function generateMultiLayerWorld() {
-  world.innerHTML='';
+  world.innerHTML = '';
   worldData.clear();
 
-  for (let gx=0;gx<CHUNK_SIZE_X;gx++){
-    for (let gz=0;gz<CHUNK_SIZE_Z;gz++){
-      const dirtLayers=Math.floor(Math.random()*2)+2;
-      worldData.set(keyAt(gx,0,gz),'grass');
-      for (let y=1;y<=dirtLayers;y++) worldData.set(keyAt(gx,y,gz),'dirt');
-      for (let y=dirtLayers+1;y<STONE_LAYERS;y++) worldData.set(keyAt(gx,y,gz),'stone');
+  // Generate base terrain
+  for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
+    for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+      const dirtLayers = Math.floor(Math.random() * 2) + 2;
+
+      // Top grass block
+      const topK = keyAt(gx, 0, gz);
+      const topEl = createBlockElement(gx, 0, gz, 'grass', getExposedFacesFor(gx, 0, gz));
+      worldData.set(topK, { type: 'grass', element: topEl });
+      world.appendChild(topEl);
+
+      // Dirt layers
+      for (let y = 1; y <= dirtLayers; y++) {
+        const k = keyAt(gx, y, gz);
+        const el = createBlockElement(gx, y, gz, 'dirt', getExposedFacesFor(gx, y, gz));
+        worldData.set(k, { type: 'dirt', element: el });
+        world.appendChild(el);
+      }
+
+      // Stone layers
+      for (let y = dirtLayers + 1; y < STONE_LAYERS; y++) {
+        const k = keyAt(gx, y, gz);
+        const el = createBlockElement(gx, y, gz, 'stone', getExposedFacesFor(gx, y, gz));
+        worldData.set(k, { type: 'stone', element: el });
+        world.appendChild(el);
+      }
     }
   }
 
+  // Generate ore veins
   const ores = [
-    { name: 'coal-ore', minD:1,maxD:15,veins:2,size:15 },
-    { name: 'copper-ore', minD:10,maxD:20,veins:2,size:10 },
-    { name: 'tin-ore', minD:10,maxD:20,veins:2,size:10 },
-    { name: 'iron-ore', minD:20,maxD:35,veins:2,size:7 },
-    { name: 'diamond-ore', minD:35,maxD:50,veins:1,size:4 },
-    { name: 'amber-ore', minD:50,maxD:80,veins:1,size:1 },
-    { name: 'ruby-ore', minD:50,maxD:80,veins:1,size:1 }
+    { name: 'coal-ore', minD: 1, maxD: 15, veins: 2, size: 15 },
+    { name: 'copper-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
+    { name: 'tin-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
+    { name: 'iron-ore', minD: 20, maxD: 35, veins: 2, size: 7 },
+    { name: 'diamond-ore', minD: 35, maxD: 50, veins: 1, size: 4 },
+    { name: 'amber-ore', minD: 50, maxD: 80, veins: 1, size: 1 },
+    { name: 'ruby-ore', minD: 50, maxD: 80, veins: 1, size: 1 }
   ];
 
   for (const ore of ores) {
-    for (let v=0;v<ore.veins;v++){
-      const gx=Math.floor(Math.random()*CHUNK_SIZE_X);
-      const gz=Math.floor(Math.random()*CHUNK_SIZE_Z);
-      const minLayer=Math.max(1,ore.minD);
-      const maxLayer=Math.min(STONE_LAYERS-1,ore.maxD);
-      if (minLayer>maxLayer) continue;
-      const gy=Math.floor(minLayer + Math.random()*(maxLayer-minLayer+1));
-      generateVein(gx,gy,gz,ore.size,ore.name);
+    for (let v = 0; v < ore.veins; v++) {
+      const gx = Math.floor(Math.random() * CHUNK_SIZE_X);
+      const gz = Math.floor(Math.random() * CHUNK_SIZE_Z);
+      const minLayer = Math.max(1, ore.minD);
+      const maxLayer = Math.min(STONE_LAYERS - 1, ore.maxD);
+      if (minLayer > maxLayer) continue;
+      const gy = Math.floor(minLayer + Math.random() * (maxLayer - minLayer + 1));
+      generateVein(gx, gy, gz, ore.size, ore.name);
     }
   }
 
-  let created=0;
-  for (const [k,type] of worldData.entries()){
-    const [gx,gy,gz]=k.split(',').map(Number);
-    const exposed=getExposedFacesFor(gx,gy,gz);
-    if (exposed.length===0) continue;
-    const el=createBlockElement(gx,gy,gz,type,exposed);
-    world.appendChild(el);
-    created++;
-  }
-  console.log('generateMultiLayerWorld: worldData size',worldData.size,'created DOM blocks',created);
+  console.log('generateMultiLayerWorld: worldData size', worldData.size);
 }
+
 
 // === Character creation ===
 function createCharacter(){
