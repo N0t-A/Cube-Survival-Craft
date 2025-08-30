@@ -2319,25 +2319,27 @@ function setBlock(x, y, z, blockType) {
     }
 }
 
-const result = raycastFromCamera();
-if (!result.hit) return; // stop if nothing was hit
+function placeBlockFromRaycast() {
+  const result = raycastFromCamera();
+  if (!result.hit) return; // now legal inside a function
 
-const { gx, gy, gz, normal } = result;
+  const { gx, gy, gz, normal } = result;
 
-// Place block one unit in the direction of the normal
-const newGX = gx + normal[0];
-const newGY = gy + normal[1];
-const newGZ = gz + normal[2];
+  // Place block one unit in the direction of the normal
+  const newGX = gx + normal[0];
+  const newGY = gy + normal[1];
+  const newGZ = gz + normal[2];
 
-const type = selectedBlockType(); // Your current hotbar block
-const exposedFaces = getExposedFacesFor(newGX, newGY, newGZ);
-const blockEl = createBlockElement(newGX, newGY, newGZ, type, exposedFaces);
+  const type = selectedBlockType(); // Your current hotbar block
+  const exposedFaces = getExposedFacesFor(newGX, newGY, newGZ);
+  const blockEl = createBlockElement(newGX, newGY, newGZ, type, exposedFaces);
 
-worldData.set(keyAt(newGX, newGY, newGZ), {
-  type: type,
-  element: blockEl
-});
-world.appendChild(blockEl);
+  worldData.set(keyAt(newGX, newGY, newGZ), {
+    type: type,
+    element: blockEl
+  });
+  world.appendChild(blockEl);
+}
 
 const toolTiers = {
   'wood-shovel': 1,
