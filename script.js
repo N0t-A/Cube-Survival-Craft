@@ -2234,7 +2234,6 @@ function raycastFromCamera() {
     }
     currentlyHighlightedBlock = highlighted;
   }
-}
 
 function getAdjacentPlacementPos(block) {
   const offsetX = Math.sign((block.x + 0.5) * blockSize - posX);
