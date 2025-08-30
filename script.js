@@ -2346,8 +2346,118 @@ if (hit) {
   world.appendChild(blockEl);
 }
 
+const toolTiers = {
+  'wood-shovel': 1,
+  'stone-shovel': 2,
+  'copper-shovel': 3,
+  'tin-shovel': 3,
+  'bronze-shovel': 4,
+  'iron-shovel': 5,
+  'steel-shovel': 6,
+  'diamond-shovel': 7,
+};
+
+const blockData = {
+  'grass': { requiredTool: null, minTier: 0, drop: ['grass'], baseTime: 45 },
+};
+
+// ===== Dropped Items =====
+const droppedItems = []; // {x, y, z, type, element}
+function dropItem(gx, gy, gz, itemType) {
+  const el = document.createElement('div');
+  el.className = `dropped-item ${itemType}`;
+  const px = gx * BLOCK_SIZE;
+  const py = gy * BLOCK_SIZE;
+  const pz = gz * BLOCK_SIZE;
+  el.style.transform = `translate3d(${px}px, ${py}px, ${pz}px)`;
+  world.appendChild(el);
+  droppedItems.push({ x: gx, y: gy, z: gz, type: itemType, element: el });
+}
+
+// ===== Breaking Logic =====
+let breaking = null; // {gx, gy, gz, progress, speed}
+
+function startBreakingBlock(gx, gy, gz) {
+  const key = keyAt(gx, gy, gz);
+  const block = worldData.get(key);
+  if (!block) return;
+
+  const meta = blockData[block.type];
+  if (!meta) return;
+
+  const tool = selectedHotbarItem(); // your current tool function
+  let toolTier = 0;
+  let toolType = null;
+
+  if (tool) {
+    const parts = tool.split('-'); // e.g., "iron-pickaxe"
+    toolType = parts[1];
+    toolTier = toolTiers[tool] || 0;
+  }
+
+  let speedMultiplier = 1;
+
+  if (meta.requiredTool) {
+    if (toolType === meta.requiredTool) {
+      speedMultiplier = (toolTier >= meta.minTier) ? 2 : 0.5; // faster with proper tool, slower with weaker
+    } else {
+      speedMultiplier = 0.25; // wrong tool
+    }
+  } else {
+    if (toolType === meta.requiredTool && toolTier >= meta.minTier) speedMultiplier = 2; // optional speed boost
+  }
+
+  breaking = { gx, gy, gz, progress: 0, speed: speedMultiplier / meta.baseTime };
+}
+
+function updateBreaking() {
+  if (!breaking) return;
+
+  breaking.progress += breaking.speed;
+  if (breaking.progress >= 1) {
+    const key = keyAt(breaking.gx, breaking.gy, breaking.gz);
+    const block = worldData.get(key);
+    if (!block) return;
+
+    const meta = blockData[block.type];
+
+    // Drop items
+    for (const item of meta.drop) dropItem(breaking.gx, breaking.gy, breaking.gz, item);
+
+    // Remove block
+    if (block.element) block.element.remove();
+    worldData.delete(key);
+
+    breaking = null;
+  }
+}
+
+// ===== Collect Nearby Items =====
+function collectNearbyItems() {
+  const reach = 1.5;
+  const px = posX / BLOCK_SIZE;
+  const py = posY / BLOCK_SIZE;
+  const pz = posZ / BLOCK_SIZE;
+
+  for (let i = droppedItems.length - 1; i >= 0; i--) {
+    const item = droppedItems[i];
+    const dx = px - item.x;
+    const dy = py - item.y;
+    const dz = pz - item.z;
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+    if (dist <= reach) {
+      addToInventory(item.type); // your function to add items to inventory
+      item.element.remove();
+      droppedItems.splice(i, 1);
+    }
+  }
+}
+
 // === Game loop ===
 function animate(){
+  updateBreaking();
+  collectNearbyItems();
   updateBlockhighlight();
   updatePlayerPosition();
   updateTransforms();
