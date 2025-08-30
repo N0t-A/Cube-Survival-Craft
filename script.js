@@ -2273,8 +2273,8 @@ function updateBlockHighlight() {
 document.addEventListener('mousedown', (e) => {
   // Left click
   if (e.button === 0) {
-    if (document.pointerLockElement !== scene) {
-      scene.requestPointerLock(); // pointer lock
+    if (document.pointerLockElement !== document) {
+      document.requestPointerLock(); // pointer lock
     } else {
       breakBlock(); // your block-breaking logic
     }
