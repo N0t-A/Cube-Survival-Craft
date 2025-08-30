@@ -2033,6 +2033,9 @@ function updateTransforms() {
     rotateX(${-smoothPitch}deg)
     rotateY(${-smoothYaw}deg)
   `;
+  if (keys['w'] || keys['a'] || keys['s'] || keys['d']) {
+    console.log('Movement input detected');
+  }
 }
 
 // --- Unified station update function ---
