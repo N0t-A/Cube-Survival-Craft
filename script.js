@@ -6,6 +6,7 @@ const cameraPitch = document.getElementById('camera-pitch');
 const cameraEye = document.getElementById('camera-eye');
 const scene = document.getElementById('scene');
 const world = document.getElementById('world');
+let currentlyHighlightedBlock = null;
 
 // === Config / constants ===
 const BLOCK_SIZE = 70;         
