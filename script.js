@@ -2312,6 +2312,9 @@ function setBlock(x, y, z, blockType) {
     }
 }
 
+let isPlacing = false;
+
+// Optimized block placement
 function placeBlockFromRaycast() {
   const result = raycastFromCamera();
   if (!result.hit) return; // exit early
@@ -2332,30 +2335,26 @@ function placeBlockFromRaycast() {
   const exposedFaces = getExposedFacesFor(newGX, newGY, newGZ);
   const blockEl = createBlockElement(newGX, newGY, newGZ, type, exposedFaces);
 
-  // Add block to world data
   worldData.set(keyAt(newGX, newGY, newGZ), {
     type: type,
     element: blockEl
   });
 
-  // Use DocumentFragment to avoid multiple DOM reflows
-  const fragment = document.createDocumentFragment();
-  fragment.appendChild(blockEl);
-  world.appendChild(fragment);
+  world.appendChild(blockEl);
 }
 
 // Debounced mousedown handler
 document.addEventListener('mousedown', (e) => {
-  if (isPlacing) return;
+  if (isPlacing) return; // skip if still processing
   isPlacing = true;
 
-  // Only allow left-click (0) for placing
-  if (e.button === 0) placeBlockFromRaycast();
+  if (e.button === 0) {
+    placeBlockFromRaycast();
+  }
 
-  // Cooldown for 30ms to prevent freezes
   setTimeout(() => {
     isPlacing = false;
-  }, 30);
+  }, 30); // small cooldown
 });
 
 const toolTiers = {
