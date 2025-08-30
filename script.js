@@ -2273,13 +2273,13 @@ document.addEventListener('mousedown', (e) => {
     if (document.pointerLockElement !== scene) {
       scene.requestPointerLock(); // pointer lock
     } else {
-      handleBlockBreaking(); // your block-breaking logic
+      breakBlock(); // your block-breaking logic
     }
   }
 
   // Right click
   if (e.button === 2) {
-    handleBlockPlacing();
+    placeBlock();
   }
 });
 
@@ -2336,20 +2336,6 @@ function placeBlockFromRaycast() {
 
   world.appendChild(blockEl);
 }
-
-// Debounced mousedown handler
-document.addEventListener('mousedown', (e) => {
-  if (isPlacing) return; // skip if still processing
-  isPlacing = true;
-
-  if (e.button === 0) {
-    placeBlockFromRaycast();
-  }
-
-  setTimeout(() => {
-    isPlacing = false;
-  }, 30); // small cooldown
-});
 
 const toolTiers = {
   'wood-shovel': 1,
