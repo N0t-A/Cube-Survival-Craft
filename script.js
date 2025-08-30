@@ -2284,10 +2284,10 @@ function updateBlockHighlight() {
 }
 
 document.addEventListener('mousedown', (e) => {
-  const hit = raycastFromCamera();
-  if (!hit) return;
+  const result = raycastFromCamera();
+  if (!result) return;
 
-  const { gx, gy, gz } = hit;
+  const { gx, gy, gz } = result;
 
   if (e.button === 0) {
     // Left-click: Break block
