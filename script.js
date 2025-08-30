@@ -2200,28 +2200,28 @@ function refreshAllStations() {
 }
 
 function raycastFromCamera() {
-    const origin = [posX, posY, posZ];
-    const dir = getDirectionVector(); // Must return normalized [x,y,z]
-    const maxReach = 5;
-    const step = 0.1;
+  const origin = [posX, posY, posZ];
+  const dir = getDirectionVector(); // normalized [x, y, z]
+  const maxReach = 5;
+  const step = 0.2; // bigger step = fewer iterations
 
-    let lastBlockPos = null;
-    for (let t = 0; t < maxReach; t += step) {
-        const x = origin[0] + dir[0] * t;
-        const y = origin[1] + dir[1] * t;
-        const z = origin[2] + dir[2] * t;
+  for (let t = 0; t < maxReach; t += step) {
+    const x = origin[0] + dir[0] * t;
+    const y = origin[1] + dir[1] * t;
+    const z = origin[2] + dir[2] * t;
 
-        const gx = Math.floor(x / BLOCK_SIZE);
-        const gy = Math.floor(y / BLOCK_SIZE);
-        const gz = Math.floor(z / BLOCK_SIZE);
+    const gx = Math.floor(x / BLOCK_SIZE);
+    const gy = Math.floor(y / BLOCK_SIZE);
+    const gz = Math.floor(z / BLOCK_SIZE);
 
-        const block = getBlock(gx, gy, gz);
-        if (block) {
-            const normal = [0, 1, 0]; // you can calculate exact face if needed
-            return { hit: true, gx, gy, gz, normal };
-        }
+    const block = getBlock(gx, gy, gz);
+    if (block) {
+      // You can calculate exact face later if needed
+      const normal = [0, 1, 0];
+      return { hit: true, gx, gy, gz, normal };
     }
-    return { hit: false };
+  }
+  return { hit: false };
 }
 
 function getAdjacentPlacementPos(block) {
@@ -2314,25 +2314,49 @@ function setBlock(x, y, z, blockType) {
 
 function placeBlockFromRaycast() {
   const result = raycastFromCamera();
-  if (!result.hit) return; // now legal inside a function
+  if (!result.hit) return; // exit early
 
   const { gx, gy, gz, normal } = result;
 
-  // Place block one unit in the direction of the normal
+  // Place block one unit along the normal
   const newGX = gx + normal[0];
   const newGY = gy + normal[1];
   const newGZ = gz + normal[2];
 
-  const type = selectedBlockType(); // Your current hotbar block
+  // Avoid placing blocks where one already exists
+  if (worldData.has(keyAt(newGX, newGY, newGZ))) return;
+
+  const type = selectedBlockType(); // current hotbar block
+
+  // Only calculate faces if block is placed
   const exposedFaces = getExposedFacesFor(newGX, newGY, newGZ);
   const blockEl = createBlockElement(newGX, newGY, newGZ, type, exposedFaces);
 
+  // Add block to world data
   worldData.set(keyAt(newGX, newGY, newGZ), {
     type: type,
     element: blockEl
   });
-  world.appendChild(blockEl);
+
+  // Use DocumentFragment to avoid multiple DOM reflows
+  const fragment = document.createDocumentFragment();
+  fragment.appendChild(blockEl);
+  world.appendChild(fragment);
 }
+
+// Debounced mousedown handler
+document.addEventListener('mousedown', (e) => {
+  if (isPlacing) return;
+  isPlacing = true;
+
+  // Only allow left-click (0) for placing
+  if (e.button === 0) placeBlockFromRaycast();
+
+  // Cooldown for 30ms to prevent freezes
+  setTimeout(() => {
+    isPlacing = false;
+  }, 30);
+});
 
 const toolTiers = {
   'wood-shovel': 1,
