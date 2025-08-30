@@ -2236,13 +2236,16 @@ function getAdjacentPlacementPos(block) {
 }
 
 function breakBlock(x, y, z) {
-  const key = `${x},${y},${z}`;
-  const block = blocks[key];
-  if (block) {
-    block.remove();
-    delete blocks[key];
+  const key = keyAt(x, y, z); // Use your existing key function
+  const blockData = worldData.get(key);
+  if (blockData) {
+    // Remove the element from the DOM
+    blockData.element.remove();
+    // Remove the block from worldData
+    worldData.delete(key);
   }
 }
+
 
 function placeBlock(x, y, z, blockType) {
   const key = `${x},${y},${z}`;
