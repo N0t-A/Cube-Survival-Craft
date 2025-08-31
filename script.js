@@ -2452,13 +2452,17 @@ function collectNearbyItems() {
 }
 
 // === Game loop ===
-function animate(){
-  console.log('gameloop is working');
-  updateBreaking();
-  collectNearbyItems();
-  updateBlockhighlight();
-  updatePlayerPosition();
-  updateTransforms();
+function animate() {
+  try {
+    updateBreaking();
+    collectNearbyItems();
+    updateBlockhighlight();
+    updatePlayerPosition();
+    updateTransforms();
+  } catch (err) {
+    console.error("Error in game loop:", err);
+  }
+
   requestAnimationFrame(animate);
 }
 
