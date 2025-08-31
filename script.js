@@ -1973,7 +1973,7 @@ function updatePlayerPosition() {
  const surfaceY = getTopSurfaceYUnderPlayer();
 const feetY = posY - characterYOffset;
 
-if (surfaceY !== undefined && feetY < surfaceY) { 
+if (surfaceY !== undefined && feetY > surfaceY) { 
   // Feet are below the surface
   posY = surfaceY + characterYOffset;
   velY = 0;
