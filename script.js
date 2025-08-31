@@ -46,12 +46,11 @@ function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 // === Input handling ===
 document.body.addEventListener('keydown', e => {
   keys[e.key.toLowerCase()] = true;
-  if (e.code === 'Space' && grounded) {
-    velY = -jumpStrength;
-    grounded = false;
-  }
 });
-document.body.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+document.body.addEventListener('keyup', e => {
+  keys[e.key.toLowerCase()] = false;
+});
 
 function getDirectionVector() {
   const pitchRad = pitch * Math.PI / 180;
