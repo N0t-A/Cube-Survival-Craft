@@ -2464,7 +2464,7 @@ function getExposedFacesFor(gx, gy, gz) {
 // === Game loop ===
 function animate() {
   try {
-    updatePlayerposition();
+    updatePlayerPosition();
     updateBreaking();
     collectNearbyItems();
     updateBlockHighlight();
