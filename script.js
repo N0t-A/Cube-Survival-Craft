@@ -2453,13 +2453,13 @@ function collectNearbyItems() {
 
 // === Game loop ===
 function animate(){
+  console.log('gameloop is working');
   updateBreaking();
   collectNearbyItems();
   updateBlockhighlight();
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
-  console.log('gameloop is working');
 }
 
 // === Start ===
