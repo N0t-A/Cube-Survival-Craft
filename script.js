@@ -81,22 +81,6 @@ function createBlockElement(gx, gy, gz, type, exposedFaces) {
   return el;
 }
 
-function getExposedFacesFor(gx, gy, gz) {
-  const neighbors = [
-    {dx:0,dy:-1,dz:0,name:'top'},
-    {dx:0,dy:1,dz:0,name:'bottom'},
-    {dx:0,dy:0,dz:-1,name:'front'},
-    {dx:0,dy:0,dz:1,name:'back'},
-    {dx:-1,dy:0,dz:0,name:'left'},
-    {dx:1,dy:0,dz:0,name:'right'}
-  ];
-  const faces = [];
-  for (const n of neighbors) {
-    if (!worldData.has(keyAt(gx+n.dx,gy+n.dy,gz+n.dz))) faces.push(n.name);
-  }
-  return faces;
-}
-
 // === Crafting recipes ===
 const basicRecipes = [
   {
@@ -2448,6 +2432,22 @@ function collectNearbyItems() {
       droppedItems.splice(i, 1);
     }
   }
+}
+
+function getExposedFacesFor(gx, gy, gz) {
+  const neighbors = [
+    {dx:0,dy:-1,dz:0,name:'top'},
+    {dx:0,dy:1,dz:0,name:'bottom'},
+    {dx:0,dy:0,dz:-1,name:'front'},
+    {dx:0,dy:0,dz:1,name:'back'},
+    {dx:-1,dy:0,dz:0,name:'left'},
+    {dx:1,dy:0,dz:0,name:'right'}
+  ];
+  const faces = [];
+  for (const n of neighbors) {
+    if (!worldData.has(keyAt(gx+n.dx,gy+n.dy,gz+n.dz))) faces.push(n.name);
+  }
+  return faces;
 }
 
 // === Game loop ===
