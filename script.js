@@ -2288,7 +2288,6 @@ function onMouseMove(e) {
   if (pitch > maxPitch) pitch = maxPitch;
   if (pitch < -maxPitch) pitch = -maxPitch;
   console.log(`Camera rotation - yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
-updateTransforms();
 }
 
 function getBlock(gx, gy, gz) {
