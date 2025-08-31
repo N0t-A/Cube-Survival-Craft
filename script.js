@@ -2459,7 +2459,6 @@ function animate() {
     updateBlockHighlight();
     updatePlayerPosition();
     updateTransforms();
-    console.log('gameloop is working normaly');
   } catch (err) {
     console.error("Error in game loop:", err);
     console.log('there was an error in the gameloop');
