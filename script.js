@@ -2459,6 +2459,7 @@ function animate(){
   updatePlayerPosition();
   updateTransforms();
   requestAnimationFrame(animate);
+  console.log('gameloop is working')
 }
 
 // === Start ===
