@@ -44,11 +44,11 @@ const worldData = new Map();
 function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 
 // === Input handling ===
-document.body.addEventListener('keydown', e => {
+document.addEventListener('keydown', e => {
   keys[e.key.toLowerCase()] = true;
 });
 
-document.body.addEventListener('keyup', e => {
+document.addEventListener('keyup', e => {
   keys[e.key.toLowerCase()] = false;
 });
 
