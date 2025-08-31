@@ -1970,16 +1970,18 @@ function updatePlayerPosition() {
   posY += velY;
 
   // Ground collision
-  const surfaceY = getTopSurfaceYUnderPlayer();
-  const feetY = posY - characterYOffset;
-console.log('posY:', posY, 'feetY:', feetY, 'surfaceY:', surfaceY);
- if (surfaceY !== undefined && feetY > surfaceY) {
+ const surfaceY = getTopSurfaceYUnderPlayer();
+const feetY = posY - characterYOffset;
+
+if (surfaceY !== undefined && feetY < surfaceY) { 
+  // Feet are below the surface
   posY = surfaceY + characterYOffset;
   velY = 0;
   grounded = true;
 } else {
   grounded = false;
 }
+
 
   // Jump
   if (keys[' '] && grounded) {
@@ -2462,10 +2464,10 @@ function getExposedFacesFor(gx, gy, gz) {
 // === Game loop ===
 function animate() {
   try {
+    updatePlayerposition();
     updateBreaking();
     collectNearbyItems();
     updateBlockHighlight();
-    updatePlayerPosition();
     updateTransforms();
   } catch (err) {
     console.error("Error in game loop:", err);
