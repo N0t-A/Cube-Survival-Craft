@@ -1855,36 +1855,24 @@ function generateMultiLayerWorld() {
   world.innerHTML = '';
   worldData.clear();
 
-  // Generate base terrain
+  // Pass 1: Add block types to worldData only (no DOM yet)
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
-      // Top grass block
-      const topK = keyAt(gx, 0, gz);
-      const topEl = createBlockElement(gx, 0, gz, 'grass', getExposedFacesFor(gx, 0, gz));
-      worldData.set(topK, { type: 'grass', element: topEl });
-      world.appendChild(topEl);
+      worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
 
-      // Dirt layers
       for (let y = 1; y <= dirtLayers; y++) {
-        const k = keyAt(gx, y, gz);
-        const el = createBlockElement(gx, y, gz, 'dirt', getExposedFacesFor(gx, y, gz));
-        worldData.set(k, { type: 'dirt', element: el });
-        world.appendChild(el);
+        worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
       }
 
-      // Stone layers
       for (let y = dirtLayers + 1; y < STONE_LAYERS; y++) {
-        const k = keyAt(gx, y, gz);
-        const el = createBlockElement(gx, y, gz, 'stone', getExposedFacesFor(gx, y, gz));
-        worldData.set(k, { type: 'stone', element: el });
-        world.appendChild(el);
+        worldData.set(keyAt(gx, y, gz), { type: 'stone' });
       }
     }
   }
 
-  // Generate ore veins
+  // Generate ore veins (still just modifying worldData)
   const ores = [
     { name: 'coal-ore', minD: 1, maxD: 15, veins: 2, size: 15 },
     { name: 'copper-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
@@ -1907,8 +1895,18 @@ function generateMultiLayerWorld() {
     }
   }
 
+  // Pass 2: Now all blocks exist. Generate DOM elements with proper face culling.
+  for (const [key, data] of worldData.entries()) {
+    const [gx, gy, gz] = key.split(',').map(Number);
+    const exposedFaces = getExposedFacesFor(gx, gy, gz);
+    const el = createBlockElement(gx, gy, gz, data.type, exposedFaces);
+    data.element = el;
+    world.appendChild(el);
+  }
+
   console.log('generateMultiLayerWorld: worldData size', worldData.size);
 }
+
 
 
 // === Character creation ===
