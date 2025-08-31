@@ -2456,7 +2456,7 @@ function animate() {
   try {
     updateBreaking();
     collectNearbyItems();
-    updateBlockhighlight();
+    updateBlockHighlight();
     updatePlayerPosition();
     updateTransforms();
     console.log('gameloop is working normaly');
