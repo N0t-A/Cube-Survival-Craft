@@ -45,6 +45,7 @@ function keyAt(gx, gy, gz) { return `${gx},${gy},${gz}`; }
 
 // === Input handling ===
 document.addEventListener('keydown', e => {
+  console.log('Key down:', e.key);
   keys[e.key.toLowerCase()] = true;
 });
 
