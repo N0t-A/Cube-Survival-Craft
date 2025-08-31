@@ -1962,13 +1962,13 @@ function updatePlayerPosition() {
   // Ground collision
   const surfaceY = getTopSurfaceYUnderPlayer();
   const feetY = posY - characterYOffset;
-  if (surfaceY !== undefined && feetY < surfaceY) {
-    posY = surfaceY + characterYOffset;
-    velY = 0;
-    grounded = true;
-  } else {
-    grounded = false;
-  }
+ if (surfaceY !== undefined && feetY > surfaceY) {
+  posY = surfaceY + characterYOffset;
+  velY = 0;
+  grounded = true;
+} else {
+  grounded = false;
+}
 
   // Jump
   if (keys[' '] && grounded) {
@@ -2018,6 +2018,7 @@ function updateTransforms() {
   if (keys['w'] || keys['a'] || keys['s'] || keys['d']) {
     console.log('Movement input detected');
   }
+console.log('posY:', posY, 'feetY:', feetY, 'surfaceY:', surfaceY);
 }
 
 // --- Unified station update function ---
