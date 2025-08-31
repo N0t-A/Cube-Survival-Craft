@@ -2470,7 +2470,6 @@ function animate() {
 
 // === Start ===
 generateMultiLayerWorld();
-myStation.update();
 createCharacter();
 console.log('World generated. Starting posY:', posY,'groundY:',groundY);
 animate();
