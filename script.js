@@ -1932,23 +1932,24 @@ function createCharacter(){
 // === Collision / surface ===
 function getTopSurfaceYUnderPlayer() {
   console.log("getTopSurfaceYUnderPlayer called");
-  // Convert player X/Z to grid coordinates
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  // Find all blocks under the player at this (gx, gz)
   let topY = undefined;
 
   for (let y = -STONE_LAYERS; y <= STONE_LAYERS; y++) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
-      if (topY === undefined || y < topY) topY = y; // inverted Y: smaller Y is higher
+      if (topY === undefined || y < topY) topY = y; // inverted Y: smaller is higher
     }
   }
 
-  return topY;
-}
+  if (topY !== undefined) {
+    return topY * BLOCK_SIZE; // convert to world Y position
+  }
 
+  return undefined;
+}
 
 // === Player movement / collision ===
 function updatePlayerPosition() {
