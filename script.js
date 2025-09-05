@@ -2173,10 +2173,19 @@ function refreshAllStations() {
 }
 
 function raycastFromCamera() {
-  const origin = [posX, posY, posZ];
-  const dir = getDirectionVector(); // Must return normalized [x,y,z]
+  const origin = [
+    posX,
+    posY - characterYOffset + eyeHeight, // camera is offset above feet
+    posZ
+  ];
+
+  const dir = getDirectionVector(); // based on yaw and pitch
   const maxReach = 5;
   const step = 0.1;
+
+  let lastGX = null;
+  let lastGY = null;
+  let lastGZ = null;
 
   for (let t = 0; t < maxReach; t += step) {
     const x = origin[0] + dir[0] * t;
@@ -2187,11 +2196,19 @@ function raycastFromCamera() {
     const gy = Math.floor(y / BLOCK_SIZE);
     const gz = Math.floor(z / BLOCK_SIZE);
 
-    const block = getBlock(gx, gy, gz);
-    if (block) {
-      const normal = [0, 1, 0]; // optional: compute real hit face
-      console.log(`Looking at block at (${gx}, ${gy}, ${gz}) — type: ${block.type || block}`);
-      return { hit: true, gx, gy, gz, normal };
+    if (
+      gx !== lastGX || gy !== lastGY || gz !== lastGZ
+    ) {
+      lastGX = gx;
+      lastGY = gy;
+      lastGZ = gz;
+
+      const block = getBlock(gx, gy, gz);
+      if (block) {
+        console.log(`Ray hit block at (${gx}, ${gy}, ${gz})`);
+        const normal = [0, 1, 0]; // Stubbed — can calculate based on last step
+        return { hit: true, gx, gy, gz, normal };
+      }
     }
   }
 
