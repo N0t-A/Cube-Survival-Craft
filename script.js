@@ -2174,9 +2174,9 @@ function refreshAllStations() {
 
 function raycastFromCamera() {
   const origin = [posX, posY, posZ];
-  const dir = getDirectionVector(); // normalized [x, y, z]
+  const dir = getDirectionVector(); // Must return normalized [x,y,z]
   const maxReach = 5;
-  const step = 0.2; // bigger step = fewer iterations
+  const step = 0.1;
 
   for (let t = 0; t < maxReach; t += step) {
     const x = origin[0] + dir[0] * t;
@@ -2189,11 +2189,12 @@ function raycastFromCamera() {
 
     const block = getBlock(gx, gy, gz);
     if (block) {
-      // You can calculate exact face later if needed
-      const normal = [0, 1, 0];
+      const normal = [0, 1, 0]; // optional: compute real hit face
+      console.log(`Looking at block at (${gx}, ${gy}, ${gz}) — type: ${block.type || block}`);
       return { hit: true, gx, gy, gz, normal };
     }
   }
+
   return { hit: false };
 }
 
