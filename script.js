@@ -1931,6 +1931,7 @@ function createCharacter(){
 
 // === Collision / surface ===
 function getTopSurfaceYUnderPlayer() {
+  console.log("getTopSurfaceYUnderPlayer called");
   // Convert player X/Z to grid coordinates
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
