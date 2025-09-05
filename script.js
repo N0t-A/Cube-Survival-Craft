@@ -2175,11 +2175,11 @@ function refreshAllStations() {
 function raycastFromCamera() {
   const origin = [
     posX,
-    posY - characterYOffset + eyeHeight, // camera is offset above feet
+    posY - characterYOffset + eyeHeight,
     posZ
   ];
 
-  const dir = getDirectionVector(); // based on yaw and pitch
+  const dir = getDirectionVector();
   const maxReach = 5;
   const step = 0.1;
 
@@ -2196,17 +2196,16 @@ function raycastFromCamera() {
     const gy = Math.floor(y / BLOCK_SIZE);
     const gz = Math.floor(z / BLOCK_SIZE);
 
-    if (
-      gx !== lastGX || gy !== lastGY || gz !== lastGZ
-    ) {
+    // Only check a new grid cell
+    if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
       lastGY = gy;
       lastGZ = gz;
 
-      const block = getBlock(gx, gy, gz);
-      if (block) {
+      // Only consider blocks that exist in worldData
+      if (worldData.has(keyAt(gx, gy, gz))) {
         console.log(`Ray hit block at (${gx}, ${gy}, ${gz})`);
-        const normal = [0, 1, 0]; // Stubbed — can calculate based on last step
+        const normal = [0, 1, 0]; // Stub for now
         return { hit: true, gx, gy, gz, normal };
       }
     }
