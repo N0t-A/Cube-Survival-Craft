@@ -2369,6 +2369,9 @@ const toolTiers = {
 
 const blockData = {
   'grass': { requiredTool: null, minTier: 0, drop: ['grass'], baseTime: 45 },
+  'dirt': {requiredTool: null, minTier: 0, drop: ['dirt'], baseTime: 30 },
+  'stone': {requiredTool: pickaxe, minTier: 1, drop ['cobblestone'], baseTime: 30},
+  '
 };
 
 // ===== Dropped Items =====
