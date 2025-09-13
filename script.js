@@ -1931,26 +1931,23 @@ function createCharacter(){
 
 // === Collision / surface ===
 function getTopSurfaceYUnderPlayer() {
-  console.log("getTopSurfaceYUnderPlayer called");
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  const maxY = 50;   // highest possible terrain (world ceiling)
-  const minY = -80;  // lowest possible terrain (world floor)
+  const maxY = 50;
+  const minY = -80;
 
-  for (let y = minY; y <= maxY; y++) {
+  for (let y = maxY; y >= minY; y--) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
       console.log(`Top block found at y = ${y}`);
-      return y * BLOCK_SIZE; // convert grid Y to world Y
+      return y * BLOCK_SIZE;
     }
   }
 
   console.log("No surface block found under player");
   return undefined;
 }
-
-
 
 // === Player movement / collision ===
 function updatePlayerPosition() {
