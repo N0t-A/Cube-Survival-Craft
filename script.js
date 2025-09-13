@@ -1934,13 +1934,13 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  const maxY = 50;
   const minY = -80;
+  const maxY = 50;
 
-  for (let y = maxY; y >= minY; y--) {
+  for (let y = minY; y <= maxY; y++) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
-      console.log(`Top block found at y = ${y}`);
+      console.log(`Top surface block found at y = ${y}`);
       return y * BLOCK_SIZE;
     }
   }
