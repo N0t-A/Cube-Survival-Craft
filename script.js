@@ -1935,16 +1935,20 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
+  console.log(`Checking surface under player at gx=${gx}, gz=${gz}`);
+
   const minY = 0;               // Top surface starts at y = 0
   const maxY = STONE_LAYERS;    // Bottom-most possible block
 
   for (let y = minY; y <= maxY; y++) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
+      console.log(`Found block at ${key}`);
       return y * BLOCK_SIZE; // Convert to world Y position
     }
   }
 
+  console.log(`No surface found at gx=${gx}, gz=${gz}`);
   return undefined; // No block found
 }
 
