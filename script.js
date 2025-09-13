@@ -1856,24 +1856,24 @@ function generateMultiLayerWorld() {
   worldData.clear();
 
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
-    for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
-      const dirtLayers = Math.floor(Math.random() * 2) + 2;
+  for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+    const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
-      // Grass at top layer
-      worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
+    // Grass at top layer (y = 0)
+    worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
 
-      // Dirt layers BELOW grass
-      for (let i = 1; i <= dirtLayers; i++) {
-        const y = i; // positive Y goes downward in your inverted system
-        worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
-      }
+    // Dirt layers BELOW grass (negative Y)
+    for (let i = 1; i <= dirtLayers; i++) {
+      const y = -i; 
+      worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
+    }
 
-      // Stone layers BELOW dirt
-      for (let y = dirtLayers + 1; y <= STONE_LAYERS; y++) {
-        worldData.set(keyAt(gx, y, gz), { type: 'stone' });
-      }
+    // Stone layers BELOW dirt
+    for (let y = -(dirtLayers + 1); y >= -STONE_LAYERS; y--) {
+      worldData.set(keyAt(gx, y, gz), { type: 'stone' });
     }
   }
+}
 
   // Ore generation (same as before)
   const ores = [
