@@ -1935,16 +1935,17 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  // Start at top (grass at y=0) and go downward
-  for (let y = 0; y >= -STONE_LAYERS; y--) {
+  const minY = 0;               // Top surface starts at y = 0
+  const maxY = STONE_LAYERS;    // Bottom-most possible block
+
+  for (let y = minY; y <= maxY; y++) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
-      return y * BLOCK_SIZE; // top surface of the first block we find
+      return y * BLOCK_SIZE; // Convert to world Y position
     }
   }
 
-  // No block found under player
-  return undefined;
+  return undefined; // No block found
 }
 
 // === Player movement / collision ===
@@ -2493,6 +2494,8 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+// === Start ===
+generateMultiLayerWorld();
 const checkKey = keyAt(0, 0, 0); // change to any X/Z you're testing
 const testBlock = worldData.get(checkKey);
 if (testBlock) {
@@ -2500,9 +2503,6 @@ if (testBlock) {
 } else {
   console.log(`No block exists at Y = 0`);
 }
-
-// === Start ===
-generateMultiLayerWorld();
 createCharacter();
 console.log('World generated. Starting posY:', posY,'groundY:',groundY);
 animate();
