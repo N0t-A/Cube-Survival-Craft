@@ -1935,20 +1935,25 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  const minY = -80;
-  const maxY = 50;
+  // We'll search from the top of the world downward
+  const minY = 0;               // grass layer is at y=0
+  const maxY = STONE_LAYERS;    // deepest stone layer
 
-  // Start from the top and go downward to find the highest block under the player
-  for (let y = maxY; y >= minY; y--) {
+  let topY = undefined;
+
+  for (let y = minY; y <= maxY; y++) {
     const key = keyAt(gx, y, gz);
-    console.log(`Checking key: ${key}, worldData.has: ${worldData.has(key)}`);
     if (worldData.has(key)) {
-      console.log(`Top surface block found at y = ${y}`);
-      return y * BLOCK_SIZE;
+      topY = y;
+      break; // stop at the first block we find (highest one)
     }
   }
 
-  console.log("No surface block found under player");
+  if (topY !== undefined) {
+    return topY * BLOCK_SIZE; // convert to world Y
+  }
+
+  // No block found under player
   return undefined;
 }
 
