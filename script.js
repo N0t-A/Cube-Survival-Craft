@@ -1939,7 +1939,9 @@ function getTopSurfaceYUnderPlayer() {
 
   for (let y = minY; y <= maxY; y++) {
     const key = keyAt(gx, y, gz);
-    if (worldData.has(key)) {
+    const blockData = worldData.get(key);
+    
+    if (blockData && blockData.element && world.contains(blockData.element)) {
       console.log(`Top surface block found at y = ${y}`);
       return y * BLOCK_SIZE;
     }
