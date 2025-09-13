@@ -1864,7 +1864,7 @@ function generateMultiLayerWorld() {
 
     // Dirt layers BELOW grass (negative Y)
     for (let i = 1; i <= dirtLayers; i++) {
-      const y = -i; 
+      const y = i; 
       worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
     }
 
