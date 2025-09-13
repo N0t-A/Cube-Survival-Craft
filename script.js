@@ -2490,6 +2490,7 @@ function animate() {
     collectNearbyItems();
     updateBlockHighlight();
     updateTransforms();
+    console.log(topY);
   } catch (err) {
     console.error("Error in game loop:", err);
     console.log('there was an error in the gameloop');
