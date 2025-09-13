@@ -1971,7 +1971,9 @@ function updatePlayerPosition() {
   // Ground collision
   const surfaceY = getTopSurfaceYUnderPlayer();
   const feetY = posY - characterYOffset;
-
+  
+  console.log(`Feet Y: ${feetY}, Surface Y: ${surfaceY}, posY: ${posY}, velY: ${velY}`);
+  
   if (surfaceY !== undefined && feetY > surfaceY) { 
     // Feet are below the surface
     posY = surfaceY + characterYOffset;
