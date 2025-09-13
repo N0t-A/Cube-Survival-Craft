@@ -1938,7 +1938,8 @@ function getTopSurfaceYUnderPlayer() {
   const minY = -80;
   const maxY = 50;
 
-  for (let y = minY; y <= MaxY; y--) {
+  // Start from the top and go downward to find the highest block under the player
+  for (let y = maxY; y >= minY; y--) {
     const key = keyAt(gx, y, gz);
     console.log(`Checking key: ${key}, worldData.has: ${worldData.has(key)}`);
     if (worldData.has(key)) {
