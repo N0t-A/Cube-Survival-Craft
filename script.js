@@ -2498,6 +2498,14 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+const checkKey = keyAt(0, 0, 0); // change to any X/Z you're testing
+const testBlock = worldData.get(checkKey);
+if (testBlock) {
+  console.warn(`Block found at Y = 0:`, testBlock.type);
+} else {
+  console.log(`No block exists at Y = 0`);
+}
+
 // === Start ===
 generateMultiLayerWorld();
 createCharacter();
