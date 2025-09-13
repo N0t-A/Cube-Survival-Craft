@@ -1935,22 +1935,12 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  // We'll search from the top of the world downward
-  const minY = 0;               // grass layer is at y=0
-  const maxY = STONE_LAYERS;    // deepest stone layer
-
-  let topY = undefined;
-
-  for (let y = minY; y <= maxY; y++) {
+  // Start at top (grass at y=0) and go downward
+  for (let y = 0; y >= -STONE_LAYERS; y--) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
-      topY = y;
-      break; // stop at the first block we find (highest one)
+      return y * BLOCK_SIZE; // top surface of the first block we find
     }
-  }
-
-  if (topY !== undefined) {
-    return topY * BLOCK_SIZE; // convert to world Y
   }
 
   // No block found under player
@@ -1978,18 +1968,17 @@ function updatePlayerPosition() {
   posY += velY;
 
   // Ground collision
- const surfaceY = getTopSurfaceYUnderPlayer();
-const feetY = posY - characterYOffset;
+  const surfaceY = getTopSurfaceYUnderPlayer();
+  const feetY = posY - characterYOffset;
 
-if (surfaceY !== undefined && feetY > surfaceY) { 
-  // Feet are below the surface
-  posY = surfaceY + characterYOffset;
-  velY = 0;
-  grounded = true;
-} else {
-  grounded = false;
-}
-
+  if (surfaceY !== undefined && feetY < surfaceY) { 
+    // Feet are below the surface
+    posY = surfaceY + characterYOffset;
+    velY = 0;
+    grounded = true;
+  } else {
+    grounded = false;
+  }
 
   // Jump
   if (keys[' '] && grounded) {
