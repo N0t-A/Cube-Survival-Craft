@@ -23,7 +23,7 @@ let selectedBlock = null;
 
 // === Player state ===
 let posX = 0;
-let posY = 300; // start with feet at ground
+let posY = 0; // start with feet at ground
 let posZ = 0;
 let yaw = 0, pitch = 0;
 
@@ -1860,19 +1860,22 @@ function generateMultiLayerWorld() {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
+      // Top grass block at y = 0
       worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
 
-      for (let y = 1; y <= dirtLayers; y++) {
+      // Dirt layers below grass (negative Y)
+      for (let y = -1; y >= -dirtLayers; y--) {
         worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
       }
 
-      for (let y = dirtLayers + 1; y < STONE_LAYERS; y++) {
+      // Stone layers below dirt
+      for (let y = -dirtLayers - 1; y >= -STONE_LAYERS; y--) {
         worldData.set(keyAt(gx, y, gz), { type: 'stone' });
       }
     }
   }
 
-  // Generate ore veins (still just modifying worldData)
+  // Generate ore veins (same as before)
   const ores = [
     { name: 'coal-ore', minD: 1, maxD: 15, veins: 2, size: 15 },
     { name: 'copper-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
@@ -1890,7 +1893,7 @@ function generateMultiLayerWorld() {
       const minLayer = Math.max(1, ore.minD);
       const maxLayer = Math.min(STONE_LAYERS - 1, ore.maxD);
       if (minLayer > maxLayer) continue;
-      const gy = Math.floor(minLayer + Math.random() * (maxLayer - minLayer + 1));
+      const gy = -minLayer - Math.floor(Math.random() * (maxLayer - minLayer + 1));
       generateVein(gx, gy, gz, ore.size, ore.name);
     }
   }
@@ -1906,8 +1909,6 @@ function generateMultiLayerWorld() {
 
   console.log('generateMultiLayerWorld: worldData size', worldData.size);
 }
-
-
 
 // === Character creation ===
 function createCharacter(){
