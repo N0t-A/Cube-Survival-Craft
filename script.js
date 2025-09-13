@@ -1935,21 +1935,18 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  let topY = undefined;
-
-  for (let y = -STONE_LAYERS; y <= STONE_LAYERS; y++) {
+  for (let y = STONE_LAYERS; y >= -STONE_LAYERS; y--) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
-      if (topY === undefined || y < topY) topY = y; // inverted Y: smaller is higher
+      console.log(`Top block found at y = ${y}`);
+      return y * BLOCK_SIZE;
     }
   }
 
-  if (topY !== undefined) {
-    return topY * BLOCK_SIZE; // convert to world Y position
-  }
-
+  console.log("No surface block found under player");
   return undefined;
 }
+
 
 // === Player movement / collision ===
 function updatePlayerPosition() {
@@ -2490,7 +2487,6 @@ function animate() {
     collectNearbyItems();
     updateBlockHighlight();
     updateTransforms();
-    console.log(topY);
   } catch (err) {
     console.error("Error in game loop:", err);
     console.log('there was an error in the gameloop');
