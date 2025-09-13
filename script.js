@@ -1869,7 +1869,7 @@ function generateMultiLayerWorld() {
     }
 
     // Stone layers BELOW dirt
-    for (let y = -(dirtLayers + 1); y >= -STONE_LAYERS; y--) {
+    for (let y = (dirtLayers + 1); y <= STONE_LAYERS; y++) {
       worldData.set(keyAt(gx, y, gz), { type: 'stone' });
     }
   }
