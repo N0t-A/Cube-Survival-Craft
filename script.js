@@ -1860,10 +1860,10 @@ function generateMultiLayerWorld() {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
-      // Top grass block at y = 0
+      // Grass at y = 0
       worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
 
-      // Dirt layers below grass (negative Y)
+      // Dirt layers below grass
       for (let y = -1; y >= -dirtLayers; y--) {
         worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
       }
@@ -1875,7 +1875,7 @@ function generateMultiLayerWorld() {
     }
   }
 
-  // Generate ore veins (same as before)
+  // Generate ore veins (still just modifying worldData)
   const ores = [
     { name: 'coal-ore', minD: 1, maxD: 15, veins: 2, size: 15 },
     { name: 'copper-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
@@ -1890,10 +1890,10 @@ function generateMultiLayerWorld() {
     for (let v = 0; v < ore.veins; v++) {
       const gx = Math.floor(Math.random() * CHUNK_SIZE_X);
       const gz = Math.floor(Math.random() * CHUNK_SIZE_Z);
-      const minLayer = Math.max(1, ore.minD);
-      const maxLayer = Math.min(STONE_LAYERS - 1, ore.maxD);
+      const minLayer = Math.max(-STONE_LAYERS, -ore.maxD);
+      const maxLayer = Math.min(-1, -ore.minD);
       if (minLayer > maxLayer) continue;
-      const gy = -minLayer - Math.floor(Math.random() * (maxLayer - minLayer + 1));
+      const gy = Math.floor(minLayer + Math.random() * (maxLayer - minLayer + 1));
       generateVein(gx, gy, gz, ore.size, ore.name);
     }
   }
