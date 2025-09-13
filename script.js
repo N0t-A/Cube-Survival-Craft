@@ -1855,28 +1855,27 @@ function generateMultiLayerWorld() {
   world.innerHTML = '';
   worldData.clear();
 
-  // Pass 1: Add block types to worldData only (no DOM yet)
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
-      // Grass at y = 0
+      // Grass at top layer
       worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
 
-      // Dirt layers below grass
+      // Dirt layers BELOW grass
       for (let i = 1; i <= dirtLayers; i++) {
-        const y = -i;
+        const y = i; // positive Y goes downward in your inverted system
         worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
       }
 
-      // Stone layers below dirt
-      for (let y = -(dirtLayers + 1); y >= -STONE_LAYERS; y--) {
+      // Stone layers BELOW dirt
+      for (let y = dirtLayers + 1; y <= STONE_LAYERS; y++) {
         worldData.set(keyAt(gx, y, gz), { type: 'stone' });
       }
     }
   }
 
-  // Generate ore veins (still just modifying worldData)
+  // Ore generation (same as before)
   const ores = [
     { name: 'coal-ore', minD: 1, maxD: 15, veins: 2, size: 15 },
     { name: 'copper-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
@@ -1891,15 +1890,15 @@ function generateMultiLayerWorld() {
     for (let v = 0; v < ore.veins; v++) {
       const gx = Math.floor(Math.random() * CHUNK_SIZE_X);
       const gz = Math.floor(Math.random() * CHUNK_SIZE_Z);
-      const minLayer = Math.max(-STONE_LAYERS, -ore.maxD);
-      const maxLayer = Math.min(-1, -ore.minD);
+      const minLayer = Math.max(1, ore.minD);
+      const maxLayer = Math.min(STONE_LAYERS, ore.maxD);
       if (minLayer > maxLayer) continue;
       const gy = Math.floor(minLayer + Math.random() * (maxLayer - minLayer + 1));
       generateVein(gx, gy, gz, ore.size, ore.name);
     }
   }
 
-  // Pass 2: Generate DOM elements with proper face culling
+  // Generate DOM elements
   for (const [key, data] of worldData.entries()) {
     const [gx, gy, gz] = key.split(',').map(Number);
     const exposedFaces = getExposedFacesFor(gx, gy, gz);
