@@ -1864,12 +1864,13 @@ function generateMultiLayerWorld() {
       worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
 
       // Dirt layers below grass
-      for (let y = -1; y >= -dirtLayers; y--) {
+      for (let i = 1; i <= dirtLayers; i++) {
+        const y = -i;
         worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
       }
 
       // Stone layers below dirt
-      for (let y = -dirtLayers - 1; y >= -STONE_LAYERS; y--) {
+      for (let y = -(dirtLayers + 1); y >= -STONE_LAYERS; y--) {
         worldData.set(keyAt(gx, y, gz), { type: 'stone' });
       }
     }
@@ -1898,7 +1899,7 @@ function generateMultiLayerWorld() {
     }
   }
 
-  // Pass 2: Now all blocks exist. Generate DOM elements with proper face culling.
+  // Pass 2: Generate DOM elements with proper face culling
   for (const [key, data] of worldData.entries()) {
     const [gx, gy, gz] = key.split(',').map(Number);
     const exposedFaces = getExposedFacesFor(gx, gy, gz);
