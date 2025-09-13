@@ -23,7 +23,7 @@ let selectedBlock = null;
 
 // === Player state ===
 let posX = 0;
-let posY = characterYOffset; // start with feet at ground
+let posY = -40; // start with feet at ground
 let posZ = 0;
 let yaw = 0, pitch = 0;
 
