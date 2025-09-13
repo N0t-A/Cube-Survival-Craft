@@ -1935,21 +1935,22 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  console.log(`Checking surface under player at gx=${gx}, gz=${gz}`);
+  // Clamp gx and gz to valid world range
+  if (gx < 0 || gx >= CHUNK_SIZE_X || gz < 0 || gz >= CHUNK_SIZE_Z) {
+    console.log(`Out of bounds: gx=${gx}, gz=${gz}`);
+    return undefined;
+  }
 
-  const minY = 0;               // Top surface starts at y = 0
-  const maxY = STONE_LAYERS;    // Bottom-most possible block
-
-  for (let y = minY; y <= maxY; y++) {
+  for (let y = 0; y <= STONE_LAYERS; y++) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
-      console.log(`Found block at ${key}`);
-      return y * BLOCK_SIZE; // Convert to world Y position
+      console.log(`Top surface block found at gx=${gx}, gz=${gz}, y=${y}`);
+      return y * BLOCK_SIZE;
     }
   }
 
-  console.log(`No surface found at gx=${gx}, gz=${gz}`);
-  return undefined; // No block found
+  console.log(`No surface block found at gx=${gx}, gz=${gz}`);
+  return undefined;
 }
 
 // === Player movement / collision ===
