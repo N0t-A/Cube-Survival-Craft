@@ -1935,17 +1935,21 @@ function getTopSurfaceYUnderPlayer() {
   const gx = Math.floor(posX / BLOCK_SIZE);
   const gz = Math.floor(posZ / BLOCK_SIZE);
 
-  for (let y = STONE_LAYERS; y >= -STONE_LAYERS; y--) {
+  const maxY = 50;   // highest possible terrain (world ceiling)
+  const minY = -80;  // lowest possible terrain (world floor)
+
+  for (let y = minY; y <= maxY; y++) {
     const key = keyAt(gx, y, gz);
     if (worldData.has(key)) {
       console.log(`Top block found at y = ${y}`);
-      return y * BLOCK_SIZE;
+      return y * BLOCK_SIZE; // convert grid Y to world Y
     }
   }
 
   console.log("No surface block found under player");
   return undefined;
 }
+
 
 
 // === Player movement / collision ===
