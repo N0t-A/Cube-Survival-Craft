@@ -31,7 +31,7 @@ let yaw = 0, pitch = 0;
 const keys = {};
 const speed = 8;
 const gravity = 1.5;  
-const jumpStrength = 1;
+const jumpStrength = 10;
 let velY = 0;
 let grounded = false;
 
