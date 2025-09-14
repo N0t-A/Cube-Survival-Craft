@@ -10,6 +10,8 @@ const gameContainer = document.getElementById('game-container');
 let currentlyHighlightedBlock = null;
 
 // === Config / constants ===
+const WORLD_CHUNKS_X = 4;
+const WORLD_CHUNKS_Z = 4;
 const BLOCK_SIZE = 70;         
 const CHUNK_SIZE_X = 10;       
 const CHUNK_SIZE_Z = 10;       
@@ -1855,6 +1857,9 @@ function generateMultiLayerWorld() {
   world.innerHTML = '';
   worldData.clear();
 
+  for (let chunkX = 0; chunkX < WORLD_CHUNKS_X; chunkX++) {
+    for (let chunkZ = 0; chunkZ < WORLD_CHUNKS_Z; chunkZ++ {
+
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
   for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
     const dirtLayers = Math.floor(Math.random() * 2) + 2;
@@ -1871,6 +1876,8 @@ function generateMultiLayerWorld() {
     // Stone layers BELOW dirt
     for (let y = (dirtLayers + 1); y <= STONE_LAYERS; y++) {
       worldData.set(keyAt(gx, y, gz), { type: 'stone' });
+        }
+      }
     }
   }
 }
