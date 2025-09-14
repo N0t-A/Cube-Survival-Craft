@@ -29,7 +29,7 @@ let yaw = 0, pitch = 0;
 
 // === Movement / physics ===
 const keys = {};
-const speed = 2;
+const speed = 8;
 const gravity = 1.5;  
 const jumpStrength = 70;
 let velY = 0;
@@ -1990,7 +1990,7 @@ function updatePlayerPosition() {
 
   // Jump
   if (keys[' '] && grounded) {
-    velY = jumpStrength;
+    velY = -jumpStrength;
     grounded = false;
   }
 }
