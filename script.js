@@ -1869,17 +1869,17 @@ function generateMultiLayerWorld() {
     const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
     // Grass at top layer (y = 0)
-    worldData.set(keyAt(gx, 0, gz), { type: 'grass' });
+    worldData.set(keyAt(worldX, 0, worldZ), { type: 'grass' });
 
     // Dirt layers BELOW grass (negative Y)
     for (let i = 1; i <= dirtLayers; i++) {
       const y = i; 
-      worldData.set(keyAt(gx, y, gz), { type: 'dirt' });
+      worldData.set(keyAt(worldX, y, worldZ), { type: 'dirt' });
     }
 
     // Stone layers BELOW dirt
     for (let y = (dirtLayers + 1); y <= STONE_LAYERS; y++) {
-      worldData.set(keyAt(gx, y, gz), { type: 'stone' });
+      worldData.set(keyAt(worldX, y, worldZ), { type: 'stone' });
         }
       }
     }
