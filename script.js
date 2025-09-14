@@ -1859,24 +1859,25 @@ function generateMultiLayerWorld() {
 
   for (let chunkX = 0; chunkX < WORLD_CHUNKS_X; chunkX++) {
     for (let chunkZ = 0; chunkZ < WORLD_CHUNKS_Z; chunkZ++) {
+
       for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
         for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
           const worldX = chunkX * CHUNK_SIZE_X + gx;
           const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
 
-          const dirtLayers = Math.floor(Math.random() * 2) + 2;
+          // 🌄 Dynamic terrain height
+          const surfaceY = Math.floor(Math.random() * 6) - 2; // Between -2 and 3
 
-          // Grass at y = 0 (top surface)
-          worldData.set(keyAt(worldX, 0, worldZ), { type: 'grass' });
+          // Grass top
+          worldData.set(keyAt(worldX, surfaceY, worldZ), { type: 'grass' });
 
-          // Dirt layers BELOW grass (positive Y)
-          for (let i = 1; i <= dirtLayers; i++) {
-            const y = i;
+          // Dirt below
+          for (let y = surfaceY + 1; y <= surfaceY + 3; y++) {
             worldData.set(keyAt(worldX, y, worldZ), { type: 'dirt' });
           }
 
-          // Stone layers BELOW dirt (positive Y)
-          for (let y = dirtLayers + 1; y <= STONE_LAYERS; y++) {
+          // Stone deeper
+          for (let y = surfaceY + 4; y <= STONE_LAYERS; y++) {
             worldData.set(keyAt(worldX, y, worldZ), { type: 'stone' });
           }
         }
@@ -1884,7 +1885,9 @@ function generateMultiLayerWorld() {
     }
   }
 
-  // Generate DOM elements
+  // 🪨 Ore generation (unchanged — still valid)
+
+  // 🌐 Face culling works across chunks
   for (const [key, data] of worldData.entries()) {
     const [gx, gy, gz] = key.split(',').map(Number);
     const exposedFaces = getExposedFacesFor(gx, gy, gz);
@@ -1893,7 +1896,7 @@ function generateMultiLayerWorld() {
     world.appendChild(el);
   }
 
-  console.log('generateMultiLayerWorld: worldData size', worldData.size);
+  console.log('World generated with dynamic terrain. Size:', worldData.size);
 }
 
 // === Character creation ===
