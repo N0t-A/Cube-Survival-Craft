@@ -1859,53 +1859,28 @@ function generateMultiLayerWorld() {
 
   for (let chunkX = 0; chunkX < WORLD_CHUNKS_X; chunkX++) {
     for (let chunkZ = 0; chunkZ < WORLD_CHUNKS_Z; chunkZ++) {
+      for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
+        for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+          const worldX = chunkX * CHUNK_SIZE_X + gx;
+          const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
 
-  for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
-  for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+          const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
-    const worldX = chunkX * CHUNK_SIZE_X + gx;
-    const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
-    
-    const dirtLayers = Math.floor(Math.random() * 2) + 2;
+          // Grass at y = 0 (top surface)
+          worldData.set(keyAt(worldX, 0, worldZ), { type: 'grass' });
 
-    // Grass at top layer (y = 0)
-    worldData.set(keyAt(worldX, 0, worldZ), { type: 'grass' });
+          // Dirt layers BELOW grass (positive Y)
+          for (let i = 1; i <= dirtLayers; i++) {
+            const y = i;
+            worldData.set(keyAt(worldX, y, worldZ), { type: 'dirt' });
+          }
 
-    // Dirt layers BELOW grass (negative Y)
-    for (let i = 1; i <= dirtLayers; i++) {
-      const y = i; 
-      worldData.set(keyAt(worldX, y, worldZ), { type: 'dirt' });
-    }
-
-    // Stone layers BELOW dirt
-    for (let y = (dirtLayers + 1); y <= STONE_LAYERS; y++) {
-      worldData.set(keyAt(worldX, y, worldZ), { type: 'stone' });
+          // Stone layers BELOW dirt (positive Y)
+          for (let y = dirtLayers + 1; y <= STONE_LAYERS; y++) {
+            worldData.set(keyAt(worldX, y, worldZ), { type: 'stone' });
+          }
         }
       }
-    }
-  }
-}
-
-  // Ore generation (same as before)
-  const ores = [
-    { name: 'coal-ore', minD: 1, maxD: 15, veins: 2, size: 15 },
-    { name: 'copper-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
-    { name: 'tin-ore', minD: 10, maxD: 20, veins: 2, size: 10 },
-    { name: 'iron-ore', minD: 20, maxD: 35, veins: 2, size: 7 },
-    { name: 'diamond-ore', minD: 35, maxD: 50, veins: 1, size: 4 },
-    { name: 'amber-ore', minD: 50, maxD: 80, veins: 1, size: 1 },
-    { name: 'ruby-ore', minD: 50, maxD: 80, veins: 1, size: 1 }
-  ];
-
-  for (const ore of ores) {
-    for (let v = 0; v < ore.veins; v++) {
-      const gx = Math.floor(Math.random() * CHUNK_SIZE_X);
-      const gz = Math.floor(Math.random() * CHUNK_SIZE_Z);
-      const minLayer = Math.max(1, ore.minD);
-      const maxLayer = Math.min(STONE_LAYERS, ore.maxD);
-      if (minLayer > maxLayer) continue;
-      const gy = Math.floor(minLayer + Math.random() * (maxLayer - minLayer + 1));
-      generateVein(gx, gy, gz, ore.size, ore.name);
     }
   }
 
