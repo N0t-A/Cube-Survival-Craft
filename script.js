@@ -1862,6 +1862,10 @@ function generateMultiLayerWorld() {
 
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
   for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+
+    const worldX = chunkX * CHUNK_SIZE_X + gx;
+    const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
+    
     const dirtLayers = Math.floor(Math.random() * 2) + 2;
 
     // Grass at top layer (y = 0)
