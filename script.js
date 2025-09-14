@@ -1858,7 +1858,7 @@ function generateMultiLayerWorld() {
   worldData.clear();
 
   for (let chunkX = 0; chunkX < WORLD_CHUNKS_X; chunkX++) {
-    for (let chunkZ = 0; chunkZ < WORLD_CHUNKS_Z; chunkZ++ {
+    for (let chunkZ = 0; chunkZ < WORLD_CHUNKS_Z; chunkZ++) {
 
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
   for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
