@@ -1858,55 +1858,29 @@ function generateVein(startGX, startGY, startGZ, size, type) {
 }
 
 function generateChunk(chunkX, chunkZ) {
-  const chunkKey = `${chunkX},${chunkZ}`;
-  if (loadedChunks.has(chunkKey)) return; // already generated
-
-  loadedChunks.add(chunkKey);
-
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const worldX = chunkX * CHUNK_SIZE_X + gx;
       const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
+      const surfaceY = Math.floor(Math.random() * 6) - 2;
 
-      // 🌄 Dynamic terrain height
-      const surfaceY = Math.floor(Math.random() * 6) - 2; // Between -2 and 3
-
-      // Grass top
       worldData.set(keyAt(worldX, surfaceY, worldZ), { type: 'grass' });
 
-      // Dirt below
       for (let y = surfaceY + 1; y <= surfaceY + 3; y++) {
         worldData.set(keyAt(worldX, y, worldZ), { type: 'dirt' });
       }
 
-      // Stone deeper
       for (let y = surfaceY + 4; y <= STONE_LAYERS; y++) {
         worldData.set(keyAt(worldX, y, worldZ), { type: 'stone' });
       }
     }
   }
 
-  // Render visible blocks
-  for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
-    for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
-      const worldX = chunkX * CHUNK_SIZE_X + gx;
-      const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
+  loadedChunks.set(`${chunkX},${chunkZ}`, { blocksLoaded: true, rendered: false });
 
-      for (let gy = -2; gy <= STONE_LAYERS; gy++) {
-        const key = keyAt(worldX, gy, worldZ);
-        const data = worldData.get(key);
-        if (!data) continue;
-
-        const exposedFaces = getExposedFacesFor(worldX, gy, worldZ);
-        const el = createBlockElement(worldX, gy, worldZ, data.type, exposedFaces);
-        data.element = el;
-        world.appendChild(el);
-      }
-    }
-  }
-
-  console.log(`Chunk (${chunkX}, ${chunkZ}) generated.`);
+  tryRenderWithNeighbors(chunkX, chunkZ);
 }
+
 
 function generateChunksAroundPlayer() {
   const chunkX = Math.floor(posX / (CHUNK_SIZE_X * BLOCK_SIZE));
@@ -1918,6 +1892,56 @@ function generateChunksAroundPlayer() {
     }
   }
 }
+
+function tryRenderWithNeighbors(cx, cz) {
+  const neighbors = [
+    [0, 0],
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
+  ];
+
+  const allLoaded = neighbors.every(([dx, dz]) =>
+    loadedChunks.has(`${cx + dx},${cz + dz}`) &&
+    loadedChunks.get(`${cx + dx},${cz + dz}`).blocksLoaded
+  );
+
+  if (!allLoaded) return;
+
+  // Now render all 5 chunks
+  for (const [dx, dz] of neighbors) {
+    const key = `${cx + dx},${cz + dz}`;
+    const chunk = loadedChunks.get(key);
+    if (!chunk.rendered) {
+      renderChunk(cx + dx, cz + dz);
+      chunk.rendered = true;
+    }
+  }
+}
+
+function renderChunk(chunkX, chunkZ) {
+  for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
+    for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+      const worldX = chunkX * CHUNK_SIZE_X + gx;
+      const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
+
+      for (let y = -STONE_LAYERS; y <= 10; y++) {
+        const key = keyAt(worldX, y, worldZ);
+        const block = worldData.get(key);
+        if (!block) continue;
+
+        const faces = getExposedFacesFor(worldX, y, worldZ);
+        if (faces.length > 0) {
+          const el = createBlockElement(worldX, y, worldZ, block.type, faces);
+          block.element = el;
+          world.appendChild(el);
+        }
+      }
+    }
+  }
+}
+
 
 // === Character creation ===
 function createCharacter(){
