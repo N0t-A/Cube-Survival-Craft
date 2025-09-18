@@ -22,12 +22,16 @@ const characterYOffset = 10;  // feet-to-model offset
 const maxReach = 6;
 const rayStep = 0.5;
 let selectedBlock = null;
+const CHUNK_RENDER_DISTANCE = 2;
+const loadedChunks = new Set();
 
 // === Player state ===
 let posX = 0;
 let posY = 0; // start with feet at ground
 let posZ = 0;
 let yaw = 0, pitch = 0;
+const playerChunkX = Math.floor(posX / (BLOCK_SIZE * CHUNK_SIZE_X));
+const playerChunkZ = Math.floor(posZ / (BLOCK_SIZE * CHUNK_SIZE_Z));
 
 // === Movement / physics ===
 const keys = {};
@@ -1853,50 +1857,66 @@ function generateVein(startGX, startGY, startGZ, size, type) {
   return placed;
 }
 
-function generateMultiLayerWorld() {
-  world.innerHTML = '';
-  worldData.clear();
+function generateChunk(chunkX, chunkZ) {
+  const chunkKey = `${chunkX},${chunkZ}`;
+  if (loadedChunks.has(chunkKey)) return; // already generated
 
-  for (let chunkX = 0; chunkX < WORLD_CHUNKS_X; chunkX++) {
-    for (let chunkZ = 0; chunkZ < WORLD_CHUNKS_Z; chunkZ++) {
+  loadedChunks.add(chunkKey);
 
-      for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
-        for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
-          const worldX = chunkX * CHUNK_SIZE_X + gx;
-          const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
+  for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
+    for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+      const worldX = chunkX * CHUNK_SIZE_X + gx;
+      const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
 
-          // 🌄 Dynamic terrain height
-          const surfaceY = Math.floor(Math.random() * 6) - 2; // Between -2 and 3
+      // 🌄 Dynamic terrain height
+      const surfaceY = Math.floor(Math.random() * 6) - 2; // Between -2 and 3
 
-          // Grass top
-          worldData.set(keyAt(worldX, surfaceY, worldZ), { type: 'grass' });
+      // Grass top
+      worldData.set(keyAt(worldX, surfaceY, worldZ), { type: 'grass' });
 
-          // Dirt below
-          for (let y = surfaceY + 1; y <= surfaceY + 3; y++) {
-            worldData.set(keyAt(worldX, y, worldZ), { type: 'dirt' });
-          }
+      // Dirt below
+      for (let y = surfaceY + 1; y <= surfaceY + 3; y++) {
+        worldData.set(keyAt(worldX, y, worldZ), { type: 'dirt' });
+      }
 
-          // Stone deeper
-          for (let y = surfaceY + 4; y <= STONE_LAYERS; y++) {
-            worldData.set(keyAt(worldX, y, worldZ), { type: 'stone' });
-          }
-        }
+      // Stone deeper
+      for (let y = surfaceY + 4; y <= STONE_LAYERS; y++) {
+        worldData.set(keyAt(worldX, y, worldZ), { type: 'stone' });
       }
     }
   }
 
-  // 🪨 Ore generation (unchanged — still valid)
+  // Render visible blocks
+  for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
+    for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
+      const worldX = chunkX * CHUNK_SIZE_X + gx;
+      const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
 
-  // 🌐 Face culling works across chunks
-  for (const [key, data] of worldData.entries()) {
-    const [gx, gy, gz] = key.split(',').map(Number);
-    const exposedFaces = getExposedFacesFor(gx, gy, gz);
-    const el = createBlockElement(gx, gy, gz, data.type, exposedFaces);
-    data.element = el;
-    world.appendChild(el);
+      for (let gy = -2; gy <= STONE_LAYERS; gy++) {
+        const key = keyAt(worldX, gy, worldZ);
+        const data = worldData.get(key);
+        if (!data) continue;
+
+        const exposedFaces = getExposedFacesFor(worldX, gy, worldZ);
+        const el = createBlockElement(worldX, gy, worldZ, data.type, exposedFaces);
+        data.element = el;
+        world.appendChild(el);
+      }
+    }
   }
 
-  console.log('World generated with dynamic terrain. Size:', worldData.size);
+  console.log(`Chunk (${chunkX}, ${chunkZ}) generated.`);
+}
+
+function generateChunksAroundPlayer() {
+  const chunkX = Math.floor(posX / (CHUNK_SIZE_X * BLOCK_SIZE));
+  const chunkZ = Math.floor(posZ / (CHUNK_SIZE_Z * BLOCK_SIZE));
+
+  for (let dx = -RENDER_DISTANCE; dx <= RENDER_DISTANCE; dx++) {
+    for (let dz = -RENDER_DISTANCE; dz <= RENDER_DISTANCE; dz++) {
+      generateChunk(chunkX + dx, chunkZ + dz);
+    }
+  }
 }
 
 // === Character creation ===
@@ -2491,7 +2511,7 @@ function animate() {
 }
 
 // === Start ===
-generateMultiLayerWorld();
+generateChunksAroundPlayer();
 const checkKey = keyAt(0, 0, 0); // change to any X/Z you're testing
 const testBlock = worldData.get(checkKey);
 if (testBlock) {
