@@ -23,7 +23,7 @@ const maxReach = 6;
 const rayStep = 0.5;
 let selectedBlock = null;
 const CHUNK_RENDER_DISTANCE = 2;
-const loadedChunks = new Set();
+const loadedChunks = new Map();
 
 // === Player state ===
 let posX = 0;
