@@ -1913,7 +1913,7 @@ function generateChunksAroundPlayer() {
   const chunkZ = Math.floor(posZ / (CHUNK_SIZE_Z * BLOCK_SIZE));
 
   for (let dx = -CHUNK_RENDER_DISTANCE; dx <= CHUNK_RENDER_DISTANCE; dx++) {
-    for (let dz = -CHUNK-RENDER_DISTANCE; dz <= CHUNK_RENDER_DISTANCE; dz++) {
+    for (let dz = -CHUNK_RENDER_DISTANCE; dz <= CHUNK_RENDER_DISTANCE; dz++) {
       generateChunk(chunkX + dx, chunkZ + dz);
     }
   }
