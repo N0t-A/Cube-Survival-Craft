@@ -429,6 +429,11 @@ html, body {
   object-fit: contain;
 }
 
+.chunk {
+  position: absolute;
+  transform-style: preserve-3d; /* important for 3D child blocks */
+}
+
 /* Blocks and Block Transforms */
 .block.highlighted .face {
   outline: 3px solid black;
