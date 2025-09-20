@@ -1934,29 +1934,49 @@ function tryRenderWithNeighbors(cx, cz) {
 }
 
 function renderChunk(chunkX, chunkZ) {
+  const frag = document.createDocumentFragment(); // batch container
+
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const worldX = chunkX * CHUNK_SIZE_X + gx;
       const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
 
-      // Adjust vertical bounds if needed
       for (let y = -STONE_LAYERS; y <= 10; y++) {
         const key = keyAt(worldX, y, worldZ);
         const block = worldData.get(key);
         if (!block) continue;
 
-        // Compute exposed faces
+        // compute visible faces
         const faces = getExposedFacesFor(worldX, y, worldZ);
+        if (faces.length === 0) continue;
 
-        // Only render if at least one face is visible and not already rendered
-        if (faces.length > 0 && !block.element) {
-          const el = createBlockElement(worldX, y, worldZ, block.type, faces);
-          block.element = el;
-          world.appendChild(el);
+        // only create element if it doesn't exist
+        if (!block.element) {
+          const blockFrag = document.createDocumentFragment(); // faces for this block
+
+          for (const face of faces) {
+            const el = document.createElement('div');
+            el.className = 'block-face ' + face; // e.g., 'top', 'left', etc.
+            el.style.backgroundImage = `url(${blockTextures[face]})`;
+
+            // apply transform/position
+            el.style.transform = `translate3d(${worldX * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${worldZ * BLOCK_SIZE}px)`;
+
+            blockFrag.appendChild(el);
+          }
+
+          // store a reference to this fragment for future use
+          block.element = blockFrag;
+
+          // add all faces of this block at once
+          frag.appendChild(blockFrag);
         }
       }
     }
   }
+
+  // append all blocks of this chunk in a single operation
+  world.appendChild(frag);
 }
 
 // === Character creation ===
