@@ -2608,9 +2608,8 @@ function getExposedFacesFor(x, y, z) {
 
   const faces = [];
 
-  // Only render face if there is no neighboring block
-  if (!getBlockSafe(x, y + 1, z)) faces.push('top');
-  if (!getBlockSafe(x, y - 1, z)) faces.push('bottom');
+  if (!getBlockSafe(x, y - 1, z)) faces.push('top');     // negative Y is up
+  if (!getBlockSafe(x, y + 1, z)) faces.push('bottom');  // positive Y is down
   if (!getBlockSafe(x + 1, y, z)) faces.push('right');
   if (!getBlockSafe(x - 1, y, z)) faces.push('left');
   if (!getBlockSafe(x, y, z + 1)) faces.push('front');
