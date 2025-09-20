@@ -2261,22 +2261,21 @@ function refreshAllStations() {
 }
 
 function raycastFromCamera() {
+  // Camera/world origin
   const origin = [
     posX,
-    posY - characterYOffset + eyeHeight,
+    posY - characterYOffset + eyeHeight, // your inverted Y setup
     posZ
   ];
 
-  const dir = getDirectionVector(); // based on camera yaw/pitch
+  // Compute direction vector from yaw/pitch
+  const dir = getDirectionVector(); // returns [dx, dy, dz] unit vector
   const maxReach = 5;
   const step = 0.1;
 
   let lastGX = null;
   let lastGY = null;
   let lastGZ = null;
-  let prevGX = null;
-  let prevGY = null;
-  let prevGZ = null;
 
   for (let t = 0; t < maxReach; t += step) {
     const x = origin[0] + dir[0] * t;
@@ -2287,36 +2286,14 @@ function raycastFromCamera() {
     const gy = Math.floor(y / BLOCK_SIZE);
     const gz = Math.floor(z / BLOCK_SIZE);
 
-    // Skip out-of-world coordinates
-    if (gy < -STONE_LAYERS || gy > 10) continue;
-
-    // Only check new grid cells
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
-      prevGX = lastGX;
-      prevGY = lastGY;
-      prevGZ = lastGZ;
-
       lastGX = gx;
       lastGY = gy;
       lastGZ = gz;
 
       const key = keyAt(gx, gy, gz);
-
       if (worldData.has(key)) {
-        // Approximate normal of the face hit
-        const dx = gx - prevGX;
-        const dy = gy - prevGY;
-        const dz = gz - prevGZ;
-        const normal = [dx || 0, dy || 0, dz || 0];
-
-        return {
-          hit: true,
-          // Block to break
-          gx, gy, gz,
-          // Adjacent empty block for placing
-          px: prevGX, py: prevGY, pz: prevGZ,
-          normal
-        };
+        return { hit: true, gx, gy, gz };
       }
     }
   }
