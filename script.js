@@ -1939,21 +1939,25 @@ function renderChunk(chunkX, chunkZ) {
       const worldX = chunkX * CHUNK_SIZE_X + gx;
       const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
 
+      // Adjust vertical bounds if needed
       for (let y = -STONE_LAYERS; y <= 10; y++) {
         const key = keyAt(worldX, y, worldZ);
         const block = worldData.get(key);
         if (!block) continue;
 
+        // Compute exposed faces
         const faces = getExposedFacesFor(worldX, y, worldZ);
-        if (faces.length > 0) {
+
+        // Only render if at least one face is visible and not already rendered
+        if (faces.length > 0 && !block.element) {
           const el = createBlockElement(worldX, y, worldZ, block.type, faces);
           block.element = el;
           world.appendChild(el);
-          }
         }
       }
     }
   }
+}
 
 // === Character creation ===
 function createCharacter(){
@@ -2514,19 +2518,20 @@ function collectNearbyItems() {
   }
 }
 
-function getExposedFacesFor(gx, gy, gz) {
-  const neighbors = [
-    {dx:0,dy:-1,dz:0,name:'top'},
-    {dx:0,dy:1,dz:0,name:'bottom'},
-    {dx:0,dy:0,dz:-1,name:'front'},
-    {dx:0,dy:0,dz:1,name:'back'},
-    {dx:-1,dy:0,dz:0,name:'left'},
-    {dx:1,dy:0,dz:0,name:'right'}
-  ];
+function getExposedFacesFor(x, y, z) {
+  const block = getBlockSafe(x, y, z);
+  if (!block) return [];
+
   const faces = [];
-  for (const n of neighbors) {
-    if (!worldData.has(keyAt(gx+n.dx,gy+n.dy,gz+n.dz))) faces.push(n.name);
-  }
+
+  // Only render face if there is no neighboring block
+  if (!getBlockSafe(x, y + 1, z)) faces.push('top');
+  if (!getBlockSafe(x, y - 1, z)) faces.push('bottom');
+  if (!getBlockSafe(x + 1, y, z)) faces.push('right');
+  if (!getBlockSafe(x - 1, y, z)) faces.push('left');
+  if (!getBlockSafe(x, y, z + 1)) faces.push('front');
+  if (!getBlockSafe(x, y, z - 1)) faces.push('back');
+
   return faces;
 }
 
