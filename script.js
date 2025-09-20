@@ -1876,10 +1876,23 @@ function generateChunk(chunkX, chunkZ) {
     }
   }
 
-  loadedChunks.set(`${chunkX},${chunkZ}`, { blocksLoaded: true, rendered: false });
+  loadedChunks.set(`${chunkX},${chunkZ}`, {
+    blocksLoaded: true,
+    rendered: false
+  });
 
-  tryRenderWithNeighbors(chunkX, chunkZ);
+  // ✅ Try rendering this and neighbors again
+  const neighbors = [
+    [0, 0],
+    [-1, 0], [1, 0],
+    [0, -1], [0, 1],
+  ];
+
+  for (const [dx, dz] of neighbors) {
+    tryRenderWithNeighbors(chunkX + dx, chunkZ + dz);
+  }
 }
+
 
 
 function generateChunksAroundPlayer() {
@@ -1941,7 +1954,6 @@ function renderChunk(chunkX, chunkZ) {
       }
     }
   }
-}
 
 // === Character creation ===
 function createCharacter(){
