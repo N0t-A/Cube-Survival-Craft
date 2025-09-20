@@ -1955,65 +1955,44 @@ function tryRenderWithNeighbors(cx, cz) {
 }
 
 function renderChunk(chunkX, chunkZ) {
-  // Create a DocumentFragment for batch insertion
-  const frag = document.createDocumentFragment();
+  const frag = document.createDocumentFragment(); // batch container
 
-  // Create a container for this chunk
-  const chunkContainer = document.createElement('div');
-  chunkContainer.className = `chunk ${chunkX},${chunkZ}`;
-  chunkContainer.style.transformStyle = 'preserve-3d';
-  chunkContainer.style.transform = `translate3d(0, 0, 0)`; // adjust if you want chunk offset
-
-  // Loop through all blocks in this chunk
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const worldX = chunkX * CHUNK_SIZE_X + gx;
       const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
 
-      for (let y = -STONE_LAYERS; y <= 10; y++) {
+      for (let y = -STONE_LAYERS; y <= 10; y++) {  // adjust to your world height
         const key = keyAt(worldX, y, worldZ);
         const block = worldData.get(key);
         if (!block) continue;
 
-        // Determine which faces are visible
+        // Get faces exposed to air, using inverted Y
         const faces = getExposedFacesFor(worldX, y, worldZ);
-        if (faces.length === 0) continue;
+        if (faces.length === 0) continue; // fully enclosed, skip
 
-        // Only create block element if it doesn't exist yet
         if (!block.element) {
+          // create the main block container
           const blockEl = document.createElement('div');
           blockEl.className = `${block.type} block`;
           blockEl.style.transform = `translate3d(${worldX * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${worldZ * BLOCK_SIZE}px)`;
 
-          // Add only visible faces
+          // create face elements only for exposed faces
           for (const face of faces) {
             const faceEl = document.createElement('div');
-            faceEl.className = `face ${face}`; // top, bottom, left, right, front, back
+            faceEl.className = `face ${face}`;
             blockEl.appendChild(faceEl);
           }
 
-          // Store reference to element
+          // store reference and add to fragment
           block.element = blockEl;
-          chunkContainer.appendChild(blockEl);
+          frag.appendChild(blockEl);
         }
       }
     }
   }
 
-  // Add the chunk container to the fragment
-  frag.appendChild(chunkContainer);
-
-  // Append all at once to the world for better performance
   world.appendChild(frag);
-
-  // Store the chunk container in loadedChunks for future unloading
-  const chunkKey = `${chunkX},${chunkZ}`;
-  if (!loadedChunks.has(chunkKey)) {
-    loadedChunks.set(chunkKey, { blocksLoaded: true, rendered: true, elementContainer: chunkContainer });
-  } else {
-    loadedChunks.get(chunkKey).elementContainer = chunkContainer;
-    loadedChunks.get(chunkKey).rendered = true;
-  }
 }
 
 // === Character creation ===
