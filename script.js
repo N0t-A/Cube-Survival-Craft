@@ -2393,6 +2393,10 @@ function updateBlockHighlight() {
 
   // Perform raycast from camera (already works with ground-moving setup)
   const result = raycastFromCamera();
+  if (result.hit){
+    console.log(`Raycast hit block at gx=${result.gx}, gy=${result.gy}, gz=${result.gz}`);
+  }
+  
   if (!result.hit) return;
 
   const key = keyAt(result.gx, result.gy, result.gz);
