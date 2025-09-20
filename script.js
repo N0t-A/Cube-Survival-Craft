@@ -2518,6 +2518,11 @@ function collectNearbyItems() {
   }
 }
 
+function getBlockSafe(x, y, z) {
+  // Returns the block at (x,y,z), or null if none exists
+  return worldData.get(keyAt(x, y, z)) || null;
+}
+
 function getExposedFacesFor(x, y, z) {
   const block = getBlockSafe(x, y, z);
   if (!block) return [];
