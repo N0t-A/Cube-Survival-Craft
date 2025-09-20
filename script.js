@@ -2281,7 +2281,7 @@ function refreshAllStations() {
   updateEngravingStation();
 }
 
-function rayCastFromCamera() {
+function raycastFromCamera() {
   const origin = [
     posX,
     posY - characterYOffset + eyeHeight,
