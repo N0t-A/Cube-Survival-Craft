@@ -1946,36 +1946,30 @@ function renderChunk(chunkX, chunkZ) {
         const block = worldData.get(key);
         if (!block) continue;
 
-        // compute visible faces
         const faces = getExposedFacesFor(worldX, y, worldZ);
         if (faces.length === 0) continue;
 
-        // only create element if it doesn't exist
         if (!block.element) {
-          const blockFrag = document.createDocumentFragment(); // faces for this block
+          // create the main block container
+          const blockEl = document.createElement('div');
+          blockEl.className = `${block.type} block`;
+          blockEl.style.transform = `translate3d(${worldX * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${worldZ * BLOCK_SIZE}px)`;
 
+          // create face elements
           for (const face of faces) {
-            const el = document.createElement('div');
-            el.className = 'block-face ' + face; // e.g., 'top', 'left', etc.
-            el.style.backgroundImage = `url(${blockTextures[face]})`;
-
-            // apply transform/position
-            el.style.transform = `translate3d(${worldX * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${worldZ * BLOCK_SIZE}px)`;
-
-            blockFrag.appendChild(el);
+            const faceEl = document.createElement('div');
+            faceEl.className = `face ${face}`; // top, bottom, left, right, front, back
+            blockEl.appendChild(faceEl);
           }
 
-          // store a reference to this fragment for future use
-          block.element = blockFrag;
-
-          // add all faces of this block at once
-          frag.appendChild(blockFrag);
+          // store reference and add to fragment
+          block.element = blockEl;
+          frag.appendChild(blockEl);
         }
       }
     }
   }
 
-  // append all blocks of this chunk in a single operation
   world.appendChild(frag);
 }
 
