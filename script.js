@@ -1895,16 +1895,37 @@ function generateChunk(chunkX, chunkZ) {
 
 
 
-function generateChunksAroundPlayer() {
-  const chunkX = Math.floor(posX / (CHUNK_SIZE_X * BLOCK_SIZE));
-  const chunkZ = Math.floor(posZ / (CHUNK_SIZE_Z * BLOCK_SIZE));
+function generateChunksAroundPlayer(playerX, playerZ) {
+  const playerChunkX = Math.floor(playerX / CHUNK_SIZE_X);
+  const playerChunkZ = Math.floor(playerZ / CHUNK_SIZE_Z);
+
+  const newLoaded = new Set(); // track chunks that should remain loaded
 
   for (let dx = -CHUNK_RENDER_DISTANCE; dx <= CHUNK_RENDER_DISTANCE; dx++) {
     for (let dz = -CHUNK_RENDER_DISTANCE; dz <= CHUNK_RENDER_DISTANCE; dz++) {
-      generateChunk(chunkX + dx, chunkZ + dz);
+      const cx = playerChunkX + dx;
+      const cz = playerChunkZ + dz;
+      newLoaded.add(`${cx},${cz}`);
+
+      if (!loadedChunks.has(`${cx},${cz}`)) {
+        generateChunk(cx, cz); // your existing chunk generation + tryRenderWithNeighbors
+      }
+    }
+  }
+
+  // Unload chunks that are too far
+  for (const key of loadedChunks.keys()) {
+    if (!newLoaded.has(key)) {
+      const chunk = loadedChunks.get(key);
+      // remove DOM elements
+      if (chunk && chunk.elementContainer) {
+        world.removeChild(chunk.elementContainer);
+      }
+      loadedChunks.delete(key);
     }
   }
 }
+
 
 function tryRenderWithNeighbors(cx, cz) {
   const neighbors = [
@@ -1934,7 +1955,9 @@ function tryRenderWithNeighbors(cx, cz) {
 }
 
 function renderChunk(chunkX, chunkZ) {
-  const frag = document.createDocumentFragment(); // batch container
+  const frag = document.createDocumentFragment();
+  let chunkContainer = document.createElement('div'); // container for all blocks in this chunk
+  chunkContainer.className = `chunk ${chunkX},${chunkZ}`;
 
   for (let gx = 0; gx < CHUNK_SIZE_X; gx++) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
@@ -1950,27 +1973,28 @@ function renderChunk(chunkX, chunkZ) {
         if (faces.length === 0) continue;
 
         if (!block.element) {
-          // create the main block container
           const blockEl = document.createElement('div');
           blockEl.className = `${block.type} block`;
           blockEl.style.transform = `translate3d(${worldX * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${worldZ * BLOCK_SIZE}px)`;
 
-          // create face elements
           for (const face of faces) {
             const faceEl = document.createElement('div');
-            faceEl.className = `face ${face}`; // top, bottom, left, right, front, back
+            faceEl.className = `face ${face}`;
             blockEl.appendChild(faceEl);
           }
 
-          // store reference and add to fragment
           block.element = blockEl;
-          frag.appendChild(blockEl);
+          chunkContainer.appendChild(blockEl);
         }
       }
     }
   }
 
+  frag.appendChild(chunkContainer);
   world.appendChild(frag);
+
+  // store container for potential unloading
+  loadedChunks.get(`${chunkX},${chunkZ}`).elementContainer = chunkContainer;
 }
 
 // === Character creation ===
@@ -2562,6 +2586,7 @@ function animate() {
     collectNearbyItems();
     updateBlockHighlight();
     updateTransforms();
+    generateChunksAroundPlayer(playerPosX, playerPosZ);
   } catch (err) {
     console.error("Error in game loop:", err);
     console.log('there was an error in the gameloop');
