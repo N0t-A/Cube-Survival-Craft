@@ -2391,7 +2391,7 @@ function updateBlockHighlight() {
     if (oldOverlay) oldOverlay.remove();
   }
 
-  // Perform raycast from camera
+  // Perform raycast from camera (already works with ground-moving setup)
   const result = raycastFromCamera();
   if (!result.hit) return;
 
@@ -2402,17 +2402,8 @@ function updateBlockHighlight() {
   // Create highlight overlay
   const overlay = document.createElement('div');
   overlay.className = 'highlight-overlay';
-  overlay.style.position = 'absolute';
-  overlay.style.top = '0';
-  overlay.style.left = '0';
-  overlay.style.width = '100%';
-  overlay.style.height = '100%';
-  overlay.style.pointerEvents = 'none';
-  overlay.style.boxSizing = 'border-box';
-  overlay.style.border = '3px solid yellow';
-  overlay.style.zIndex = 1000;
 
-  // Add overlay to the block element
+  // Append overlay to the block element
   block.element.appendChild(overlay);
   highlightedEl = block.element;
 }
