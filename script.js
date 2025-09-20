@@ -2340,24 +2340,48 @@ function getAdjacentPlacementPos(block) {
   return null;
 }
 
-function breakBlock(x, y, z) {
-  const key = keyAt(x, y, z); // Use your existing key function
-  const blockData = worldData.get(key);
-  if (blockData) {
-    // Remove the element from the DOM
-    blockData.element.remove();
-    // Remove the block from worldData
-    worldData.delete(key);
-  }
-}
-
-
 function placeBlock(x, y, z, blockType) {
-  const key = `${x},${y},${z}`;
-  if (!blocks[key]) {
-    createBlock(x, y, z, blockType);
-  }
+  const key = keyAt(x, y, z);
+  if (worldData.has(key)) return; // Don't place if a block already exists
+
+  // Create new block data
+  const newBlock = {
+    type: blockType,
+    position: { x, y, z },
+    element: null
+  };
+  worldData.set(key, newBlock);
+
+  // Create DOM element for the block
+  const blockEl = document.createElement('div');
+  blockEl.className = `${blockType} block`;
+  blockEl.style.transform = `translate3d(${x * BLOCK_SIZE}px, ${y * BLOCK_SIZE}px, ${z * BLOCK_SIZE}px)`;
+  newBlock.element = blockEl;
+  world.appendChild(blockEl);
+
+  // Update faces for this block and neighbors
+  updateBlockFaces(newBlock);
+  updateNeighborFaces(x, y, z);
 }
+
+function breakBlock(x, y, z) {
+  const key = keyAt(x, y, z);
+  const block = worldData.get(key);
+  if (!block) return;
+
+  // Remove DOM element
+  if (block.element && block.element.parentNode) {
+    block.element.parentNode.removeChild(block.element);
+    block.element = null;
+  }
+
+  // Remove from worldData
+  worldData.delete(key);
+
+  // Update neighboring blocks' faces
+  updateNeighborFaces(x, y, z);
+}
+
 
 let highlightedEl = null;
 
