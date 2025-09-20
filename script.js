@@ -2387,16 +2387,22 @@ let highlightedEl = null;
 
 function updateBlockHighlight() {
   // Remove previous highlight
-  if (highlightedEl) highlightedEl.classList.remove('highlighted');
+  if (highlightedEl) {
+    for (const face of highlightedEl.querySelectorAll('.face')) {
+      face.classList.remove('highlighted');
+    }
+  }
 
   const result = raycastFromCamera();
   if (!result.hit) return;
 
-  // Get block from worldData
   const key = keyAt(result.gx, result.gy, result.gz);
   const block = worldData.get(key);
   if (block && block.element) {
-    block.element.classList.add('highlighted');
+    // Highlight all visible faces
+    for (const face of block.element.querySelectorAll('.face')) {
+      face.classList.add('highlighted');
+    }
     highlightedEl = block.element;
   }
 }
