@@ -2281,20 +2281,23 @@ function refreshAllStations() {
   updateEngravingStation();
 }
 
-function raycastFromCamera() {
+function rayCastFromCamera() {
   const origin = [
     posX,
     posY - characterYOffset + eyeHeight,
     posZ
   ];
 
-  const dir = getDirectionVector();
+  const dir = getDirectionVector(); // based on camera yaw/pitch
   const maxReach = 5;
   const step = 0.1;
 
   let lastGX = null;
   let lastGY = null;
   let lastGZ = null;
+  let prevGX = null;
+  let prevGY = null;
+  let prevGZ = null;
 
   for (let t = 0; t < maxReach; t += step) {
     const x = origin[0] + dir[0] * t;
@@ -2305,17 +2308,36 @@ function raycastFromCamera() {
     const gy = Math.floor(y / BLOCK_SIZE);
     const gz = Math.floor(z / BLOCK_SIZE);
 
-    // Only check a new grid cell
+    // Skip out-of-world coordinates
+    if (gy < -STONE_LAYERS || gy > 10) continue;
+
+    // Only check new grid cells
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
+      prevGX = lastGX;
+      prevGY = lastGY;
+      prevGZ = lastGZ;
+
       lastGX = gx;
       lastGY = gy;
       lastGZ = gz;
 
-      // Only consider blocks that exist in worldData
-      if (worldData.has(keyAt(gx, gy, gz))) {
-        console.log(`Ray hit block at (${gx}, ${gy}, ${gz})`);
-        const normal = [0, 1, 0]; // Stub for now
-        return { hit: true, gx, gy, gz, normal };
+      const key = keyAt(gx, gy, gz);
+
+      if (worldData.has(key)) {
+        // Approximate normal of the face hit
+        const dx = gx - prevGX;
+        const dy = gy - prevGY;
+        const dz = gz - prevGZ;
+        const normal = [dx || 0, dy || 0, dz || 0];
+
+        return {
+          hit: true,
+          // Block to break
+          gx, gy, gz,
+          // Adjacent empty block for placing
+          px: prevGX, py: prevGY, pz: prevGZ,
+          normal
+        };
       }
     }
   }
