@@ -2386,7 +2386,7 @@ function breakBlock(x, y, z) {
 let highlightedEl = null;
 
 function updateBlockHighlight() {
-  // Remove previous highlight
+  // Remove previous overlay
   if (highlightedEl) {
     const oldOverlay = highlightedEl.querySelector('.highlight-overlay');
     if (oldOverlay) oldOverlay.remove();
@@ -2397,24 +2397,22 @@ function updateBlockHighlight() {
 
   const key = keyAt(result.gx, result.gy, result.gz);
   const block = worldData.get(key);
-  if (block && block.element) {
-    // Create a highlight overlay div
-    const overlay = document.createElement('div');
-    overlay.className = 'highlight-overlay';
-    overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.transform = 'translateZ(0)'; // make sure it overlays faces
-    overlay.style.pointerEvents = 'none';
-    overlay.style.boxSizing = 'border-box';
-    overlay.style.border = '2px solid yellow';
-    overlay.style.mixBlendMode = 'screen'; // optional for glow effect
+  if (!block || !block.element) return;
 
-    block.element.appendChild(overlay);
-    highlightedEl = block.element;
-  }
+  const overlay = document.createElement('div');
+  overlay.className = 'highlight-overlay';
+  overlay.style.position = 'absolute';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.pointerEvents = 'none';
+  overlay.style.boxSizing = 'border-box';
+  overlay.style.border = '3px solid yellow';
+  overlay.style.zIndex = 1000;
+
+  block.element.appendChild(overlay);
+  highlightedEl = block.element;
 }
 
 document.addEventListener('mousedown', (e) => {
