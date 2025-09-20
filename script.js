@@ -2388,9 +2388,8 @@ let highlightedEl = null;
 function updateBlockHighlight() {
   // Remove previous highlight
   if (highlightedEl) {
-    for (const face of highlightedEl.querySelectorAll('.face')) {
-      face.classList.remove('highlighted');
-    }
+    const oldOverlay = highlightedEl.querySelector('.highlight-overlay');
+    if (oldOverlay) oldOverlay.remove();
   }
 
   const result = raycastFromCamera();
@@ -2399,10 +2398,21 @@ function updateBlockHighlight() {
   const key = keyAt(result.gx, result.gy, result.gz);
   const block = worldData.get(key);
   if (block && block.element) {
-    // Highlight all visible faces
-    for (const face of block.element.querySelectorAll('.face')) {
-      face.classList.add('highlighted');
-    }
+    // Create a highlight overlay div
+    const overlay = document.createElement('div');
+    overlay.className = 'highlight-overlay';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.transform = 'translateZ(0)'; // make sure it overlays faces
+    overlay.style.pointerEvents = 'none';
+    overlay.style.boxSizing = 'border-box';
+    overlay.style.border = '2px solid yellow';
+    overlay.style.mixBlendMode = 'screen'; // optional for glow effect
+
+    block.element.appendChild(overlay);
     highlightedEl = block.element;
   }
 }
