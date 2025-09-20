@@ -1936,12 +1936,12 @@ function renderChunk(chunkX, chunkZ) {
           const el = createBlockElement(worldX, y, worldZ, block.type, faces);
           block.element = el;
           world.appendChild(el);
+          }
         }
       }
     }
   }
 }
-
 
 // === Character creation ===
 function createCharacter(){
