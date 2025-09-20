@@ -1862,7 +1862,7 @@ function generateChunk(chunkX, chunkZ) {
     for (let gz = 0; gz < CHUNK_SIZE_Z; gz++) {
       const worldX = chunkX * CHUNK_SIZE_X + gx;
       const worldZ = chunkZ * CHUNK_SIZE_Z + gz;
-      const surfaceY = Math.floor(Math.random() * 6) - 2;
+      const surfaceY = 0;
 
       worldData.set(keyAt(worldX, surfaceY, worldZ), { type: 'grass' });
 
