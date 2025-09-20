@@ -2382,16 +2382,16 @@ function breakBlock(x, y, z) {
   updateNeighborFaces(x, y, z);
 }
 
-
 let highlightedEl = null;
 
 function updateBlockHighlight() {
-  // Remove previous overlay
+  // Remove previous highlight overlay
   if (highlightedEl) {
     const oldOverlay = highlightedEl.querySelector('.highlight-overlay');
     if (oldOverlay) oldOverlay.remove();
   }
 
+  // Perform raycast from camera
   const result = raycastFromCamera();
   if (!result.hit) return;
 
@@ -2399,6 +2399,7 @@ function updateBlockHighlight() {
   const block = worldData.get(key);
   if (!block || !block.element) return;
 
+  // Create highlight overlay
   const overlay = document.createElement('div');
   overlay.className = 'highlight-overlay';
   overlay.style.position = 'absolute';
@@ -2411,6 +2412,7 @@ function updateBlockHighlight() {
   overlay.style.border = '3px solid yellow';
   overlay.style.zIndex = 1000;
 
+  // Add overlay to the block element
   block.element.appendChild(overlay);
   highlightedEl = block.element;
 }
