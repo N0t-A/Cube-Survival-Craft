@@ -2386,16 +2386,18 @@ function breakBlock(x, y, z) {
 let highlightedEl = null;
 
 function updateBlockHighlight() {
+  // Remove previous highlight
   if (highlightedEl) highlightedEl.classList.remove('highlighted');
 
   const result = raycastFromCamera();
   if (!result.hit) return;
 
-  const key = `${result.gx},${result.gy},${result.gz}`;
-  const el = world.querySelector(`.block[data-key="${key}"]`);
-  if (el) {
-    el.classList.add('highlighted');
-    highlightedEl = el;
+  // Get block from worldData
+  const key = keyAt(result.gx, result.gy, result.gz);
+  const block = worldData.get(key);
+  if (block && block.element) {
+    block.element.classList.add('highlighted');
+    highlightedEl = block.element;
   }
 }
 
