@@ -435,9 +435,10 @@ html, body {
 }
 
 /* Blocks and Block Transforms */
-.block.highlighted .face {
-  outline: 3px solid black;
-  box-shadow: 0 0 10px black;
+.highlight-overlay {
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 3px solid yellow;
   z-index: 1000;
 }
 
