@@ -2586,7 +2586,7 @@ function animate() {
     collectNearbyItems();
     updateBlockHighlight();
     updateTransforms();
-    generateChunksAroundPlayer(playerPosX, playerPosZ);
+    generateChunksAroundPlayer(posX, posZ);
   } catch (err) {
     console.error("Error in game loop:", err);
     console.log('there was an error in the gameloop');
