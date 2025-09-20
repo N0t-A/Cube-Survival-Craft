@@ -2637,6 +2637,7 @@ function animate() {
     updateBreaking();
     collectNearbyItems();
     updateBlockHighlight();
+    updateBlockHighlight();
     updateTransforms();
     generateChunksAroundPlayer(posX, posZ);
   } catch (err) {
