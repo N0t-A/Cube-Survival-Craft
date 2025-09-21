@@ -9,8 +9,8 @@ const world = document.getElementById('world');
 const gameContainer = document.getElementById('game-container');
 let currentlyHighlightedBlock = null;
 const debugDot = document.createElement('div');
-debugDot.className = 'debug-dot';
-world.appendChild(debugDot);
+debugDot.className = 'debug-ray-container';
+world.appendChild(debugRayContainer);
 
 // === Config / constants ===
 const WORLD_CHUNKS_X = 4;
@@ -2278,6 +2278,10 @@ function raycastFromCamera() {
 
   let lastGX = null, lastGY = null, lastGZ = null;
 
+  if (debug){
+    debugRayContainer.innerHTML = '';
+  }
+
   for (let t = 0; t <= maxReach; t += step) {
     const x = origin[0] + dir[0] * t;
     const y = origin[1] + dir[1] * t;
@@ -2286,6 +2290,13 @@ function raycastFromCamera() {
     const gx = Math.floor(x / BLOCK_SIZE);
     const gy = Math.floor(y / BLOCK_SIZE);
     const gz = Math.floor(z / BLOCK_SIZE);
+
+    if (debug) {
+      const dot = document.createElement('div');
+      dot.className = 'debug-dot';
+      dot.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+      debugRayContainer.appendChild(dot);
+    }
 
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
