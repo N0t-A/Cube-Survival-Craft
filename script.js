@@ -2266,26 +2266,23 @@ function refreshAllStations() {
 }
 
 function raycastFromCamera(debug = true) {
-  // Camera-eye origin in world coordinates
   const origin = [
     posX,
-    posY - eyeHeight, // inverted world Y setup
+    posY - eyeHeight,
     posZ
   ];
 
-  const dir = getDirectionVector(); // normalized direction
+  const dir = getDirectionVector();
   const maxReach = 5;
   const step = 0.05;
 
   let lastGX = null, lastGY = null, lastGZ = null;
 
   if (debug) {
-    // Clear previous dots
     debugRayContainer.innerHTML = '';
   }
 
   for (let t = 0; t <= maxReach; t += step) {
-    // Position along ray in world coordinates
     const x = origin[0] + dir[0] * t;
     const y = origin[1] + dir[1] * t;
     const z = origin[2] + dir[2] * t;
@@ -2312,7 +2309,6 @@ function raycastFromCamera(debug = true) {
       debugRayContainer.appendChild(dot);
     }
 
-    // Only check new grid positions
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
       lastGY = gy;
@@ -2322,10 +2318,9 @@ function raycastFromCamera(debug = true) {
       if (worldData.has(key)) {
         const block = worldData.get(key);
 
-        if (debug) {
-          console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
-        }
-console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
+        // Only log inside this block where `block` is defined
+        console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
+
         return { hit: true, gx, gy, gz, type: block.type };
       }
     }
