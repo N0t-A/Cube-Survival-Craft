@@ -2261,29 +2261,17 @@ function refreshAllStations() {
 }
 
 function raycastFromCamera() {
-  // Player/camera eye position in world coordinates
   const origin = [
     posX,
-    posY - characterYOffset + eyeHeight, // inverted Y setup
+    posY - characterYOffset + eyeHeight, // camera height in world space
     posZ
   ];
 
-  // Direction vector from yaw/pitch
-  const yawRad = yaw * (Math.PI / 180);
-  const pitchRad = pitch * (Math.PI / 180);
+  const dir = getDirectionVector(); // ✅ use your tested function
+  const maxReach = 5;
+  const step = 0.05;
 
-  const dir = [
-    Math.sin(yawRad) * Math.cos(pitchRad), // X
-    Math.sin(-pitchRad),                   // Y inverted
-    Math.cos(yawRad) * Math.cos(pitchRad)  // Z
-  ];
-
-  const maxReach = 5;  // max block reach distance
-  const step = 0.05;   // small steps for accuracy
-
-  let lastGX = null;
-  let lastGY = null;
-  let lastGZ = null;
+  let lastGX = null, lastGY = null, lastGZ = null;
 
   for (let t = 0; t <= maxReach; t += step) {
     const x = origin[0] + dir[0] * t;
@@ -2294,7 +2282,6 @@ function raycastFromCamera() {
     const gy = Math.floor(y / BLOCK_SIZE);
     const gz = Math.floor(z / BLOCK_SIZE);
 
-    // Only check new grid positions
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
       lastGY = gy;
