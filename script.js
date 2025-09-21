@@ -2274,8 +2274,6 @@ function raycastFromCamera(debug = true) {
   const maxReach = 5;
   const step = 0.05;
 
-  console.log('Ray origin:', origin, 'Direction:', dir);
-
   let lastGX = null, lastGY = null, lastGZ = null;
 
   if (debug) {
