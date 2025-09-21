@@ -2289,6 +2289,8 @@ function raycastFromCamera(debug = true) {
     const gy = Math.floor(y);
     const gz = Math.floor(z);
 
+    console.log(`Ray step at x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}, gx=${gx}, gy=${gy}, gz=${gz}`);
+
     if (debug) {
       const dot = document.createElement('div');
       dot.className = 'debug-dot';
