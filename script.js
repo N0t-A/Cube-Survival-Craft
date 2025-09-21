@@ -2263,7 +2263,7 @@ function refreshAllStations() {
   updateEngravingStation();
 }
 
-function raycastFromCamera() {
+function raycastFromCamera(debug = true) {
   const origin = [
     posX,
     posY - characterYOffset + eyeHeight, // camera height in world space
@@ -2278,7 +2278,7 @@ function raycastFromCamera() {
 
   let lastGX = null, lastGY = null, lastGZ = null;
 
-  if (debug){
+  if (debug) {
     debugRayContainer.innerHTML = '';
   }
 
