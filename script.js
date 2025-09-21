@@ -70,9 +70,6 @@ function getDirectionVector() {
   return [dx, dy, dz];
 }
 
-const dir = getDirectionVector();
-console.log('Direction:', dir, 'Pitch:', pitch, 'Yaw:', yaw);
-
 // === Block helpers ===
 function createBlockElement(gx, gy, gz, type, exposedFaces) {
   const el = document.createElement('div');
@@ -2620,6 +2617,8 @@ function animate() {
     updateBlockHighlight();
     updateBlockHighlight();
     updateTransforms();
+    const dir = getDirectionVector();
+console.log('Direction:', dir, 'Pitch:', pitch, 'Yaw:', yaw);
     generateChunksAroundPlayer(posX, posZ);
   } catch (err) {
     console.error("Error in game loop:", err);
