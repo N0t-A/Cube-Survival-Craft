@@ -21,7 +21,7 @@ const CHUNK_SIZE_Z = 10;
 const STONE_LAYERS = 80;       
 const groundY = 0;             
 const eyeHeight = 110;         // Camera eye level (just below head)
-const characterYOffset = 10;  // feet-to-model offset
+const characterYOffset = 0;  // feet-to-model offset
 const maxReach = 6;
 const rayStep = 0.5;
 let selectedBlock = null;
@@ -2266,7 +2266,7 @@ function refreshAllStations() {
 function raycastFromCamera(debug = true) {
   const origin = [
     posX,
-    posY - characterYOffset + eyeHeight, // camera height in world space
+    posY - eyeHeight, // camera height in world space
     posZ
   ];
 
