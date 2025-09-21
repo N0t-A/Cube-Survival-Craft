@@ -8,6 +8,9 @@ const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 const gameContainer = document.getElementById('game-container');
 let currentlyHighlightedBlock = null;
+const debugDot = document.createElement('div');
+debugDot.className = 'debug-dot';
+world.appendChild(debugDot);
 
 // === Config / constants ===
 const WORLD_CHUNKS_X = 4;
