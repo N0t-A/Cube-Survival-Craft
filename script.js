@@ -2267,8 +2267,6 @@ function raycastFromCamera() {
     posZ
   ];
 
-  console.log('Ray origin:', origin, 'Direction:', dir);
-
   const dir = getDirectionVector(); // ✅ use your tested function
   const maxReach = 5;
   const step = 0.05;
@@ -2619,6 +2617,7 @@ function animate() {
     updateBlockHighlight();
     updateBlockHighlight();
     updateTransforms();
+    console.log('Ray origin:', origin, 'Direction:', dir);
     generateChunksAroundPlayer(posX, posZ);
   } catch (err) {
     console.error("Error in game loop:", err);
