@@ -2293,21 +2293,23 @@ function raycastFromCamera(debug = true) {
 
     // Debug dots
     if (debug) {
-      const dot = document.createElement('div');
-      dot.className = 'debug-dot';
-      dot.style.width = '4px';
-      dot.style.height = '4px';
-      dot.style.background = 'red';
-      dot.style.position = 'absolute';
-      dot.style.transform = `
-        translate3d(
-          ${(x - posX) * BLOCK_SIZE}px,
-          ${(y - (posY - eyeHeight)) * BLOCK_SIZE}px,
-          ${(z - posZ) * BLOCK_SIZE}px
-        )
-      `;
-      debugRayContainer.appendChild(dot);
-    }
+  const dot = document.createElement('div');
+  dot.className = 'debug-dot';
+  dot.style.width = '4px';
+  dot.style.height = '4px';
+  dot.style.background = 'red';
+  dot.style.position = 'absolute';
+
+  dot.style.transform = `
+    translate3d(
+      ${dir[0] * t * BLOCK_SIZE}px,
+      ${dir[1] * t * BLOCK_SIZE}px,
+      ${dir[2] * t * BLOCK_SIZE}px
+    )
+  `;
+
+  debugRayContainer.appendChild(dot);
+}
 
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
