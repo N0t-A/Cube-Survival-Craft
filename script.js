@@ -10,7 +10,7 @@ const gameContainer = document.getElementById('game-container');
 let currentlyHighlightedBlock = null;
 const debugRayContainer = document.createElement('div');
 debugRayContainer.id = 'debug-ray-container';
-world.appendChild(debugRayContainer);
+document.body.appendChild(debugRayContainer);
 
 // === Config / constants ===
 const WORLD_CHUNKS_X = 4;
