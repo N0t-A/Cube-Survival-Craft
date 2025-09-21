@@ -2300,12 +2300,13 @@ function raycastFromCamera(debug = true) {
       lastGX = gx;
       lastGY = gy;
       lastGZ = gz;
-
-      console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
       
       const key = keyAt(gx, gy, gz);
       if (worldData.has(key)) {
         const block = worldData.get(key);
+
+         console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
+        
         return { hit: true, gx, gy, gz, type: block.type };
       }
     }
