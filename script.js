@@ -2325,7 +2325,7 @@ function raycastFromCamera(debug = true) {
         if (debug) {
           console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
         }
-
+console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
         return { hit: true, gx, gy, gz, type: block.type };
       }
     }
