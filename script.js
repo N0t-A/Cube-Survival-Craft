@@ -2287,9 +2287,9 @@ function raycastFromCamera(debug = true) {
     const y = origin[1] + dir[1] * t;
     const z = origin[2] + dir[2] * t;
 
-    const gx = Math.floor(x / BLOCK_SIZE);
-    const gy = Math.floor(y / BLOCK_SIZE);
-    const gz = Math.floor(z / BLOCK_SIZE);
+    const gx = Math.floor(x);
+    const gy = Math.floor(y);
+    const gz = Math.floor(z);
 
     if (debug) {
       const dot = document.createElement('div');
