@@ -2271,6 +2271,8 @@ function raycastFromCamera() {
   const maxReach = 5;
   const step = 0.05;
 
+  console.log('Ray origin:', origin, 'Direction:', dir);
+
   let lastGX = null, lastGY = null, lastGZ = null;
 
   for (let t = 0; t <= maxReach; t += step) {
@@ -2617,7 +2619,6 @@ function animate() {
     updateBlockHighlight();
     updateBlockHighlight();
     updateTransforms();
-    console.log('Ray origin:', origin, 'Direction:', dir);
     generateChunksAroundPlayer(posX, posZ);
   } catch (err) {
     console.error("Error in game loop:", err);
