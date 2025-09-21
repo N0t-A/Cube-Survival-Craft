@@ -2291,12 +2291,26 @@ function raycastFromCamera(debug = true) {
 
     console.log(`Ray step at x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}, gx=${gx}, gy=${gy}, gz=${gz}`);
 
-    if (debug) {
-      const dot = document.createElement('div');
-      dot.className = 'debug-dot';
-      dot.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
-      debugRayContainer.appendChild(dot);
-    }
+   if (debug) {
+    const dot = document.createElement('div');
+    dot.className = 'debug-dot';
+    dot.style.width = '4px';
+    dot.style.height = '4px';
+    dot.style.background = 'red';
+    dot.style.position = 'absolute';
+
+    // Place dot along the ray relative to camera
+    dot.style.transform = `
+      translate3d(
+        ${dir[0] * t * BLOCK_SIZE}px,
+        ${dir[1] * t * BLOCK_SIZE}px,
+        ${dir[2] * t * BLOCK_SIZE}px
+      )
+    `;
+
+    debugRayContainer.appendChild(dot);
+}
+
 
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
