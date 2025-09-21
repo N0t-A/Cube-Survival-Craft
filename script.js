@@ -8,9 +8,11 @@ const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 const gameContainer = document.getElementById('game-container');
 let currentlyHighlightedBlock = null;
+const crosshair = document.getElementById('crosshair');
 const debugRayContainer = document.createElement('div');
 debugRayContainer.id = 'debug-ray-container';
-cameraEye.appendChild(debugRayContainer);
+debugRayContainer.style.transformStyle = 'preserve-3d';
+crosshair.appendChild(debugRayContainer);
 
 // === Config / constants ===
 const WORLD_CHUNKS_X = 4;
@@ -2264,23 +2266,26 @@ function refreshAllStations() {
 }
 
 function raycastFromCamera(debug = true) {
+  // Camera-eye origin in world coordinates
   const origin = [
     posX,
-    posY - eyeHeight, // camera height in world space
+    posY - eyeHeight, // inverted world Y setup
     posZ
   ];
 
-  const dir = getDirectionVector(); // ✅ use your tested function
+  const dir = getDirectionVector(); // normalized direction
   const maxReach = 5;
   const step = 0.05;
 
   let lastGX = null, lastGY = null, lastGZ = null;
 
   if (debug) {
+    // Clear previous dots
     debugRayContainer.innerHTML = '';
   }
 
   for (let t = 0; t <= maxReach; t += step) {
+    // Position along ray in world coordinates
     const x = origin[0] + dir[0] * t;
     const y = origin[1] + dir[1] * t;
     const z = origin[2] + dir[2] * t;
@@ -2289,40 +2294,38 @@ function raycastFromCamera(debug = true) {
     const gy = Math.floor(y);
     const gz = Math.floor(z);
 
-    console.log(`Ray step at x=${x.toFixed(2)}, y=${y.toFixed(2)}, z=${z.toFixed(2)}, gx=${gx}, gy=${gy}, gz=${gz}`);
+    // Debug dots
+    if (debug) {
+      const dot = document.createElement('div');
+      dot.className = 'debug-dot';
+      dot.style.width = '4px';
+      dot.style.height = '4px';
+      dot.style.background = 'red';
+      dot.style.position = 'absolute';
+      dot.style.transform = `
+        translate3d(
+          ${(x - posX) * BLOCK_SIZE}px,
+          ${(y - (posY - eyeHeight)) * BLOCK_SIZE}px,
+          ${(z - posZ) * BLOCK_SIZE}px
+        )
+      `;
+      debugRayContainer.appendChild(dot);
+    }
 
-   if (debug) {
-    const dot = document.createElement('div');
-    dot.className = 'debug-dot';
-    dot.style.width = '4px';
-    dot.style.height = '4px';
-    dot.style.background = 'red';
-    dot.style.position = 'absolute';
-
-    // Place dot along the ray relative to camera
-    dot.style.transform = `
-      translate3d(
-        ${dir[0] * t * BLOCK_SIZE}px,
-        ${dir[1] * t * BLOCK_SIZE}px,
-        ${dir[2] * t * BLOCK_SIZE}px
-      )
-    `;
-
-    debugRayContainer.appendChild(dot);
-}
-
-
+    // Only check new grid positions
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
       lastGY = gy;
       lastGZ = gz;
-      
+
       const key = keyAt(gx, gy, gz);
       if (worldData.has(key)) {
         const block = worldData.get(key);
 
-         console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
-        
+        if (debug) {
+          console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
+        }
+
         return { hit: true, gx, gy, gz, type: block.type };
       }
     }
