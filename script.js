@@ -24,6 +24,8 @@ const rayStep = 0.5;
 let selectedBlock = null;
 const CHUNK_RENDER_DISTANCE = 2;
 const loadedChunks = new Map();
+const dir = getDirectionVector();
+console.log('Direction:', dir, 'Pitch:', pitch, 'Yaw:', yaw);
 
 // === Player state ===
 let posX = 0;
