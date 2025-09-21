@@ -2289,8 +2289,6 @@ function raycastFromCamera(debug = true) {
     const gy = Math.floor(y);
     const gz = Math.floor(z);
 
-    console.log(`x=${x}, y=${y}, z=${z}, gx=${gx}, gy=${gy}, gz=${gz}`);
-
     if (debug) {
       const dot = document.createElement('div');
       dot.className = 'debug-dot';
@@ -2303,6 +2301,8 @@ function raycastFromCamera(debug = true) {
       lastGY = gy;
       lastGZ = gz;
 
+      console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
+      
       const key = keyAt(gx, gy, gz);
       if (worldData.has(key)) {
         const block = worldData.get(key);
