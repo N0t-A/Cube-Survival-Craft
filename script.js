@@ -64,10 +64,10 @@ function getDirectionVector() {
   const yawRad = yaw * Math.PI / 180;
 
   const dx = Math.sin(yawRad) * Math.cos(pitchRad);
-  const dy = Math.sin(pitchRad);
+  const dy = -Math.sin(pitchRad); // ← invert HERE if your Y axis is flipped (higher = more negative)
   const dz = Math.cos(yawRad) * Math.cos(pitchRad);
 
-  return [dx, -dy, dz]; // -dy if Y axis is inverted in your world
+  return [dx, dy, dz];
 }
 
 // === Block helpers ===
