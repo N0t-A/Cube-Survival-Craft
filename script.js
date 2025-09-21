@@ -8,8 +8,8 @@ const scene = document.getElementById('scene');
 const world = document.getElementById('world');
 const gameContainer = document.getElementById('game-container');
 let currentlyHighlightedBlock = null;
-const debugDot = document.createElement('div');
-debugDot.className = 'debug-ray-container';
+const debugRayContainer = document.createElement('div');
+debugRayContainer.id = 'debug-ray-container';
 world.appendChild(debugRayContainer);
 
 // === Config / constants ===
