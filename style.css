@@ -434,6 +434,17 @@ html, body {
   transform-style: preserve-3d; /* important for 3D child blocks */
 }
 
+.debug-dot {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  position: absolute;
+  transform: translate3d(0, 0, 0);
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+}
+
 /* Blocks and Block Transforms */
 .highlight-overlay {
   position: absolute;
