@@ -12,7 +12,7 @@ const crosshair = document.getElementById('crosshair');
 const debugRayContainer = document.createElement('div');
 debugRayContainer.id = 'debug-ray-container';
 debugRayContainer.style.transformStyle = 'preserve-3d';
-crosshair.appendChild(debugRayContainer);
+cameraEye.appendChild(debugRayContainer);
 
 // === Config / constants ===
 const WORLD_CHUNKS_X = 4;
