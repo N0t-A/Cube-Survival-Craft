@@ -2297,24 +2297,23 @@ function raycastFromCamera(debug = true) {
 
     // Debug dots
     if (debug) {
-  const dot = document.createElement('div');
-  dot.className = 'debug-dot';
-  dot.style.width = '4px';
-  dot.style.height = '4px';
-  dot.style.background = 'red';
-  dot.style.position = 'absolute';
+      const dot = document.createElement('div');
+      dot.className = 'debug-dot';
+      dot.style.width = '4px';
+      dot.style.height = '4px';
+      dot.style.background = 'red';
+      dot.style.position = 'absolute';
+      dot.style.transform = `
+        translate3d(
+          ${dir[0] * t * BLOCK_SIZE}px,
+          ${dir[1] * t * BLOCK_SIZE}px,
+          ${dir[2] * t * BLOCK_SIZE}px
+        )
+      `;
+      debugRayContainer.appendChild(dot);
+    }
 
-  dot.style.transform = `
-    translate3d(
-      ${dir[0] * t * BLOCK_SIZE}px,
-      ${dir[1] * t * BLOCK_SIZE}px,
-      ${dir[2] * t * BLOCK_SIZE}px
-    )
-  `;
-
-  debugRayContainer.appendChild(dot);
-}
-
+    // Only check new grid positions
     if (gx !== lastGX || gy !== lastGY || gz !== lastGZ) {
       lastGX = gx;
       lastGY = gy;
@@ -2324,7 +2323,7 @@ function raycastFromCamera(debug = true) {
       if (worldData.has(key)) {
         const block = worldData.get(key);
 
-        // Only log inside this block where `block` is defined
+        // ✅ This logs the block's grid position and type
         console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
 
         return { hit: true, gx, gy, gz, type: block.type };
