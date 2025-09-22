@@ -2271,9 +2271,9 @@ function refreshAllStations() {
 
 function raycastFromCamera(debug = true) {
   const origin = [
-    posX,
-    posY - eyeHeight,
-    posZ
+    posX / BLOCK_SIZE,
+    (posY - eyeHeight) / BLOCK_SIZE,
+    posZ / BLOCK_SIZE
   ];
 
   const dir = getDirectionVector();
