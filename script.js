@@ -2280,6 +2280,10 @@ function raycastFromCamera(debug = true) {
   const maxReach = 5;
   const step = 0.05;
 
+  console.log('🔍 Raycast starting');
+  console.log(`👁️ Origin: (${origin[0].toFixed(2)}, ${origin[1].toFixed(2)}, ${origin[2].toFixed(2)})`);
+  console.log(`➡️ Direction: (${dir[0].toFixed(2)}, ${dir[1].toFixed(2)}, ${dir[2].toFixed(2)})`);
+
   let lastGX = null, lastGY = null, lastGZ = null;
 
   if (debug) {
@@ -2320,17 +2324,22 @@ function raycastFromCamera(debug = true) {
       lastGZ = gz;
 
       const key = keyAt(gx, gy, gz);
+
+      // 🔍 Log each position checked
+      console.log(`🧱 Checking key: ${key} — Exists? ${worldData.has(key)}`);
+
       if (worldData.has(key)) {
         const block = worldData.get(key);
 
-        // ✅ This logs the block's grid position and type
-        console.log(`Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
+        // ✅ Log exact hit details
+        console.log(`✅ Ray hit block at x=${gx}, y=${gy}, z=${gz}, type=${block.type}`);
 
         return { hit: true, gx, gy, gz, type: block.type };
       }
     }
   }
 
+  console.log('❌ Ray hit nothing');
   return { hit: false };
 }
 
