@@ -11,7 +11,11 @@ let currentlyHighlightedBlock = null;
 const crosshair = document.getElementById('crosshair');
 const debugRayContainer = document.createElement('div');
 debugRayContainer.id = 'debug-ray-container';
+debugRayContainer.style.position = 'absolute';
+debugRayContainer.style.top = '50%';
+debugRayContainer.style.left = '50%';
 debugRayContainer.style.transformStyle = 'preserve-3d';
+debugRayContainer.style.pointerEvents = 'none';
 cameraEye.appendChild(debugRayContainer);
 
 // === Config / constants ===
