@@ -2296,7 +2296,7 @@ function raycastFromCamera(debug = true) {
     const z = origin[2] + dir[2] * t;
 
     const gx = Math.floor(x);
-    const gy = Math.floor(y);
+    const gy = -Math.floor(y);
     const gz = Math.floor(z);
 
     // Debug dots
