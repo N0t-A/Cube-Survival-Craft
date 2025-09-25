@@ -2272,7 +2272,7 @@ function refreshAllStations() {
 function raycastFromCamera(debug = true) {
   const origin = [
     posX / BLOCK_SIZE,
-    (posY - eyeHeight) / BLOCK_SIZE,
+    (posY / BLOCK_SIZE) - (eyeHeight / BLOCK_SIZE),
     posZ / BLOCK_SIZE
   ];
 
