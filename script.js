@@ -38,7 +38,7 @@ const loadedChunks = new Map();
 let posX = 0;
 let posY = 0; // start with feet at ground
 let posZ = 0;
-let yaw = 0, pitch = 0;
+let yaw = 0, pitch = 90;
 const playerChunkX = Math.floor(posX / (BLOCK_SIZE * CHUNK_SIZE_X));
 const playerChunkZ = Math.floor(posZ / (BLOCK_SIZE * CHUNK_SIZE_Z));
 
