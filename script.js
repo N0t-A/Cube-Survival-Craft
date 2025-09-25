@@ -2275,7 +2275,8 @@ function raycastFromCamera(debug = true) {
     (posY / BLOCK_SIZE) - (eyeHeight / BLOCK_SIZE),
     posZ / BLOCK_SIZE
   ];
-
+  
+  console.log(`🎯 Using yaw=${yaw.toFixed(2)}, pitch=${pitch.toFixed(2)} in raycast`);
   const dir = getDirectionVector();
   const maxReach = 5;
   const step = 0.05;
